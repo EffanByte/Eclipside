@@ -21,7 +21,7 @@ public class SpecialMeterFill : MonoBehaviour
         if (indicator == null)
             indicator = GetComponent<RectTransform>();
 
-        SetValue(minValue); // start empty
+        SetValue(50f); // start empty
     }
 
     /// <summary>
