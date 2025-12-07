@@ -4,28 +4,40 @@ using UnityEngine.UI;
 
 public class HeartsHealthUI : MonoBehaviour
 {
-    [Header("Setup")]
-    [SerializeField] private Image heartPrefab;      // Filled Image heart
-    [SerializeField] private Transform heartsParent; // HorizontalLayoutGroup parent
-    [SerializeField] private int maxHearts = 10;     // Change this later to connect to health script
+    [Header("Dependencies")]
+    private PlayerHealth playerHealth; // Drag the player here
 
-    private readonly List<Image> hearts = new();
+    [Header("Visual Setup")]
+    [SerializeField] private Image heartPrefab;      
+    [SerializeField] private Transform heartsParent; 
+    
+    private List<Image> hearts = new List<Image>();
 
-    private float currentHealth;
-
-    private void Awake()
+    private void OnEnable()
     {
-        InitHearts();
-        SetHealth(maxHearts); // start full
+        playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            // Subscribe to events
+            playerHealth.OnMaxHealthChanged += InitHearts;
+            playerHealth.OnHealthChanged += UpdateHearts;
+        }
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        ApplyDamage (5.0f);
+        if (playerHealth != null)
+        {
+            // Unsubscribe to avoid errors if object is destroyed
+            playerHealth.OnMaxHealthChanged -= InitHearts;
+            playerHealth.OnHealthChanged -= UpdateHearts;
+        }
     }
-    private void InitHearts()
+
+    // Called automatically when PlayerHealth starts
+    private void InitHearts(int maxHearts)
     {
-        // Clear existing children (optional if you spawn only once)
+        // Clear existing children
         foreach (Transform child in heartsParent)
             Destroy(child.gameObject);
 
@@ -34,33 +46,25 @@ public class HeartsHealthUI : MonoBehaviour
         for (int i = 0; i < maxHearts; i++)
         {
             Image heart = Instantiate(heartPrefab, heartsParent);
-            heart.type = Image.Type.Filled; // just in case
+            heart.type = Image.Type.Filled; 
             heart.fillAmount = 1f;
             hearts.Add(heart);
         }
     }
 
-    /// <summary>
-    /// Set current health in [0, maxHearts], fractional allowed.
-    /// </summary>
-    public void SetHealth(float health)
+    // Called automatically whenever PlayerHealth changes
+    private void UpdateHearts(float currentHealth)
     {
-        currentHealth = Mathf.Clamp(health, 0f, maxHearts);
+        // Logic: 1.0f in health equals 1.0f fill in one heart
+        // Example: Health 9.5
+        // Heart 0-8: (9.5 - 0..8) > 1.0 -> Filled
+        // Heart 9:   (9.5 - 9) = 0.5    -> Half Full
+        // Heart 10:  (9.5 - 10) < 0     -> Empty
 
         for (int i = 0; i < hearts.Count; i++)
         {
-            // 1 HP per heart
             float heartFill = Mathf.Clamp01(currentHealth - i);
             hearts[i].fillAmount = heartFill;
         }
     }
-
-    /// <summary>
-    /// Apply damage (positive value).
-    /// </summary>
-    public void ApplyDamage(float damage)
-    {
-        SetHealth(currentHealth - damage);
-    }
-
 }
