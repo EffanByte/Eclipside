@@ -16,7 +16,7 @@ public enum EnemyState
 public class EnemyStats
 {
     [Header("General Stats")]
-    public float maxHp = 20f;
+    public float maxHealth = 20f;
     public float moveSpeed = 3f;
     public float expReward = 10f;
     public string enemyTag = "Normal"; 
@@ -40,7 +40,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
     [Header("Runtime State")]
     public EnemyState currentState = EnemyState.Idle;
-    protected float currentHp;
+    protected float currentHealth;
     protected float lastAttackTime;
     protected Transform playerTarget;
     
@@ -58,7 +58,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        currentHp = stats.maxHp;
+        currentHealth = stats.maxHealth;
         
         // Find player (Assumes player has "Player" tag)
      GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -179,7 +179,7 @@ public virtual void PerformAttack(GameObject target)
         // float finalDamage = dmg.amount * multiplier;
 
         // // B. Apply Damage
-        // currentHp -= finalDamage;
+        // currentHealth -= finalDamage;
 
         // // C. Visual Feedback (Flash White)
         // StartCoroutine(FlashSpriteRoutine());
@@ -195,7 +195,7 @@ public virtual void PerformAttack(GameObject target)
         // }
 
         // // E. Death Check
-        // if (currentHp <= 0)
+        // if (currentHealth <= 0)
         // {
         //     Die();
         // }
