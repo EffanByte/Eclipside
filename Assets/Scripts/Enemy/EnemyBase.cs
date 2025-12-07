@@ -41,13 +41,16 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     [Header("Runtime State")]
     public EnemyState currentState = EnemyState.Idle;
     protected float currentHealth;
-    protected float lastAttackTime;
+    
+    // REPLACEMENT: Boolean flag instead of timestamp
+    protected bool isAttackReady = true;
+
     protected Transform playerTarget;
     
     // Components
     protected Rigidbody2D rb;
     protected SpriteRenderer spriteRenderer;
-    protected Animator anim; // Optional
+    protected Animator anim; 
 
     // Status Modifiers (For Freeze/Slows)
     protected float speedMultiplier = 1.0f; 
@@ -60,13 +63,13 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         currentHealth = stats.maxHealth;
         
-        // Find player (Assumes player has "Player" tag)
-     GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        // Find player
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
 
-        // Default to chasing immediately
-        // This is a base case for when enemy definitely has to find player
-        // There will be a different case later on for enemy searching for players
+        // Ensure attack is ready at start
+        isAttackReady = true;
+
         ChangeState(EnemyState.Chasing);
     }
 
@@ -90,22 +93,38 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     }
 
     // ---------------------------------------------------------
-    // STATE LOGIC (Virtual = Children can override this)
+    // STATE LOGIC 
     // ---------------------------------------------------------
 
     protected virtual void LogicIdle()
     {
-
+        if (playerTarget != null)
+        {
+            ChangeState(EnemyState.Chasing);
+        }
     }
 
     protected virtual void LogicChasing()
     {
+        if (playerTarget == null) return;
 
+        MoveTowardsTarget();
+
+        // Flip Sprite
+        if (playerTarget.position.x > transform.position.x)
+            spriteRenderer.flipX = false; 
+        else
+            spriteRenderer.flipX = true;  
     }
 
     protected virtual void LogicAttacking()
     {
-
+        // Since we are using a boolean flag for cooldowns, 
+        // we can simply switch back to chasing immediately after the attack frame,
+        // or wait here if you have an animation lock.
+        
+        // For simple contact enemies, we just go back to chasing.
+        ChangeState(EnemyState.Chasing);
     }
 
     // ---------------------------------------------------------
@@ -118,87 +137,86 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         Vector2 direction = (playerTarget.position - transform.position).normalized;
         
-        // Apply velocity (Use MovePosition for smoother physics collision)
+        // Note: linearVelocity is for Unity 6+. If using older Unity, use .velocity
         rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
     }
 
-    // Called when touching the player (Contact Damage)
-    protected virtual void OnCollisionStay2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (currentState == EnemyState.Dead) return;
-
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Check cooldown
-            if (Time.time > lastAttackTime + stats.attackCooldown)
+            if (isAttackReady)
             {
+                Debug.Log("performed");
                 PerformAttack(collision.gameObject);
-                lastAttackTime = Time.time;
             }
         }
     }
 
     // ---------------------------------------------------------
-    // REQUIRED FUNCTIONS
+    // ATTACK LOGIC
     // ---------------------------------------------------------
 
-    // 1. PERFORM ATTACK
-// Inside EnemyBase class
-
-public virtual void PerformAttack(GameObject target)
-{
-    // 1. Get the Interface (Don't look for PlayerHealth directly)
-    IDamageable damageable = target.GetComponent<IDamageable>();
-
-    if (damageable != null)
+    public virtual void PerformAttack(GameObject target)
     {
-        // 2. Create the Packet using the Stats configured in Inspector
-        DamageInfo info = new DamageInfo(
-            amount: stats.damage,
-            element: stats.attackElement,  // e.g., Fire, Physical, Poison
-            style: stats.attackStyle,      // e.g., MeleeLight, Ranged
-            sourcePosition: transform.position,
-            knockbackForce: stats.knockbackForce
-        );
+        Debug.Log("Attack performed");
+        IDamageable damageable = target.GetComponent<IDamageable>();
 
-        // 3. Send it
-        damageable.ReceiveDamage(info);
-        
-        // Debug for testing
-        Debug.Log($"{name} attacked {target.name} with {stats.attackElement} for {stats.damage} damage!");
+        if (damageable != null)
+        {
+            Debug.Log("Damageable found");
+            DamageInfo info = new DamageInfo(
+                amount: stats.damage,
+                element: stats.attackElement,  
+                style: stats.attackStyle,      
+                sourcePosition: transform.position,
+                knockbackForce: stats.knockbackForce
+            );
+            Debug.Log("DamageInfo created");
+            damageable.ReceiveDamage(info);
+            Debug.Log($"{name} attacked {target.name}!");
+
+            // START THE COOLDOWN ROUTINE
+            StartCoroutine(AttackCooldownRoutine());
+        }
     }
-}
 
-    // 2. RECEIVE DAMAGE (Interface Implementation)
+    // NEW: The Cooutine that handles the timer
+    protected IEnumerator AttackCooldownRoutine()
+    {
+        isAttackReady = false; // Lock attack
+        yield return new WaitForSeconds(stats.attackCooldown); // Wait
+        isAttackReady = true;  // Unlock attack
+    }
+
+    // ---------------------------------------------------------
+    // DAMAGE RECEIVER
+    // ---------------------------------------------------------
+
     public virtual void ReceiveDamage(DamageInfo dmg)
     {
-        // if (currentState == EnemyState.Dead) return;
+        // Uncomment this logic when you have the rest of your system ready
+        /*
+        if (currentState == EnemyState.Dead) return;
 
-        // // A. Weakness Logic
-        // //float multiplier = DamageLogic.CalculateWeaknessMultiplier(dmg, stats.enemyTag);
-        // float finalDamage = dmg.amount * multiplier;
+        // Weakness calculation would go here...
+        float finalDamage = dmg.amount; 
 
-        // // B. Apply Damage
-        // currentHealth -= finalDamage;
+        currentHealth -= finalDamage;
 
-        // // C. Visual Feedback (Flash White)
-        // StartCoroutine(FlashSpriteRoutine());
+        StartCoroutine(FlashSpriteRoutine());
 
-        // // D. Knockback
-        // if (rb != null && dmg.knockbackForce > 0)
-        // {
-        //     Vector2 knockbackDir = (transform.position - (Vector3)dmg.sourcePosition).normalized;
-        //     rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
-            
-        //     // Optional: Briefly stun on heavy hit
-        //     StartCoroutine(StunRoutine(0.2f)); 
-        // }
+        if (rb != null && dmg.knockbackForce > 0)
+        {
+            Vector2 knockbackDir = (transform.position - (Vector3)dmg.sourcePosition).normalized;
+            rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
+        }
 
-        // // E. Death Check
-        // if (currentHealth <= 0)
-        // {
-        //     Die();
-        // }
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+        */
     }
 
     protected virtual void Die()
@@ -207,7 +225,7 @@ public virtual void PerformAttack(GameObject target)
         rb.linearVelocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
 
-        Destroy(gameObject, 0.5f); // Delay destroy for animation
+        Destroy(gameObject, 0.5f); 
     }
 
     protected void ChangeState(EnemyState newState)
@@ -216,13 +234,13 @@ public virtual void PerformAttack(GameObject target)
     }
 
     // ---------------------------------------------------------
-    // COROUTINES
+    // VISUALS
     // ---------------------------------------------------------
 
     IEnumerator FlashSpriteRoutine()
     {
         Color original = spriteRenderer.color;
-        spriteRenderer.color = Color.white; // Flash white
+        spriteRenderer.color = Color.white; 
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = original;
     }

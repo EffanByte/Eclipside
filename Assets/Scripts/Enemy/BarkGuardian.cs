@@ -18,6 +18,7 @@ public class BarkGuardian : EnemyBase
         stats.damage = 5f;          // Low Damage (0.5 Hearts)
         stats.moveSpeed = 1.8f;     // Slow
         stats.enemyTag = "Forest_Plant"; // Important for Fire Weakness Logic
+        stats.attackCooldown = 1.0f;
         
         // PDF Page 28: "Camouflaged"
         // Start visually dormant
@@ -40,9 +41,8 @@ public class BarkGuardian : EnemyBase
 
         // Wake up if player is too close OR if we took damage (currentHp < max)
         if (dist < wakeUpRange || currentHealth < stats.maxHealth)
-        {
-            StartCoroutine(WakeUpRoutine());
-        }
+            WakeUpRoutine();
+
     }
 
     // We do NOT override LogicChasing or LogicAttacking.
@@ -52,29 +52,8 @@ public class BarkGuardian : EnemyBase
     // SPECIAL BEHAVIOR
     // ----------------------------------------------------------------------
 
-    private IEnumerator WakeUpRoutine()
+    private void WakeUpRoutine()
     {
-        // Prevent re-triggering
-        ChangeState(EnemyState.Stunned); // Temporary state so it doesn't move
-
-        // Visual "Wake Up" feedback
-        // In a real game, play an animation: anim.SetTrigger("WakeUp");
-        spriteRenderer.color = Color.white; // Restore normal color
-        
-        // Small shake effect or delay before moving
-        float shakeDuration = 0.5f;
-        Vector3 originalPos = transform.position;
-        float elapsed = 0f;
-
-        while (elapsed < shakeDuration)
-        {
-            transform.position = originalPos + (Vector3)Random.insideUnitCircle * 0.1f;
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = originalPos;
-
-        // Officially start chasing
         ChangeState(EnemyState.Chasing);
     }
 

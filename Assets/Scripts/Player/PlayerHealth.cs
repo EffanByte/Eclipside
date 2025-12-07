@@ -6,7 +6,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("Health Stats")]
     // PDF Page 12: "1 Heart = 10 damage units". 
     // If you want 10 hearts, set this to 10.
-    [SerializeField] private float maxHearts = 10f; 
+    [SerializeField] private float maxHearts = 100f; 
     
     private float currentHealth;
 
@@ -32,6 +32,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         // 1. Apply Damage
         // Note: You can add Defense/Armor logic here later
+        Debug.Log($"Player took {dmg.amount} {dmg.element} damage!");
         currentHealth -= dmg.amount;
         
         // 2. Clamp values (Cannot go below 0 or above Max)
@@ -39,6 +40,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         // 3. Notify UI
         OnHealthChanged?.Invoke(currentHealth);
+        Debug.Log("Health Change Invoked");
 
         // 4. Check Death
         if (currentHealth <= 0)
