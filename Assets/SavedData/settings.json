@@ -1,0 +1,15 @@
+{
+  "audio": {
+    "music_volume": 0.8,
+    "sfx_volume": 1.0,
+    "is_muted": false
+  },
+  "controls": {
+    "auto_aim_enabled": true,
+    "joystick_size": 1.0,
+    "joystick_position": { "x": 0.2, "y": 0.2 }
+  },
+  "general": {
+    "language": "en" 
+  }
+}
