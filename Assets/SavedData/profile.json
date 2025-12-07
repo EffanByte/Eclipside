@@ -1,0 +1,15 @@
+{
+  "user_id": "string_uuid",
+  "username": "PlayerName",
+  "date_created": "timestamp",
+  "last_login_timestamp": "timestamp", 
+    "gold": 0,          
+    "orbs": 0,          
+    "arena_tickets": 0  
+  },
+  "is_starter_pack_purchased": false, 
+  "monthly_pass": {
+    "is_active": false,
+    "expiration_date": "timestamp",
+    "current_exp_progress": 0 
+}
