@@ -16,7 +16,7 @@ public enum EnemyState
 public class EnemyStats
 {
     [Header("General Stats")]
-    public float maxHp = 20f;
+    public float maxHealth = 20f;
     public float moveSpeed = 3f;
     public float expReward = 10f;
     public string enemyTag = "Normal"; 
@@ -40,7 +40,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
     [Header("Runtime State")]
     public EnemyState currentState = EnemyState.Idle;
-    protected float currentHp;
+    protected float currentHealth;
     protected float lastAttackTime;
     protected Transform playerTarget;
     
@@ -58,7 +58,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        currentHp = stats.maxHp;
+        currentHealth = stats.maxHealth;
         
         // Find player (Assumes player has "Player" tag)
      GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -93,19 +93,38 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     // STATE LOGIC (Virtual = Children can override this)
     // ---------------------------------------------------------
 
-    protected virtual void LogicIdle()
+protected virtual void LogicIdle()
     {
-
+        // Basic behavior: If player exists, start chasing
+        if (playerTarget != null)
+        {
+            ChangeState(EnemyState.Chasing);
+        }
     }
 
     protected virtual void LogicChasing()
     {
+        if (playerTarget == null) return;
 
+        float distance = Vector2.Distance(transform.position, playerTarget.position);
+
+        // Move towards player
+        MoveTowardsTarget();
+
+        // Flip Sprite
+        if (playerTarget.position.x > transform.position.x)
+            spriteRenderer.flipX = false; // Face Right
+        else
+            spriteRenderer.flipX = true;  // Face Left
     }
 
     protected virtual void LogicAttacking()
     {
-
+        // Wait for animation or cooldown, then return to chase
+        if (Time.time > lastAttackTime + stats.attackCooldown)
+        {
+            ChangeState(EnemyState.Chasing);
+        }
     }
 
     // ---------------------------------------------------------
