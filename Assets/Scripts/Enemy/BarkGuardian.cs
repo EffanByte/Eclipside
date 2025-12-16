@@ -12,14 +12,6 @@ public class BarkGuardian : EnemyBase
 
     protected override void Start()
     {
-        // 1. Setup Specific Stats (Or set these in Inspector)
-        // PDF Page 28: "Resistance but low damage"
-        stats.maxHealth = 40f;          // High HP
-        stats.damage = 5f;          // Low Damage (0.5 Hearts)
-        stats.moveSpeed = 1.8f;     // Slow
-        stats.enemyTag = "Forest_Plant"; // Important for Fire Weakness Logic
-        stats.attackCooldown = 1.0f;
-        
         // PDF Page 28: "Camouflaged"
         // Start visually dormant
         if (spriteRenderer != null) spriteRenderer.color = dormantColor;
