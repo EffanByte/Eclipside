@@ -1,14 +1,15 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Required namespace
+using UnityEngine.InputSystem; 
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(InventoryManager))] // Ensures the Inventory script is attached
 public class PlayerController : MonoBehaviour
 {
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float maxHearts = 3f; // 1 Heart = 10 HP
-    [SerializeField] private float attackSpeed = 1f; // Attacks per second
+    [SerializeField] private float attackSpeed = 1f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
 
@@ -25,20 +26,25 @@ public class PlayerController : MonoBehaviour
     private bool isSpecialReady = false;
 
     // --- Internal State ---
-    private float currentHealth; // Calculated as Hearts * 10
+    private float currentHealth; 
     private Rigidbody2D rb;
     private Vector2 rawInputMovement;
     private bool isDashing;
     private bool canAttack = true;
     private bool isDead = false;
-    private bool isAttackPressed = false; // For holding down attack button
+    private bool isAttackPressed = false; 
+
+    // --- Buff State (New) ---
+    private float baseMovementSpeed; // To remember speed before buffs
+    public bool hasLuck = false; // Accessible by Loot system
 
     // --- Status Effects Flags (Page 6) ---
     private bool isFrozen = false;
-    private bool isConfused = false; // Inverts controls
+    private bool isConfused = false; 
 
-    // --- Input System Reference ---
+    // --- References ---
     private PlayerControls controls; 
+    private InventoryManager inventory; // Reference to the new system
 
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
@@ -46,21 +52,27 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        
-        // Initialize Input System
+        inventory = GetComponent<InventoryManager>(); // Get the manager
         controls = new PlayerControls();
 
-        // Bind Actions
+        // Store original speed so we can revert buffs later
+        baseMovementSpeed = movementSpeed;
+
+        // --- EXISTING MOVEMENT/COMBAT ---
         controls.Player.Move.performed += ctx => rawInputMovement = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => rawInputMovement = Vector2.zero;
-
         controls.Player.Fire.started += ctx => isAttackPressed = true;
         controls.Player.Fire.canceled += ctx => isAttackPressed = false;
-
         controls.Player.Dash.performed += ctx => AttemptDash();
         controls.Player.Special.performed += ctx => AttemptSpecial();
 
-        // Initialize Health (Page 5: 1 Heart = 10 damage units)
+        // --- UPDATED: ITEM INPUTS ---
+        // Instead of handling logic here, we tell the InventoryManager to do it.
+        // Array index 0 is Slot 1.
+        controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
+        controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1);
+        controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2);
+        
         currentHealth = maxHearts * 10f;
     }
 
@@ -69,10 +81,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        
         if (isDead) return;
 
-        // Handle Auto-Attack while holding button
         if (isAttackPressed && canAttack)
         {
             PerformBasicAttack();
@@ -85,7 +95,7 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
-    #region 1. Movement & Controls (Page 1 & 10)
+    #region 1. Movement & Controls
     
     private void Move()
     {
@@ -93,23 +103,15 @@ public class PlayerController : MonoBehaviour
 
         Vector2 finalInput = rawInputMovement;
 
-        // Page 6: Confusion Status - "Effect: Player controls are inverted or randomized"
-        if (isConfused)
-        {
-            finalInput *= -1; // Invert controls
-        }
+        if (isConfused) finalInput *= -1; 
 
         float finalSpeed = movementSpeed;
 
-        // Page 6: Freeze Status - "Effect on Player: Movement speed reduced by 40%"
-        if (isFrozen)
-        {
-            finalSpeed *= 0.6f;
-        }
+        if (isFrozen) finalSpeed *= 0.6f;
 
+        // Note: Using linearVelocity (Unity 6+) based on your previous snippet. 
+        // If on older Unity, change to 'velocity'
         rb.linearVelocity = finalInput * finalSpeed;
-
-        // Page 1: "Event: Player is moving" - Trigger Walk Animation here
     }
 
     private void AttemptDash()
@@ -122,62 +124,42 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DashRoutine()
     {
-        // Page 12: SFX "short wind burst" / Page 13: "fwoosh"
         isDashing = true;
-        
-        // Dash direction: Use input if moving, otherwise face right (default)
         Vector2 dashDir = rawInputMovement == Vector2.zero ? Vector2.right : rawInputMovement.normalized;
-        
         rb.linearVelocity = dashDir * dashForce;
-        
         yield return new WaitForSeconds(dashDuration);
-        
         isDashing = false;
-        rb.linearVelocity = Vector2.zero; // Optional: stop momentum after dash
+        rb.linearVelocity = Vector2.zero; 
     }
     #endregion
 
-    #region 2. Combat & Abilities (Page 1 & 7)
+    #region 2. Combat & Abilities
 
     private void PerformBasicAttack()
     {
-        // Page 12: SFX "melee hits", "sharp tink"
         Debug.Log("Basic Attack!");
-        
-        // Simulating a hit for logic demonstration
-        // In real implementation, this would be a collision event
-        float simulatedDamageDealt = 10f; 
-        OnDealtDamage(simulatedDamageDealt);
-
+        OnDealtDamage(10f); 
         StartCoroutine(AttackCooldown());
     }
 
     private IEnumerator AttackCooldown()
     {
         canAttack = false;
-        
-        // Page 6: Freeze reduces attack speed by 40%
         float speedMultiplier = isFrozen ? 0.6f : 1.0f;
         float cooldown = 1f / (attackSpeed * speedMultiplier);
-
         yield return new WaitForSeconds(cooldown);
         canAttack = true;
     }
 
     public void OnDealtDamage(float damageAmount)
     {
-        // Page 1: "Player deals damage -> ability bar fills"
         if (!isSpecialReady)
         {
             currentSpecialCharge += damageAmount;
-            
-            // Check threshold
             if (currentSpecialCharge >= specialChargeMax)
             {
                 currentSpecialCharge = specialChargeMax;
                 isSpecialReady = true;
-                
-                // Page 13: SFX "bip low -> bip high"
                 Debug.Log("Special Ability Ready!"); 
             }
             onUIUpdate?.Invoke();
@@ -186,7 +168,6 @@ public class PlayerController : MonoBehaviour
 
     private void AttemptSpecial()
     {
-        // Page 1: "Condition: Ability bar fills completely"
         if (isSpecialReady && !isDead)
         {
             ActivateSpecialAbility();
@@ -199,43 +180,30 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateSpecialAbility()
     {
-        // Page 1: "Output: Ability activates against enemies"
-        // Page 13: SFX "whoosh explosion + short echo"
         Debug.Log("SPECIAL ABILITY UNLEASHED!");
-
-        // Reset
         currentSpecialCharge = 0;
         isSpecialReady = false;
         onUIUpdate?.Invoke();
     }
     #endregion
 
-    #region 3. Health & Status Effects (Page 5 & 6)
+    #region 3. Health & Status Effects
     
     public void TakeDamage(float damage)
     {
-        if (isDead || isDashing) return; // Dash i-frames
+        if (isDead || isDashing) return; 
 
         currentHealth -= damage;
-        
-        // Page 10: "Brief vibration and red screen flash"
-        // Page 13: SFX "dry thud + short grunt"
         Debug.Log($"Took {damage} damage. HP: {currentHealth}");
 
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (currentHealth <= 0) Die();
         onUIUpdate?.Invoke();
     }
 
     public void Heal(float hearts)
     {
-        // Page 5: 1 Heart = 10 damage units
         currentHealth += hearts * 10f;
         if (currentHealth > maxHearts * 10f) currentHealth = maxHearts * 10f;
-        
-        // Page 13: SFX "gentle chime + energy rising"
         onUIUpdate?.Invoke();
     }
 
@@ -243,14 +211,10 @@ public class PlayerController : MonoBehaviour
     {
         isDead = true;
         rb.linearVelocity = Vector2.zero;
-        controls.Disable(); // Disable input on death
-        
-        // Page 8: Death animation
-        // Page 13: SFX "deep boom + low bell echo"
+        controls.Disable(); 
         Debug.Log("Player Died");
     }
 
-    // --- Status Effect System (Page 6) ---
     public void ApplyStatusEffect(string effectName)
     {
         StartCoroutine(HandleStatusEffect(effectName));
@@ -261,50 +225,21 @@ public class PlayerController : MonoBehaviour
         switch (effectName)
         {
             case "Burn":
-                // Page 6: 0.2 hearts (2 units), 3 ticks/sec, 3 sec duration
-                // Visual: Flame overlay + sprite flickers red
-                // Page 13: SFX "fire crackling"
-                for (int i = 0; i < 9; i++) 
-                {
-                    TakeDamage(2f);
-                    yield return new WaitForSeconds(0.33f);
-                }
+                for (int i = 0; i < 9; i++) { TakeDamage(2f); yield return new WaitForSeconds(0.33f); }
                 break;
-
             case "Poison":
-                // Page 6: 0.1 hearts (1 unit), 1 tick/sec, 6-8 sec duration
-                // Visual: Green/purple mist
-                // Page 14: SFX "bubbling / glup glup"
-                for (int i = 0; i < 7; i++) 
-                {
-                    TakeDamage(1f);
-                    yield return new WaitForSeconds(1f);
-                }
+                for (int i = 0; i < 7; i++) { TakeDamage(1f); yield return new WaitForSeconds(1f); }
                 break;
-
             case "Freeze":
-                // Page 6: "Paralyzes for 2 seconds" then slows
-                // Visual: Blue tint + ice crystals
-                // Page 14: SFX "ice forming / glass sound"
                 isFrozen = true;
-                
-                // Full Paralyze (Stop movement)
                 float storedSpeed = movementSpeed;
                 movementSpeed = 0f; 
-                
                 yield return new WaitForSeconds(2.0f); 
-                
-                // Return to base speed (but isFrozen flag keeps it at 60% in Move/Attack)
                 movementSpeed = storedSpeed; 
-                yield return new WaitForSeconds(0.5f); // Remaining duration
-                
+                yield return new WaitForSeconds(0.5f); 
                 isFrozen = false;
                 break;
-
             case "Confusion":
-                // Page 6: "Controls are inverted"
-                // Visual: Purple haze + dizzy stars
-                // Page 14: SFX "distorted wobble / woOoo-woOoo"
                 isConfused = true;
                 yield return new WaitForSeconds(4f);
                 isConfused = false;
@@ -313,40 +248,59 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region 4. Interactions (Page 2 & 5)
+    #region 4. Interactions & NEW API
     
+    // --- NEW METHODS FOR ITEMS TO CALL ---
+
+    // Called by Quick Berry
+    public void ModifySpeed(float percentageAmount)
+    {
+        // Add percentage of base speed to current speed
+        movementSpeed += (baseMovementSpeed * percentageAmount);
+        Debug.Log($"Speed modified. Current: {movementSpeed}");
+    }
+
+    // Called by Rabbit's Foot
+    public void ToggleLuck(bool state)
+    {
+        hasLuck = state;
+        Debug.Log($"Luck set to: {state}");
+    }
+
+    // Helper for Touch UI Buttons
+    // Link your UI Button OnClick() to this function
+    public void UseItemFromUI(int slotNumber)
+    {
+        // Convert 1-based UI slot to 0-based array index
+        inventory.TriggerItemUse(slotNumber - 1);
+    }
+
+    // --- TRIGGERS ---
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Page 2: "Chest loot/keys"
         if (collision.CompareTag("Chest"))
         {
             if (keys > 0)
             {
                 keys--;
-                // Page 13: SFX Chest Open (common/epic/mythic variants)
                 Debug.Log("Chest Opened.");
                 Destroy(collision.gameObject);
-                // Grant Loot Logic Here
             }
-            else
-            {
-                // Page 2: UI Message
-                Debug.Log("UI: 'Chests sometimes appear during waves. You need keys to open them.'");
-            }
+            else Debug.Log("Need keys!");
         }
         
-        // Page 5: Healing Items
+        // Note: Potions are now picked up by Inventory logic or used instantly.
+        // If you want instant use on pickup, keep this:
         if (collision.CompareTag("Potion"))
         {
-            Heal(0.5f); // Small Potion = 0.5 hearts
+            Heal(0.5f); 
             Destroy(collision.gameObject);
         }
 
-        // Page 5: Rupee Collection
         if (collision.CompareTag("Rupee"))
         {
             rupees++;
-            // Page 13: SFX "cling cling cling"
             Destroy(collision.gameObject);
             onUIUpdate?.Invoke();
         }
@@ -357,11 +311,9 @@ public class PlayerController : MonoBehaviour
         currentExp += amount;
         if (currentExp >= expToNextLevel)
         {
-            // Page 1: "Level-up, the player can select one of the following stat upgrades"
-            // Page 13: SFX "soft whoosh + bright bell tone"
             currentLevel++;
             currentExp = 0;
-            Debug.Log("Level Up! Display Upgrade UI.");
+            Debug.Log("Level Up!");
         }
     }
     #endregion
