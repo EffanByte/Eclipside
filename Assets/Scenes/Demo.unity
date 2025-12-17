@@ -11180,9 +11180,10 @@ MonoBehaviour:
   expToNextLevel: 100
   rupees: 0
   keys: 0
+  currentWeapon: {fileID: 11400000, guid: 8193e9a5de0912e43949c3dcf9ac38a4, type: 2}
+  weaponHolder: {fileID: 1013607696}
   specialChargeMax: 100
   hasLuck: 0
-  currentWeapon: {fileID: 11400000, guid: 8193e9a5de0912e43949c3dcf9ac38a4, type: 2}
   playerAttackSpeedMultiplier: 1
   anim: {fileID: 0}
 --- !u!114 &440846873
@@ -25784,7 +25785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1013607696
 Transform:
   m_ObjectHideFlags: 0
@@ -25812,7 +25813,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012906a955fdfa429b5559d93007bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 440846872}
 --- !u!61 &1013607698
 BoxCollider2D:
   m_ObjectHideFlags: 0
