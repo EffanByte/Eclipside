@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using System;
 // 1. Define States
 public enum EnemyState
 {
@@ -211,6 +211,7 @@ public abstract class EnemyBase : MonoBehaviour
     // DAMAGE RECEIVER (UPDATED)
     // ---------------------------------------------------------
 
+    public static event Action<EnemyBase> OnEnemyKilled;
     public virtual void ReceiveDamage(DamageInfo dmg)
     {
         // 2. Reduce Health
@@ -244,7 +245,7 @@ public abstract class EnemyBase : MonoBehaviour
     {
         Debug.Log($"{name} Died!");
         currentState = EnemyState.Dead;
-        
+        OnEnemyKilled?.Invoke(this);
         // Stop movement immediately
         rb.linearVelocity = Vector2.zero;
         
@@ -254,7 +255,7 @@ public abstract class EnemyBase : MonoBehaviour
         // TODO: Spawn EXP Orbs or Loot here
 
         // Destroy the GameObject after a short delay (e.g. for death animation)
-        Destroy(gameObject, 0.5f); 
+        Destroy(gameObject); 
     }
 
     protected void ChangeState(EnemyState newState)
