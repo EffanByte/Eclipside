@@ -1,8 +1,9 @@
     using System.Collections;
     using UnityEngine;
     using System;
-    // 1. Define States
-    public enum EnemyState
+using TMPro;
+// 1. Define States
+public enum EnemyState
     {
         Idle,       // Waiting for player / Spawning
         Chasing,    // Moving towards target
@@ -55,6 +56,7 @@
         public float moveSpeed = 3f;
         public float expReward = 10f;
         public string enemyTag = "Normal"; 
+        
 
         [Header("Attack Configuration")]
         public float damage = 5f;          // Base Damage amount
@@ -69,6 +71,7 @@
     [RequireComponent(typeof(SpriteRenderer))]
     public abstract class EnemyBase : MonoBehaviour
     {
+        [SerializeField] TextMeshProUGUI textbox;
         [Header("Configuration")]
         public EnemyStats stats;
 
@@ -222,7 +225,8 @@ private bool freezeConfusionThawBonus = false;    // used by Freeze+Confusion
 
     float selfDmg = stats.maxHealth * selfAttackMaxHpPercent;
     currentHealth -= selfDmg;
-    Debug.Log($"{name} hurt itself due to confusion: -{selfDmg} (HP: {currentHealth})");
+    textbox.text = $"{name} hurt itself due to confusion: -{selfDmg} (HP: {currentHealth})";
+
             if (damageable != null)
             {
                 DamageInfo info = new DamageInfo(
@@ -258,7 +262,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
     float finalDamage = dmg.amount * damageTakenMultiplier;
     currentHealth -= finalDamage;
 
-    Debug.Log($"{name} Took {finalDamage} {dmg.element} damage. HP: {currentHealth}");
+    textbox.text = $"{name} took {finalDamage} {dmg.element} damage! (HP: {currentHealth})";
 
     StartCoroutine(FlashSpriteRoutine());
 
