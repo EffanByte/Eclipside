@@ -141,13 +141,13 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
     }
 
-protected virtual void OnCollisionStay2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // This will now check every frame while the bodies are touching
             if (isAttackReady)
             {
+                Debug.Log("performed");
                 PerformAttack(collision.gameObject);
             }
         }
