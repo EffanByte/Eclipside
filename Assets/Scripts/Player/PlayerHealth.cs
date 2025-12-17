@@ -1,7 +1,7 @@
 using System; // Required for Actions
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Stats")]
     // PDF Page 12: "1 Heart = 10 damage units". 

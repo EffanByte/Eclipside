@@ -3,41 +3,74 @@ using System.Collections.Generic;
 
 public class WeaponHitbox : MonoBehaviour
 {
-    // We will inject the damage data when the player attacks
     private DamageInfo currentDamageInfo;
     private List<Collider2D> hitList = new List<Collider2D>();
     private Collider2D myCollider;
+    
+    // Cache the filter to avoid creating garbage memory every attack
+    private ContactFilter2D filter;
+    private List<Collider2D> overlapResults = new List<Collider2D>();
 
     private void Awake()
     {
         myCollider = GetComponent<Collider2D>();
-        myCollider.enabled = false; // Off by default
+        myCollider.enabled = false; 
         myCollider.isTrigger = true;
+        
+        // Set up a filter that checks everything (or specific layers if you prefer)
+        filter = new ContactFilter2D().NoFilter();
     }
 
-    public void Initialize(DamageInfo info)
+    public void Start()
     {
-        currentDamageInfo = info;
+                currentDamageInfo = new DamageInfo(
+            amount: 5f,
+            element: DamageElement.Physical,
+            style: AttackStyle.MeleeLight,
+            sourcePosition: transform.position,
+            knockbackForce: 3f,
+            isCritical: false
+        );
         hitList.Clear();
-        myCollider.enabled = true; // Turn ON
+        myCollider.enabled = true; // Ensure it's on
+
+        Physics2D.OverlapCollider(myCollider, filter, overlapResults);
+
+        foreach (var col in overlapResults)
+        {
+            // Manually process the hit
+            Debug.Log("Hit detected on initialization: " + col.name);
+            TryDealDamage(col);
+        }
     }
 
     public void DisableHitbox()
     {
-        myCollider.enabled = false; // Turn OFF
+        myCollider.enabled = false;
     }
 
+    // Unity calls this automatically when something enters
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 1. Check for IDamageable (Interface we made earlier)
-        IDamageable target = collision.GetComponent<IDamageable>();
+        TryDealDamage(collision);
+    }
 
-        if (target != null && !hitList.Contains(collision))
+    // Extracted logic so we can call it from both OnTriggerEnter and Initialize
+    private void TryDealDamage(Collider2D collision)
+    {
+
+        EnemyBase target = collision.GetComponent<EnemyBase>();
+
+        if (target != null)
         {
-            hitList.Add(collision);
-            
-            // 2. Deal the damage
-            target.ReceiveDamage(currentDamageInfo);
+            // 2. Duplicate check
+            if (!hitList.Contains(collision))
+            {
+                hitList.Add(collision);
+                
+                // 3. Deal Damage
+                target.ReceiveDamage(currentDamageInfo);
+            }
         }
     }
 }

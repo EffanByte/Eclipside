@@ -11,6 +11,38 @@ public enum EnemyState
     Dead
 }
 
+public enum DamageElement
+{
+    Physical, Magic, Fire, Ice, Poison, Psychic, True
+}
+
+public enum AttackStyle
+{
+    MeleeLight, MeleeHeavy, Ranged, Environment
+}
+
+[System.Serializable]
+public struct DamageInfo
+{
+    public float amount;
+    public DamageElement element;
+    public AttackStyle style;
+    public Vector2 sourcePosition;
+    public float knockbackForce;
+    public bool isCritical;
+
+    public DamageInfo(float amount, DamageElement element, AttackStyle style, Vector2 sourcePosition, float knockbackForce = 0f, bool isCritical = false)
+    {
+        this.amount = amount;
+        this.element = element;
+        this.style = style;
+        this.sourcePosition = sourcePosition;
+        this.knockbackForce = knockbackForce;
+        this.isCritical = isCritical;
+    }
+}
+
+
 // 2. Define Stats (Editable in Inspector)
 [System.Serializable]
 public class EnemyStats
@@ -26,14 +58,13 @@ public class EnemyStats
     public float attackCooldown = 1f;
     public float knockbackForce = 3f;  // How hard they hit the player
     
-    // NEW: Allow setting these in the Inspector per enemy
     public DamageElement attackElement = DamageElement.Physical; 
     public AttackStyle attackStyle = AttackStyle.MeleeLight;
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-public abstract class EnemyBase : MonoBehaviour, IDamageable
+public abstract class EnemyBase : MonoBehaviour
 {
     [Header("Configuration")]
     public EnemyStats stats;
@@ -42,7 +73,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     public EnemyState currentState = EnemyState.Idle;
     protected float currentHealth;
     
-    // REPLACEMENT: Boolean flag instead of timestamp
+    // Flag for cooldowns
     protected bool isAttackReady = true;
 
     protected Transform playerTarget;
@@ -52,7 +83,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     protected SpriteRenderer spriteRenderer;
     protected Animator anim; 
 
-    // Status Modifiers (For Freeze/Slows)
+    // Status Modifiers
     protected float speedMultiplier = 1.0f; 
 
     protected virtual void Start()
@@ -77,7 +108,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     {
         if (currentState == EnemyState.Dead) return;
 
-        // State Machine
         switch (currentState)
         {
             case EnemyState.Idle:
@@ -110,7 +140,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         MoveTowardsTarget();
 
-        // Flip Sprite
+        // Flip Sprite based on player position
         if (playerTarget.position.x > transform.position.x)
             spriteRenderer.flipX = false; 
         else
@@ -119,11 +149,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
     protected virtual void LogicAttacking()
     {
-        // Since we are using a boolean flag for cooldowns, 
-        // we can simply switch back to chasing immediately after the attack frame,
-        // or wait here if you have an animation lock.
-        
-        // For simple contact enemies, we just go back to chasing.
         ChangeState(EnemyState.Chasing);
     }
 
@@ -137,7 +162,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         Vector2 direction = (playerTarget.position - transform.position).normalized;
         
-        // Note: linearVelocity is for Unity 6+. If using older Unity, use .velocity
+        // Using linearVelocity for Unity 6+
         rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
     }
 
@@ -147,7 +172,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         {
             if (isAttackReady)
             {
-                Debug.Log("performed");
                 PerformAttack(collision.gameObject);
             }
         }
@@ -159,12 +183,10 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
     public virtual void PerformAttack(GameObject target)
     {
-        Debug.Log("Attack performed");
-        IDamageable damageable = target.GetComponent<IDamageable>();
+        EnemyBase damageable = target.GetComponent<EnemyBase>();
 
         if (damageable != null)
         {
-            Debug.Log("Damageable found");
             DamageInfo info = new DamageInfo(
                 amount: stats.damage,
                 element: stats.attackElement,  
@@ -172,59 +194,66 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
                 sourcePosition: transform.position,
                 knockbackForce: stats.knockbackForce
             );
-            Debug.Log("DamageInfo created");
-            damageable.ReceiveDamage(info);
-            Debug.Log($"{name} attacked {target.name}!");
 
-            // START THE COOLDOWN ROUTINE
-            StartCoroutine(AttackCooldownRoutine());
+            damageable.ReceiveDamage(info);
+            
         }
     }
 
-    // NEW: The Cooutine that handles the timer
     protected IEnumerator AttackCooldownRoutine()
     {
-        isAttackReady = false; // Lock attack
-        yield return new WaitForSeconds(stats.attackCooldown); // Wait
-        isAttackReady = true;  // Unlock attack
+        isAttackReady = false; 
+        yield return new WaitForSeconds(stats.attackCooldown); 
+        isAttackReady = true; 
     }
 
     // ---------------------------------------------------------
-    // DAMAGE RECEIVER
+    // DAMAGE RECEIVER (UPDATED)
     // ---------------------------------------------------------
 
     public virtual void ReceiveDamage(DamageInfo dmg)
     {
-        // Uncomment this logic when you have the rest of your system ready
-        /*
-        if (currentState == EnemyState.Dead) return;
+        // 2. Reduce Health
+        currentHealth -= dmg.amount;
+        Debug.Log($"{name} Took {dmg.amount} damage. Current HP: {currentHealth}");
 
-        // Weakness calculation would go here...
-        float finalDamage = dmg.amount; 
-
-        currentHealth -= finalDamage;
-
+        // 3. Visual Feedback
         StartCoroutine(FlashSpriteRoutine());
 
+        // 4. Knockback Logic
         if (rb != null && dmg.knockbackForce > 0)
         {
-            Vector2 knockbackDir = (transform.position - (Vector3)dmg.sourcePosition).normalized;
-            rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
+            // Push enemy away from the source of damage
+            //Vector2 knockbackDir = (transform.position - (Vector3)dmg.sourcePosition).normalized;
+            
+            // Add impulsive force
+           // rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
+            
+            // Optional: Briefly stun them so they don't immediately walk back while flying
+            StartCoroutine(StunRoutine(0.2f)); 
         }
 
+        // 5. Check for Death
         if (currentHealth <= 0)
         {
             Die();
         }
-        */
     }
 
     protected virtual void Die()
     {
+        Debug.Log($"{name} Died!");
         currentState = EnemyState.Dead;
+        
+        // Stop movement immediately
         rb.linearVelocity = Vector2.zero;
+        
+        // Disable collider so player walks through corpse
         GetComponent<Collider2D>().enabled = false;
 
+        // TODO: Spawn EXP Orbs or Loot here
+
+        // Destroy the GameObject after a short delay (e.g. for death animation)
         Destroy(gameObject, 0.5f); 
     }
 
@@ -239,17 +268,26 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
     IEnumerator FlashSpriteRoutine()
     {
-        Color original = spriteRenderer.color;
-        spriteRenderer.color = Color.white; 
+        Color original = Color.white; // Assuming sprite is white by default
+        spriteRenderer.color = Color.red; // Flash Red
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = original;
     }
 
     IEnumerator StunRoutine(float duration)
     {
+        // Only switch to stunned if not dead
+        if (currentState == EnemyState.Dead) yield break;
+
         EnemyState previousState = currentState;
         ChangeState(EnemyState.Stunned);
+        
         yield return new WaitForSeconds(duration);
-        ChangeState(previousState);
+        
+        // Return to previous state if still alive
+        if (currentState != EnemyState.Dead)
+        {
+            ChangeState(previousState);
+        }
     }
 }

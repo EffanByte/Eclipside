@@ -86,6 +86,10 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         EquipWeapon(currentWeapon);
+        currentWeapon.cooldown = 0.5f;
+        currentWeapon.damage = 5f;
+        currentWeapon.element = DamageElement.Physical;
+        currentWeapon.style = AttackStyle.MeleeLight;
     }
 
     private void OnEnable() => controls.Enable();

@@ -58,13 +58,6 @@ public class BarkGuardian : EnemyBase
     public override void ReceiveDamage(DamageInfo dmg)
     {
         base.ReceiveDamage(dmg); // Let the parent do the math and HP reduction
-
-        // PDF Page 28: "Weakness: Fire"
-        if (dmg.element == DamageElement.Fire)
-        {
-            // Visual feedback specifically for burning wood
-            StartCoroutine(BurnFlashRoutine());
-        }
     }
 
     private IEnumerator BurnFlashRoutine()
