@@ -128,8 +128,18 @@ public class PlayerController : MonoBehaviour
 
         if (isFrozen) finalSpeed *= 0.6f;
 
-        // Note: Using linearVelocity (Unity 6+) based on your previous snippet. 
-        // If on older Unity, change to 'velocity'
+    // FLIP LOGIC
+    if (rawInputMovement.x > 0)
+    {
+        // Face Right
+        transform.localScale = new Vector3(-0.42f, 0.42f, 1);
+    }
+    else if (rawInputMovement.x < 0)
+    {
+        // Face Left
+        transform.localScale = new Vector3(0.42f, 0.42f, 1);
+    }
+    
         rb.linearVelocity = finalInput * finalSpeed;
     }
 
@@ -165,8 +175,6 @@ public class PlayerController : MonoBehaviour
         // --- THE FIX: CALCULATE COOLDOWN BASED ON WEAPON ---
         
         // Formula: Weapon Cooldown / Player Speed Stat
-        // Example: 1.0s cooldown / 1.0 speed = 1.0s wait
-        // Example: 1.0s cooldown / 2.0 speed = 0.5s wait (Faster)
         float actualCooldown = currentWeapon.cooldown / playerAttackSpeedMultiplier;
 
         if (Time.time >= lastAttackTime + actualCooldown)
@@ -177,8 +185,7 @@ public class PlayerController : MonoBehaviour
             if (aimDir == Vector2.zero) aimDir = Vector2.right; 
 
             currentWeapon.OnAttack(this, aimDir);
-            
-            // ERROR FIX: Change 'baseDamage' to 'damage'
+        
             OnDealtDamage(currentWeapon.damage);
         }
     }
