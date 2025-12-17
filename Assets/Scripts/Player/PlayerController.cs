@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxHearts = 3f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
-
     [Header("--- Progression ---")]
     public int currentLevel = 1;
     public float currentExp = 0f;
@@ -374,5 +373,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Level Up!");
         }
     }
+
+    
     #endregion
+    
 }

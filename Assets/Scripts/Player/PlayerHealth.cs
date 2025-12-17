@@ -1,8 +1,11 @@
 using System; // Required for Actions
 using UnityEngine;
+using System.Collections;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHealth : MonoBehaviour
 {
+    protected SpriteRenderer spriteRenderer;
     [Header("Health Stats")]
     // PDF Page 12: "1 Heart = 10 damage units". 
     // If you want 10 hearts, set this to 10.
@@ -19,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     {
         // Initialize HP
         currentHealth = maxHearts;
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
         // Notify the UI immediately so it draws the hearts
         OnMaxHealthChanged?.Invoke((int)maxHearts);
         OnHealthChanged?.Invoke(currentHealth);
@@ -28,17 +31,26 @@ public class PlayerHealth : MonoBehaviour
     // ----------------------------------------------------
     // IDamageable Implementation
     // ----------------------------------------------------
-    public void ReceiveDamage(DamageInfo dmg)
+
+        IEnumerator FlashSpriteRoutine()
+    {
+        Color original = Color.white; // Assuming sprite is white by default
+        spriteRenderer.color = Color.red; // Flash Red
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = original;
+    }
+    public void ReceiveDamage(float dmg)
     {
         // 1. Apply Damage
         // Note: You can add Defense/Armor logic here later
-        Debug.Log($"Player took {dmg.amount} {dmg.element} damage!");
-        currentHealth -= dmg.amount;
+        Debug.Log($"Player took {dmg} {dmg} damage!");
+        currentHealth -= dmg;
         
         // 2. Clamp values (Cannot go below 0 or above Max)
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
 
         // 3. Notify UI
+        StartCoroutine(FlashSpriteRoutine());
         OnHealthChanged?.Invoke(currentHealth);
         Debug.Log("Health Change Invoked");
 

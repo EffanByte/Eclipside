@@ -166,7 +166,7 @@ public abstract class EnemyBase : MonoBehaviour
         rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -183,7 +183,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     public virtual void PerformAttack(GameObject target)
     {
-        EnemyBase damageable = target.GetComponent<EnemyBase>();
+        PlayerHealth damageable = target.GetComponent<PlayerHealth>();
 
         if (damageable != null)
         {
@@ -195,7 +195,7 @@ public abstract class EnemyBase : MonoBehaviour
                 knockbackForce: stats.knockbackForce
             );
 
-            damageable.ReceiveDamage(info);
+            damageable.ReceiveDamage(2f);
             
         }
     }
