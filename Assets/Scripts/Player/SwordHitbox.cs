@@ -23,25 +23,10 @@ public class WeaponHitbox : MonoBehaviour
 
     public void Start()
     {
-                currentDamageInfo = new DamageInfo(
-            amount: 5f,
-            element: DamageElement.Physical,
-            style: AttackStyle.MeleeLight,
-            sourcePosition: playerController.transform.position,
-            knockbackForce: 1f,
-            isCritical: false
-        );
         hitList.Clear();
         myCollider.enabled = true; // Ensure it's on
 
         Physics2D.OverlapCollider(myCollider, filter, overlapResults);
-
-        foreach (var col in overlapResults)
-        {
-            // Manually process the hit
-            Debug.Log("Hit detected on initialization: " + col.name);
-            TryDealDamage(col);
-        }
     }
 
     public void DisableHitbox()
@@ -58,6 +43,14 @@ public class WeaponHitbox : MonoBehaviour
     // Extracted logic so we can call it from both OnTriggerEnter and Initialize
     private void TryDealDamage(Collider2D collision)
     {
+    currentDamageInfo = new DamageInfo(
+            amount: 5f,
+            element: DamageElement.Physical,
+            style: AttackStyle.MeleeLight,
+            sourcePosition: transform.parent.position,
+            knockbackForce: 1f,
+            isCritical: false
+        );
 
         EnemyBase target = collision.GetComponent<EnemyBase>();
 

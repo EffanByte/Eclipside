@@ -124,6 +124,10 @@ public abstract class EnemyBase : MonoBehaviour
                 LogicAttacking();
                 break;
         }
+        if (transform.position.y < -50f)
+        {
+            Die();
+        }
     }
 
     // ---------------------------------------------------------
@@ -232,16 +236,14 @@ protected virtual void MoveTowardsTarget(Vector2 direction)
 
         // 3. Visual Feedback
         StartCoroutine(FlashSpriteRoutine());
-        Debug.Log(dmg.knockbackForce);
-        Debug.Log(rb == null);
         // 4. Knockback Logic
         if (rb != null && dmg.knockbackForce > 0)
         {
             // Push enemy away from the source of damage
-            Vector2 knockbackDir = (transform.position - (Vector3)dmg.sourcePosition).normalized;
+            Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
             
             // Add impulsive force
-         rb.AddForce(knockbackDir * 3f, ForceMode2D.Impulse);
+            rb.AddForce(knockbackDir * 3f, ForceMode2D.Impulse);
          Debug.Log($"{name} Knocked back with force {dmg.knockbackForce}");
             
             // Optional: Briefly stun them so they don't immediately walk back while flying
