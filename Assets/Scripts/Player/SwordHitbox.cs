@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System;
 public class WeaponHitbox : MonoBehaviour
 {
     private DamageInfo currentDamageInfo;
@@ -45,7 +45,7 @@ public class WeaponHitbox : MonoBehaviour
     {
     currentDamageInfo = new DamageInfo(
             amount: 5f,
-            element: DamageElement.Physical,
+            element: GetRandomDamageElement(),
             style: AttackStyle.MeleeLight,
             sourcePosition: transform.parent.position,
             knockbackForce: 1f,
@@ -59,4 +59,10 @@ public class WeaponHitbox : MonoBehaviour
                 target.ReceiveDamage(currentDamageInfo);
         }
     }
+    private DamageElement GetRandomDamageElement()
+{
+    Array values = Enum.GetValues(typeof(DamageElement));
+    return (DamageElement)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+}
+
 }

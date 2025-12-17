@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     // --- Internal State ---
     private float currentHealth; 
+    private SpecialMeterFill specialMeterFill;
     private Rigidbody2D rb;
     private Vector2 rawInputMovement;
     private bool isDashing;
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
     // FIX: added Start to spawn the weapon visual
     private void Start()
     {
+        specialMeterFill = FindObjectOfType<SpecialMeterFill>();
         EquipWeapon(currentWeapon);
         currentWeapon.cooldown = 0.5f;
         currentWeapon.damage = 5f;
@@ -235,6 +237,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isSpecialReady)
         {
+            specialMeterFill.SetValue(currentSpecialCharge);
             currentSpecialCharge += damageAmount;
             if (currentSpecialCharge >= specialChargeMax)
             {
