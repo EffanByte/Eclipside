@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float maxHearts = 3f; // 1 Heart = 10 HP
-    [SerializeField] private float attackSpeed = 1f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
 
@@ -49,11 +48,31 @@ public class PlayerController : MonoBehaviour
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
 
+        [Header("--- Combat ---")]
+    public WeaponData currentWeapon; // Drag your Default Weapon here!
+    [SerializeField] private float playerAttackSpeedMultiplier = 1f; // From Stat Upgrades (Page 1)
+
+    // --- State Tracking ---
+    private float lastAttackTime = -999f; // Allow immediate attack on start
+    
+    // Public reference for the weapon scripts to use
+    [HideInInspector] public Animator anim; 
+
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inventory = GetComponent<InventoryManager>(); // Get the manager
         controls = new PlayerControls();
+
+        // ... (Existing Setup) ...
+        anim = GetComponent<Animator>();
+        
+        // If we have a weapon, apply its specific animations
+        if (currentWeapon != null && currentWeapon.animatorOverride != null)
+        {
+            anim.runtimeAnimatorController = currentWeapon.animatorOverride;
+        }
 
         // Store original speed so we can revert buffs later
         baseMovementSpeed = movementSpeed;
@@ -135,20 +154,33 @@ public class PlayerController : MonoBehaviour
 
     #region 2. Combat & Abilities
 
-    private void PerformBasicAttack()
+ private void PerformBasicAttack()
     {
-        Debug.Log("Basic Attack!");
-        OnDealtDamage(10f); 
-        StartCoroutine(AttackCooldown());
-    }
+        if (currentWeapon == null)
+        {
+            Debug.Log("No Weapon Equipped!");
+            return;
+        }
 
-    private IEnumerator AttackCooldown()
-    {
-        canAttack = false;
-        float speedMultiplier = isFrozen ? 0.6f : 1.0f;
-        float cooldown = 1f / (attackSpeed * speedMultiplier);
-        yield return new WaitForSeconds(cooldown);
-        canAttack = true;
+        // --- THE FIX: CALCULATE COOLDOWN BASED ON WEAPON ---
+        
+        // Formula: Weapon Cooldown / Player Speed Stat
+        // Example: 1.0s cooldown / 1.0 speed = 1.0s wait
+        // Example: 1.0s cooldown / 2.0 speed = 0.5s wait (Faster)
+        float actualCooldown = currentWeapon.cooldown / playerAttackSpeedMultiplier;
+
+        if (Time.time >= lastAttackTime + actualCooldown)
+        {
+            lastAttackTime = Time.time;
+
+            Vector2 aimDir = rawInputMovement;
+            if (aimDir == Vector2.zero) aimDir = Vector2.right; 
+
+            currentWeapon.OnAttack(this, aimDir);
+            
+            // ERROR FIX: Change 'baseDamage' to 'damage'
+            OnDealtDamage(currentWeapon.damage);
+        }
     }
 
     public void OnDealtDamage(float damageAmount)
@@ -272,7 +304,7 @@ public class PlayerController : MonoBehaviour
     public void UseItemFromUI(int slotNumber)
     {
         // Convert 1-based UI slot to 0-based array index
-        inventory.TriggerItemUse(slotNumber - 1);
+        inventory.TriggerItemUse(slotNumber);
     }
 
     // --- TRIGGERS ---
