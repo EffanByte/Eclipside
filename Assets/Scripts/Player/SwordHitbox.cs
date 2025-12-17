@@ -28,7 +28,7 @@ public class WeaponHitbox : MonoBehaviour
             element: DamageElement.Physical,
             style: AttackStyle.MeleeLight,
             sourcePosition: transform.position,
-            knockbackForce: 3f,
+            knockbackForce: 0f,
             isCritical: false
         );
         hitList.Clear();
@@ -63,14 +63,7 @@ public class WeaponHitbox : MonoBehaviour
 
         if (target != null)
         {
-            // 2. Duplicate check
-            if (!hitList.Contains(collision))
-            {
-                hitList.Add(collision);
-                
-                // 3. Deal Damage
                 target.ReceiveDamage(currentDamageInfo);
-            }
         }
     }
 }

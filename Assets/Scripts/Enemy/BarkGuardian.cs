@@ -60,10 +60,4 @@ public class BarkGuardian : EnemyBase
         base.ReceiveDamage(dmg); // Let the parent do the math and HP reduction
     }
 
-    private IEnumerator BurnFlashRoutine()
-    {
-        spriteRenderer.color = Color.red; // Flash Red
-        yield return new WaitForSeconds(0.2f);
-        spriteRenderer.color = Color.white; // Return to normal
-    }
 }
