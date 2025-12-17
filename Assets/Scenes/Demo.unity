@@ -53206,15 +53206,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 440846872}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: UseItemFromUI
-        m_Mode: 3
+      - m_Target: {fileID: 440846873}
+        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
+        m_MethodName: Heal
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
-          m_FloatArgument: 0
+          m_FloatArgument: 10
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -58225,6 +58225,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item1
       objectReference: {fileID: 0}
+    - target: {fileID: 838595132857331167, guid: b77c5afdb768669428ccef2d5ffe1b32, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2847565874077379260, guid: b77c5afdb768669428ccef2d5ffe1b32, type: 3}
       propertyPath: m_Name
       value: Basic
@@ -58426,15 +58430,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 440846872}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: UseItemFromUI
-        m_Mode: 3
+      - m_Target: {fileID: 440846873}
+        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
+        m_MethodName: Heal
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
-          m_FloatArgument: 0
+          m_FloatArgument: 5
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -58495,13 +58499,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 440846872}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: UseItemFromUI
-        m_Mode: 3
+        m_MethodName: Heal
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 5
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
