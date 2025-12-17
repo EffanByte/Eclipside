@@ -10,13 +10,13 @@ public class WeaponHitbox : MonoBehaviour
     // Cache the filter to avoid creating garbage memory every attack
     private ContactFilter2D filter;
     private List<Collider2D> overlapResults = new List<Collider2D>();
-
+    private PlayerController playerController;
     private void Awake()
     {
         myCollider = GetComponent<Collider2D>();
         myCollider.enabled = false; 
         myCollider.isTrigger = true;
-        
+        playerController = GetComponentInParent<PlayerController>();
         // Set up a filter that checks everything (or specific layers if you prefer)
         filter = new ContactFilter2D().NoFilter();
     }
@@ -27,8 +27,8 @@ public class WeaponHitbox : MonoBehaviour
             amount: 5f,
             element: DamageElement.Physical,
             style: AttackStyle.MeleeLight,
-            sourcePosition: transform.position,
-            knockbackForce: 0f,
+            sourcePosition: playerController.transform.position,
+            knockbackForce: 1f,
             isCritical: false
         );
         hitList.Clear();

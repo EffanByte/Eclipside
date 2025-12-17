@@ -1,10 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveSpawnManager : MonoBehaviour
 {
-    [Header("Enemy Prefab")]
-    [SerializeField] private EnemyBase enemyPrefab;
+    [Header("Enemy Prefabs")]
+    [SerializeField] private EnemyBase normalEnemyPrefab;
+    [SerializeField] private EnemyBase spiderEnemyPrefab;
 
     [Header("Spawn Bounds")]
     [SerializeField] private float minX = -2.25f;
@@ -16,6 +18,10 @@ public class WaveSpawnManager : MonoBehaviour
     [SerializeField] private int startEnemies = 1;
     [SerializeField] private int enemiesPerWaveIncrease = 1;
     [SerializeField] private float timeBetweenSpawns = 0.1f;
+
+    [Header("Spider Settings")]
+    [SerializeField] private int spiderStartWave = 3;
+    [SerializeField] private int spidersPerWave = 1;
 
     private readonly List<EnemyBase> aliveEnemies = new();
     private int currentWave = 0;
@@ -41,50 +47,58 @@ public class WaveSpawnManager : MonoBehaviour
         if (spawningWave) return;
 
         currentWave++;
-        int toSpawn = startEnemies + (currentWave - 1) * enemiesPerWaveIncrease;
-        StartCoroutine(SpawnWaveCoroutine(toSpawn));
+
+        int totalEnemies = startEnemies + (currentWave - 1) * enemiesPerWaveIncrease;
+        int spiderCount = currentWave >= spiderStartWave
+            ? Mathf.Min(spidersPerWave * (currentWave - spiderStartWave + 1), totalEnemies)
+            : 0;
+
+        int normalCount = totalEnemies - spiderCount;
+
+        StartCoroutine(SpawnWaveCoroutine(normalCount, spiderCount));
     }
 
-    private System.Collections.IEnumerator SpawnWaveCoroutine(int count)
+    private IEnumerator SpawnWaveCoroutine(int normalCount, int spiderCount)
     {
         spawningWave = true;
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < normalCount; i++)
         {
-            SpawnOne();
+            SpawnOne(normalEnemyPrefab);
+            yield return new WaitForSeconds(timeBetweenSpawns);
+        }
+
+        for (int i = 0; i < spiderCount; i++)
+        {
+            SpawnOne(spiderEnemyPrefab);
             yield return new WaitForSeconds(timeBetweenSpawns);
         }
 
         spawningWave = false;
     }
 
-    private void SpawnOne()
+    private void SpawnOne(EnemyBase prefab)
     {
         Vector2 pos = new Vector2(
             Random.Range(minX, maxX),
             Random.Range(minY, maxY)
         );
 
-        EnemyBase enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+        EnemyBase enemy = Instantiate(prefab, pos, Quaternion.identity);
         aliveEnemies.Add(enemy);
     }
 
     private void HandleEnemyKilled(EnemyBase enemy)
     {
-        // Remove dead one
         aliveEnemies.Remove(enemy);
-
-        // Clean up any nulls (in case something got destroyed without calling Kill)
         aliveEnemies.RemoveAll(e => e == null);
 
-        // If all are dead, start next wave
         if (!spawningWave && aliveEnemies.Count == 0)
         {
             StartNextWave();
         }
     }
 
-    // Optional: visualize spawn area in Scene view
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

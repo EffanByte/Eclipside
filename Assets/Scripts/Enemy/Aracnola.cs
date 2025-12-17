@@ -40,18 +40,19 @@ protected override void LogicChasing()
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         
         // Assumption: Sprite faces RIGHT. If sprite faces UP, use (angle - 90)
-        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        transform.rotation = Quaternion.AngleAxis(angle + 90 , Vector3.forward);
+                // 3. Special Ability: Shoot Web
+        float distToPlayer = Vector2.Distance(transform.position, playerTarget.position);
+        
+        if (distToPlayer <= webShootRange && Time.time > lastWebTime + webCooldown)
+        {
+            StartCoroutine(ShootWebRoutine());
+        }
+            
 }
 
 
-    private void HandleSpriteFlip()
-    {
-        // Standard flip based on X position relative to player
-        if (playerTarget.position.x > transform.position.x)
-            spriteRenderer.flipX = false; // Face Right
-        else
-            spriteRenderer.flipX = true;  // Face Left
-    }
+
 
     // ----------------------------------------------------------------------
     // ABILITIES

@@ -1,6 +1,7 @@
 using System; // Required for Actions
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHealth : MonoBehaviour
@@ -73,5 +74,6 @@ public class PlayerHealth : MonoBehaviour
         OnPlayerDeath?.Invoke();
         // Disable controls, show Game Over screen, etc.
         gameObject.SetActive(false); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

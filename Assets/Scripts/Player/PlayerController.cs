@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem; 
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InventoryManager))] 
@@ -56,6 +57,7 @@ public class PlayerController : MonoBehaviour
     private float lastAttackTime = -999f; 
     
     [HideInInspector] public Animator anim; 
+    [HideInInspector] public bool speedModified = false;
 
     private void Awake()
     {
@@ -102,8 +104,13 @@ public class PlayerController : MonoBehaviour
         {
             PerformBasicAttack();
         }
+        if (speedModified)
+        {
+            StartCoroutine(ReturnSpeed());
+        }
     }
 
+    
     private void FixedUpdate()
     {
         if (isDead) return;
@@ -173,7 +180,7 @@ public class PlayerController : MonoBehaviour
         // Adjusted return values to match your specific Flip Logic.
     }
 
-    private void AttemptDash()
+    public void AttemptDash()
     {
         if (!isDashing && !isDead && !isFrozen)
         {
@@ -181,6 +188,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator ReturnSpeed()
+    {
+        yield return new WaitForSeconds(1.5f);
+        movementSpeed = baseMovementSpeed;
+        speedModified = false;
+    }
     private IEnumerator DashRoutine()
     {
         isDashing = true;
@@ -255,17 +268,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 3. Health & Status Effects
-    
-    public void TakeDamage(float damage)
-    {
-        if (isDead || isDashing) return; 
 
-        currentHealth -= damage;
-        Debug.Log($"Took {damage} damage. HP: {currentHealth}");
-
-        if (currentHealth <= 0) Die();
-        onUIUpdate?.Invoke();
-    }
 
     public void Heal(float hearts)
     {
@@ -273,46 +276,7 @@ public class PlayerController : MonoBehaviour
         if (currentHealth > maxHearts * 10f) currentHealth = maxHearts * 10f;
         onUIUpdate?.Invoke();
     }
-
-    private void Die()
-    {
-        isDead = true;
-        rb.linearVelocity = Vector2.zero;
-        controls.Disable(); 
-        Debug.Log("Player Died");
-    }
-
-    public void ApplyStatusEffect(string effectName)
-    {
-        StartCoroutine(HandleStatusEffect(effectName));
-    }
-
-    private IEnumerator HandleStatusEffect(string effectName)
-    {
-        switch (effectName)
-        {
-            case "Burn":
-                for (int i = 0; i < 9; i++) { TakeDamage(2f); yield return new WaitForSeconds(0.33f); }
-                break;
-            case "Poison":
-                for (int i = 0; i < 7; i++) { TakeDamage(1f); yield return new WaitForSeconds(1f); }
-                break;
-            case "Freeze":
-                isFrozen = true;
-                float storedSpeed = movementSpeed;
-                movementSpeed = 0f; 
-                yield return new WaitForSeconds(2.0f); 
-                movementSpeed = storedSpeed; 
-                yield return new WaitForSeconds(0.5f); 
-                isFrozen = false;
-                break;
-            case "Confusion":
-                isConfused = true;
-                yield return new WaitForSeconds(4f);
-                isConfused = false;
-                break;
-        }
-    }
+   
     #endregion
 
     #region 4. Interactions & NEW API
@@ -320,7 +284,7 @@ public class PlayerController : MonoBehaviour
     public void ModifySpeed(float percentageAmount)
     {
         movementSpeed += (baseMovementSpeed * percentageAmount);
-        Debug.Log($"Speed modified. Current: {movementSpeed}");
+        speedModified = true;
     }
 
     public void ToggleLuck(bool state)

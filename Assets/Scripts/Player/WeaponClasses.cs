@@ -16,7 +16,7 @@ public class LightMeleeWeapon : WeaponData
             DamageElement.Physical,
             AttackStyle.MeleeLight,
             player.transform.position,
-            knockbackForce: knockbackForce,
+            knockbackForce: 1f,
             isCritical: false
         );
 

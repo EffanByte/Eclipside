@@ -6,7 +6,6 @@ public class SpiderWeb : MonoBehaviour
 {
     private float speed = 7f;
     private float slowAmount = -0.4f; // -40% Speed
-    private float slowDuration = 2.0f; // Lasts 2 seconds
     private Rigidbody2D rb;
 
     public void Setup(Vector2 direction)
@@ -40,18 +39,10 @@ public class SpiderWeb : MonoBehaviour
                 // ideally PlayerController should handle the duration.
                 // For now, we assume PlayerController just changes speed permanently
                 // unless we run a coroutine here to revert it, but projectiles die on impact.
-                
-                // BETTER APPROACH: Add a Status Effect to player
-                player.ApplyStatusEffect("Freeze"); // Re-using Freeze logic as it slows & stops
-                // OR specific web logic if you add "Slow" to PlayerController later.
-                
+ 
                 Debug.Log("Player hit by Web! Slowed down.");
             }
 
-            Destroy(gameObject);
-        }
-        else if (collision.CompareTag("Wall")) 
-        {
             Destroy(gameObject);
         }
     }
