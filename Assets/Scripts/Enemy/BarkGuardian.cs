@@ -12,6 +12,7 @@ public class BarkGuardian : EnemyBase
 
     protected override void Start()
     {
+        movementType = MovementType.Flip;
         // PDF Page 28: "Camouflaged"
         // Start visually dormant
         if (spriteRenderer != null) spriteRenderer.color = dormantColor;

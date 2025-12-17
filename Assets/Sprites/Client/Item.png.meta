@@ -4776,72 +4776,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_155
-      rect:
-        serializedVersion: 2
-        x: 364
-        y: 1017
-        width: 66
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 845c575bb1bfcf260800000000000000
-      internalID: 7132852006275106120
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_156
-      rect:
-        serializedVersion: 2
-        x: 364
-        y: 996
-        width: 98
-        height: 26
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 54d8384a9b0747e70800000000000000
-      internalID: 9112031888708701509
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_157
-      rect:
-        serializedVersion: 2
-        x: 364
-        y: 994
-        width: 66
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a4ce6664df821a1d0800000000000000
-      internalID: -3341344380259210166
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: The Roguelike Remastered 1-6-10 Alpha_158
       rect:
         serializedVersion: 2
@@ -12365,6 +12299,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Blue Web
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 995
+        width: 34
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5aa14e19fa10c04280ab4b88978770b
+      internalID: 1698198584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WebShot
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 995
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8af17d416bc3c094f913e4176b9442a3
+      internalID: -1086452397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -12379,6 +12357,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Blue Web: 1698198584
       Item: -9191427274821700472
       The Roguelike Remastered 1-6-10 Alpha_1: -6951518270194642895
       The Roguelike Remastered 1-6-10 Alpha_10: -6873789366587834118
@@ -12879,6 +12858,8 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_97: -3680459472759999969
       The Roguelike Remastered 1-6-10 Alpha_98: -8212567455220813035
       The Roguelike Remastered 1-6-10 Alpha_99: -328499133345843389
+      WebShot: -1086452397
+      b: 1698198584
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

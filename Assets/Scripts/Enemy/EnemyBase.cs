@@ -20,7 +20,10 @@ public enum AttackStyle
 {
     MeleeLight, MeleeHeavy, Ranged, Environment
 }
-
+public enum MovementType
+{
+    Flip, Rotate
+}
 [System.Serializable]
 public struct DamageInfo
 {
@@ -82,6 +85,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected Rigidbody2D rb;
     protected SpriteRenderer spriteRenderer;
     protected Animator anim; 
+    protected MovementType movementType;
 
     // Status Modifiers
     protected float speedMultiplier = 1.0f; 
@@ -134,18 +138,36 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    protected virtual void LogicChasing()
+protected virtual void LogicChasing()
+{
+    if (playerTarget == null) return;
+
+    // Calculate direction ONCE
+    Vector2 direction = (playerTarget.position - transform.position).normalized;
+
+    // Pass direction to movement
+    MoveTowardsTarget(direction);
+
+    // Handle Rotation / Flipping
+    if (movementType == MovementType.Flip)
     {
-        if (playerTarget == null) return;
-
-        MoveTowardsTarget();
-
-        // Flip Sprite based on player position
-        if (playerTarget.position.x > transform.position.x)
-            spriteRenderer.flipX = false; 
-        else
-            spriteRenderer.flipX = true;  
+        // Flip based on X direction
+        spriteRenderer.flipX = direction.x < 0; 
     }
+    else if (movementType == MovementType.Rotate)
+    {
+        // Rotate to face player
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        
+        // Assumption: Sprite faces RIGHT. If sprite faces UP, use (angle - 90)
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+}
+protected virtual void MoveTowardsTarget(Vector2 direction)
+{
+    if (currentState != EnemyState.Chasing) return;
+    rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
+}
 
     protected virtual void LogicAttacking()
     {
@@ -155,16 +177,6 @@ public abstract class EnemyBase : MonoBehaviour
     // ---------------------------------------------------------
     // CORE MECHANICS
     // ---------------------------------------------------------
-
-    protected virtual void MoveTowardsTarget()
-    {
-        if (currentState != EnemyState.Chasing || playerTarget == null) return;
-
-        Vector2 direction = (playerTarget.position - transform.position).normalized;
-        
-        // Using linearVelocity for Unity 6+
-        rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
-    }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
