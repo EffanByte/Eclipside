@@ -7,28 +7,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Light Melee", menuName = "Eclipside/Weapons/1. Light Melee")]
 public class LightMeleeWeapon : WeaponData
 {
-    public float attackRange = 1.2f; // Short range
+    // We don't need attackRange here anymore for damage, 
+    // but it might be useful for AI or Gizmos later.
+    public float attackRange = 1.2f; 
 
     public override void OnAttack(PlayerController player, Vector2 aimDirection)
     {
-        // Light weapons trigger the "Attack" animation quickly
-        if (player.anim != null) player.anim.SetTrigger("Attack");
-
-        // Logic: Fast, simple hitbox check
-        // (In the future, this can be replaced by Animation Events for precise timing)
-        Collider2D[] hits = Physics2D.OverlapCircleAll(player.transform.position, attackRange);
-        foreach (var hit in hits)
+        // 1. Trigger the Animation
+        // The Animation clip itself is responsible for Enabling/Disabling 
+        // the "Sword Hitbox" GameObject at the right frames.
+        if (player.anim != null) 
         {
-            if (hit.CompareTag("Enemy"))
-            {
-                // Apply Damage & Knockback
-                // hit.GetComponent<EnemyHealth>()?.TakeDamage(damage, knockbackForce);
-                Debug.Log($"[Light Melee] Hit {hit.name} for {damage} dmg");
-            }
+            player.anim.SetTrigger("Attack");
         }
+
+        // 2. DO NOT calculate damage here.
+        // We rely entirely on the 'SwordHitbox.cs' script attached to the
+        // sword sprite to detect collisions during the swing.
     }
 }
-
 // =========================================================
 // 2. HEAVY MELEE (Iron Hammer)
 // Slow speed, High damage, High knockback
