@@ -3,12 +3,12 @@ using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(InventoryManager))] // Ensures the Inventory script is attached
+[RequireComponent(typeof(InventoryManager))] 
 public class PlayerController : MonoBehaviour
 {
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
-    [SerializeField] private float maxHearts = 3f; // 1 Heart = 10 HP
+    [SerializeField] private float maxHearts = 3f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
 
@@ -19,7 +19,12 @@ public class PlayerController : MonoBehaviour
     public int rupees = 0;
     public int keys = 0;
 
-    [Header("--- Special Ability (Page 1) ---")]
+    [Header("--- Combat Setup ---")]
+    public WeaponData currentWeapon; // The data file (Stats)
+    public Transform weaponHolder;   // The empty child object where sword spawns
+    private WeaponHitbox currentHitboxInstance; // The script on the actual spawned sword
+
+    [Header("--- Special Ability ---")]
     public float specialChargeMax = 100f;
     private float currentSpecialCharge = 0f;
     private bool isSpecialReady = false;
@@ -33,51 +38,37 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private bool isAttackPressed = false; 
 
-    // --- Buff State (New) ---
-    private float baseMovementSpeed; // To remember speed before buffs
-    public bool hasLuck = false; // Accessible by Loot system
+    // --- Buff State ---
+    private float baseMovementSpeed; 
+    public bool hasLuck = false; 
 
-    // --- Status Effects Flags (Page 6) ---
+    // --- Status Effects ---
     private bool isFrozen = false;
     private bool isConfused = false; 
 
     // --- References ---
     private PlayerControls controls; 
-    private InventoryManager inventory; // Reference to the new system
+    private InventoryManager inventory; 
 
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
 
-        [Header("--- Combat ---")]
-    public WeaponData currentWeapon; // Drag your Default Weapon here!
-    [SerializeField] private float playerAttackSpeedMultiplier = 1f; // From Stat Upgrades (Page 1)
-
-    // --- State Tracking ---
-    private float lastAttackTime = -999f; // Allow immediate attack on start
+    [SerializeField] private float playerAttackSpeedMultiplier = 1f; 
+    private float lastAttackTime = -999f; 
     
-    // Public reference for the weapon scripts to use
     [HideInInspector] public Animator anim; 
-
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        inventory = GetComponent<InventoryManager>(); // Get the manager
+        inventory = GetComponent<InventoryManager>();
         controls = new PlayerControls();
-
-        // ... (Existing Setup) ...
         anim = GetComponent<Animator>();
-        
-        // If we have a weapon, apply its specific animations
-        if (currentWeapon != null && currentWeapon.animatorOverride != null)
-        {
-            anim.runtimeAnimatorController = currentWeapon.animatorOverride;
-        }
 
-        // Store original speed so we can revert buffs later
         baseMovementSpeed = movementSpeed;
+        currentHealth = maxHearts * 10f;
 
-        // --- EXISTING MOVEMENT/COMBAT ---
+        // Input Bindings
         controls.Player.Move.performed += ctx => rawInputMovement = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => rawInputMovement = Vector2.zero;
         controls.Player.Fire.started += ctx => isAttackPressed = true;
@@ -85,14 +76,16 @@ public class PlayerController : MonoBehaviour
         controls.Player.Dash.performed += ctx => AttemptDash();
         controls.Player.Special.performed += ctx => AttemptSpecial();
 
-        // --- UPDATED: ITEM INPUTS ---
-        // Instead of handling logic here, we tell the InventoryManager to do it.
-        // Array index 0 is Slot 1.
+        // Items (0, 1, 2 are the array indexes)
         controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
         controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1);
         controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2);
-        
-        currentHealth = maxHearts * 10f;
+    }
+
+    // FIX: added Start to spawn the weapon visual
+    private void Start()
+    {
+        EquipWeapon(currentWeapon);
     }
 
     private void OnEnable() => controls.Enable();
@@ -114,6 +107,33 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
+    // FIX: New Method to handle spawning the weapon prefab
+    public void EquipWeapon(WeaponData newWeapon)
+    {
+        currentWeapon = newWeapon;
+
+        // 1. Clear old weapon
+        if (weaponHolder.childCount > 0)
+        {
+            foreach (Transform child in weaponHolder) Destroy(child.gameObject);
+        }
+
+        // 2. Spawn new weapon
+        if (currentWeapon != null && currentWeapon.weaponPrefab != null)
+        {
+            GameObject spawnedWeapon = Instantiate(currentWeapon.weaponPrefab, weaponHolder);
+            
+            // 3. Get the hitbox script so we can turn it on/off later
+            currentHitboxInstance = spawnedWeapon.GetComponent<WeaponHitbox>();
+            
+            // 4. Update Animator if needed
+            if (currentWeapon.animatorOverride != null)
+            {
+                anim.runtimeAnimatorController = currentWeapon.animatorOverride;
+            }
+        }
+    }
+
     #region 1. Movement & Controls
     
     private void Move()
@@ -121,26 +141,33 @@ public class PlayerController : MonoBehaviour
         if (isDashing) return;
 
         Vector2 finalInput = rawInputMovement;
-
         if (isConfused) finalInput *= -1; 
-
         float finalSpeed = movementSpeed;
-
         if (isFrozen) finalSpeed *= 0.6f;
 
-    // FLIP LOGIC
-    if (rawInputMovement.x > 0)
-    {
-        // Face Right
-        transform.localScale = new Vector3(-0.42f, 0.42f, 1);
-    }
-    else if (rawInputMovement.x < 0)
-    {
-        // Face Left
-        transform.localScale = new Vector3(0.42f, 0.42f, 1);
-    }
+        // FLIP LOGIC (Using your specific scale values)
+        if (rawInputMovement.x > 0)
+        {
+            // Face Right
+            transform.localScale = new Vector3(-0.42f, 0.42f, 1);
+        }
+        else if (rawInputMovement.x < 0)
+        {
+            // Face Left
+            transform.localScale = new Vector3(0.42f, 0.42f, 1);
+        }
     
         rb.linearVelocity = finalInput * finalSpeed;
+    }
+
+    // FIX: Added helper for Magic Weapons to know where to aim
+    public Vector2 GetLastMovementDirection()
+    {
+        if (rawInputMovement != Vector2.zero) return rawInputMovement;
+        // Check localScale to see if we are facing left or right
+        return transform.localScale.x < 0 ? Vector2.right : Vector2.left; 
+        // Note: Based on your Flip Logic above: -0.42 is Right, +0.42 is Left.
+        // Adjusted return values to match your specific Flip Logic.
     }
 
     private void AttemptDash()
@@ -164,7 +191,7 @@ public class PlayerController : MonoBehaviour
 
     #region 2. Combat & Abilities
 
- private void PerformBasicAttack()
+    private void PerformBasicAttack()
     {
         if (currentWeapon == null)
         {
@@ -172,20 +199,18 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // --- THE FIX: CALCULATE COOLDOWN BASED ON WEAPON ---
-        
-        // Formula: Weapon Cooldown / Player Speed Stat
+        // Calculate Cooldown
         float actualCooldown = currentWeapon.cooldown / playerAttackSpeedMultiplier;
 
         if (Time.time >= lastAttackTime + actualCooldown)
         {
             lastAttackTime = Time.time;
 
-            Vector2 aimDir = rawInputMovement;
-            if (aimDir == Vector2.zero) aimDir = Vector2.right; 
-
-            currentWeapon.OnAttack(this, aimDir);
+            // FIX: Use StartCoroutine because OnAttack is now an IEnumerator (Timeline)
+            // We pass the hitbox instance we grabbed in EquipWeapon
+            StartCoroutine(currentWeapon.OnAttack(this, currentHitboxInstance));
         
+            // Progression
             OnDealtDamage(currentWeapon.damage);
         }
     }
@@ -288,33 +313,24 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 4. Interactions & NEW API
-    
-    // --- NEW METHODS FOR ITEMS TO CALL ---
 
-    // Called by Quick Berry
     public void ModifySpeed(float percentageAmount)
     {
-        // Add percentage of base speed to current speed
         movementSpeed += (baseMovementSpeed * percentageAmount);
         Debug.Log($"Speed modified. Current: {movementSpeed}");
     }
 
-    // Called by Rabbit's Foot
     public void ToggleLuck(bool state)
     {
         hasLuck = state;
         Debug.Log($"Luck set to: {state}");
     }
 
-    // Helper for Touch UI Buttons
-    // Link your UI Button OnClick() to this function
     public void UseItemFromUI(int slotNumber)
     {
-        // Convert 1-based UI slot to 0-based array index
-        inventory.TriggerItemUse(slotNumber);
+        // FIX: Subtract 1 because Array is 0-2, but UI usually sends 1-3
+        inventory.TriggerItemUse(slotNumber - 1);
     }
-
-    // --- TRIGGERS ---
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -325,12 +341,11 @@ public class PlayerController : MonoBehaviour
                 keys--;
                 Debug.Log("Chest Opened.");
                 Destroy(collision.gameObject);
+                // Trigger your Loot Drop logic here later
             }
             else Debug.Log("Need keys!");
         }
         
-        // Note: Potions are now picked up by Inventory logic or used instantly.
-        // If you want instant use on pickup, keep this:
         if (collision.CompareTag("Potion"))
         {
             Heal(0.5f); 

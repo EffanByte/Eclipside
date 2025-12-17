@@ -1,85 +1,128 @@
 using UnityEngine;
+using System.Collections; // Required for IEnumerator
 
 // =========================================================
 // 1. LIGHT MELEE (Rusty Dagger)
-// High speed, Low damage, Mid knockback
+// Uses the Hitbox logic: Turn On -> Wait -> Turn Off
 // =========================================================
 [CreateAssetMenu(fileName = "New Light Melee", menuName = "Eclipside/Weapons/1. Light Melee")]
 public class LightMeleeWeapon : WeaponData
 {
-    // We don't need attackRange here anymore for damage, 
-    // but it might be useful for AI or Gizmos later.
-    public float attackRange = 1.2f; 
-
-    public override void OnAttack(PlayerController player, Vector2 aimDirection)
+    public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
-        // 1. Trigger the Animation
-        // The Animation clip itself is responsible for Enabling/Disabling 
-        // the "Sword Hitbox" GameObject at the right frames.
-        if (player.anim != null) 
+        // 1. Create the Damage Packet
+        DamageInfo info = new DamageInfo(
+            damage,
+            element,
+            style,
+            player.transform.position,
+            knockbackForce
+        );
+
+        // 2. Play Animation
+        if (player.anim != null) player.anim.SetTrigger("Attack");
+
+        // 3. ENABLE COLLIDER
+        if (activeHitbox != null)
         {
-            player.anim.SetTrigger("Attack");
+            activeHitbox.Initialize(info);
         }
 
-        // 2. DO NOT calculate damage here.
-        // We rely entirely on the 'SwordHitbox.cs' script attached to the
-        // sword sprite to detect collisions during the swing.
+        // 4. Wait for the swing duration (defined in WeaponData)
+        yield return new WaitForSeconds(hitDuration);
+
+        // 5. DISABLE COLLIDER
+        if (activeHitbox != null)
+        {
+            activeHitbox.DisableHitbox();
+        }
     }
 }
+
 // =========================================================
 // 2. HEAVY MELEE (Iron Hammer)
-// Slow speed, High damage, High knockback
+// Identical logic to Light Melee, but relying on the Inspector 
+// stats (higher damage, longer hitDuration) to feel "Heavy".
 // =========================================================
 [CreateAssetMenu(fileName = "New Heavy Melee", menuName = "Eclipside/Weapons/2. Heavy Melee")]
 public class HeavyMeleeWeapon : WeaponData
 {
-    public float attackRange = 2.0f; // Larger range
-    public float screenShakeAmount = 0.2f; // Heavy weapons feel heavy!
+    public float screenShakeAmount = 0.2f; // Optional extra for heavy hits
 
-    public override void OnAttack(PlayerController player, Vector2 aimDirection)
+    public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
-        // Heavy weapons trigger "Attack" but the animation clip should be slower
-        if (player.anim != null) player.anim.SetTrigger("Attack");
+        // 1. Create Damage Packet
+        DamageInfo info = new DamageInfo(
+            damage,
+            element,
+            style,
+            player.transform.position,
+            knockbackForce
+        );
 
-        // Logic: Larger area, stronger hit
-        Collider2D[] hits = Physics2D.OverlapCircleAll(player.transform.position, attackRange);
-        foreach (var hit in hits)
+        // 2. Play Animation
+        if (player.anim != null) player.anim.SetTrigger("Attack");
+        
+        // (Optional: Trigger Screen Shake here if you have a Camera script)
+        // CameraShake.Instance.Shake(screenShakeAmount);
+
+        // 3. ENABLE COLLIDER
+        if (activeHitbox != null)
         {
-            if (hit.CompareTag("Enemy"))
-            {
-                // Apply Massive Damage
-                Debug.Log($"[Heavy Melee] CRUSHED {hit.name} for {damage} dmg with {knockbackForce} knockback!");
-            }
+            activeHitbox.Initialize(info);
+        }
+
+        // 4. Wait (This will likely be a longer duration than Light Melee)
+        yield return new WaitForSeconds(hitDuration);
+
+        // 5. DISABLE COLLIDER
+        if (activeHitbox != null)
+        {
+            activeHitbox.DisableHitbox();
         }
     }
 }
 
 // =========================================================
 // 3. MAGIC RANGED (Apprentice's Staff)
-// Projectile-based, Mid damage, Slightly homing
+// Spawns a projectile. Ignores the 'activeHitbox' on the player.
 // =========================================================
 [CreateAssetMenu(fileName = "New Magic Ranged", menuName = "Eclipside/Weapons/3. Magic Ranged")]
 public class MagicRangedWeapon : WeaponData
 {
+    [Header("Projectile Settings")]
     public GameObject projectilePrefab; // The "Magic Orb" prefab
     public float projectileSpeed = 8f;
 
-    public override void OnAttack(PlayerController player, Vector2 aimDirection)
+    public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
+        // 1. Play Animation
         if (player.anim != null) player.anim.SetTrigger("Shoot");
 
-        // Calculate rotation based on aim direction
+        // 2. Determine Direction
+        // (If player is standing still, default to Right, otherwise use input)
+        Vector2 aimDirection = player.GetLastMovementDirection(); 
+        if (aimDirection == Vector2.zero) aimDirection = Vector2.right;
+
+        // 3. Calculate Rotation
         float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        // Spawn Projectile
-        GameObject proj = Instantiate(projectilePrefab, player.transform.position, rotation);
-        
-        // Setup Projectile Logic
-        MagicProjectile script = proj.GetComponent<MagicProjectile>();
-        if (script != null)
+        // 4. Spawn Projectile
+        if (projectilePrefab != null)
         {
-            script.Setup(aimDirection, projectileSpeed, damage, knockbackForce);
+            GameObject proj = Instantiate(projectilePrefab, player.transform.position, rotation);
+            
+            // 5. Setup Projectile Logic
+            MagicProjectile script = proj.GetComponent<MagicProjectile>();
+            if (script != null)
+            {
+                script.Setup(aimDirection, projectileSpeed, damage, knockbackForce);
+            }
         }
+
+        // Coroutines must yield something. 
+        // We yield 'break' to finish immediately as projectiles don't need to wait.
+        yield break; 
     }
 }
