@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     [Header("--- Combat Setup ---")]
     public WeaponData currentWeapon; // The data file (Stats)
     public Transform weaponHolder;   // The empty child object where sword spawns
-    private WeaponHitbox currentHitboxInstance; // The script on the actual spawned sword
+    private WeaponHitbox currentWeaponHitBox; // The hitbox script on the spawned weapon
 
     [Header("--- Special Ability ---")]
     public float specialChargeMax = 100f;
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
 
-    [SerializeField] private float playerAttackSpeedMultiplier = 1f; 
+    public float playerAttackSpeedMultiplier = 1f; 
     private float lastAttackTime = -999f; 
     
     [HideInInspector] public Animator anim; 
@@ -89,10 +89,6 @@ public class PlayerController : MonoBehaviour
     {
         specialMeterFill = FindObjectOfType<SpecialMeterFill>();
         EquipWeapon(currentWeapon);
-        currentWeapon.cooldown = 0.5f;
-        currentWeapon.damage = 5f;
-        currentWeapon.element = DamageElement.Physical;
-        currentWeapon.style = AttackStyle.MeleeLight;
     }
 
     private void OnEnable() => controls.Enable();
@@ -136,7 +132,7 @@ public class PlayerController : MonoBehaviour
             GameObject spawnedWeapon = Instantiate(currentWeapon.weaponPrefab, weaponHolder);
             
             // 3. Get the hitbox script so we can turn it on/off later
-            currentHitboxInstance = spawnedWeapon.GetComponent<WeaponHitbox>();
+            currentWeaponHitBox = spawnedWeapon.GetComponent<WeaponHitbox>();
             
             // 4. Update Animator if needed
             if (currentWeapon.animatorOverride != null)
@@ -211,27 +207,28 @@ public class PlayerController : MonoBehaviour
 
     private void PerformBasicAttack()
     {
-        if (currentWeapon == null)
-        {
-            Debug.Log("No Weapon Equipped!");
-            return;
-        }
-
         // Calculate Cooldown
         float actualCooldown = currentWeapon.cooldown / playerAttackSpeedMultiplier;
 
         if (Time.time >= lastAttackTime + actualCooldown)
         {
+            if (currentWeapon == null)
+            {
+                Debug.Log("No Weapon Equipped!");
+                return;
+            }
             lastAttackTime = Time.time;
 
             // FIX: Use StartCoroutine because OnAttack is now an IEnumerator (Timeline)
             // We pass the hitbox instance we grabbed in EquipWeapon
-            StartCoroutine(currentWeapon.OnAttack(this, currentHitboxInstance));
+            StartCoroutine(currentWeapon.OnAttack(this, currentWeaponHitBox));
         
-            // Progression
+            // Special Meter Fill 
             OnDealtDamage(currentWeapon.damage);
         }
     }
+
+    // Need to change this later to not depend directly on damage amount
 
     public void OnDealtDamage(float damageAmount)
     {
