@@ -62233,11 +62233,20 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 113.53
       objectReference: {fileID: 0}
+    - target: {fileID: 8714877307523467274, guid: 1189a3be64dc03e49a3f873019370839, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714877307523467274, guid: 1189a3be64dc03e49a3f873019370839, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8875000421080456107, guid: 1189a3be64dc03e49a3f873019370839, type: 3}
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8714877307523467274, guid: 1189a3be64dc03e49a3f873019370839, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
