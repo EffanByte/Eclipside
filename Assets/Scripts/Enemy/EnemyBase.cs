@@ -226,7 +226,6 @@ private bool freezeConfusionThawBonus = false;    // used by Freeze+Confusion
 
     float selfDmg = stats.maxHealth * selfAttackMaxHpPercent;
     currentHealth -= selfDmg;
-    textbox.text = $"{name} hurt itself due to confusion: -{selfDmg} (HP: {currentHealth})";
 
             if (damageable != null)
             {
@@ -263,7 +262,6 @@ public virtual void ReceiveDamage(DamageInfo dmg)
     float finalDamage = dmg.amount * damageTakenMultiplier;
     currentHealth -= finalDamage;
 
-    textbox.text = $"{name} took {finalDamage} {dmg.element} damage! (HP: {currentHealth})";
 
     StartCoroutine(FlashSpriteRoutine());
 
@@ -288,14 +286,14 @@ public virtual void ReceiveDamage(DamageInfo dmg)
         StartDot(StatusType.Burn, dps: 0.2f, duration: 3f);
         ClearStatus(StatusType.Poison);
 
-        LogCombat("🔥☠ Burn + Poison → Explosion + DoT (0.2/sec for 3s)");
+        //LogCombat("Burn + Poison = Explosion + DoT (0.2/sec for 3s)");
     }
     else if (incomingPoison && HasStatus(StatusType.Burn))
     {
         TriggerExplosion(transform.position);
         StartDot(StatusType.Poison, dps: 0.2f, duration: 3f);
         ClearStatus(StatusType.Burn);
-        LogCombat("☠🔥 Poison + Burn → Explosion + DoT (0.2/sec for 3s)");
+        // LogCombat(" Poison + Burn = Explosion + DoT (0.2/sec for 3s)");
     }
 
     // Burn + Freeze: instant damage + Fragile (+20% damage taken for 3s).
@@ -305,7 +303,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
         ApplyFragile(3f);
         ClearStatus(StatusType.Burn);
         ClearStatus(StatusType.Freeze);
-        LogCombat("🔥❄ Burn + Freeze → Instant damage + Fragile (+20% for 3s)");
+        LogCombat(" Burn + Freeze = Instant damage + Fragile (+20% for 3s)");
     }
 
     // Burn + Confusion: extra DoT (0.3 hearts/sec for 3s) + self-attacks deal 5% max HP.
@@ -315,7 +313,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
         ApplyConfusion(3f);
         selfAttackMaxHpPercent = 0.05f; // 5% max HP self-damage on attacks (see PerformAttack hook below)
         ClearStatus(StatusType.Burn);
-        LogCombat("🔥🧠 Burn + Confusion → DoT (0.3/sec) + Self-damage (5% max HP)");
+        LogCombat(" Burn + Confusion = DoT (0.3/sec) + Self-damage (5% max HP)");
     }
 
     // Poison + Freeze: strong damage (0.2 hearts/sec for 5s).
@@ -324,7 +322,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
         StartDot(StatusType.Poison, dps: 0.2f, duration: 5f);
         ClearStatus(StatusType.Poison);
         ClearStatus(StatusType.Freeze);
-        LogCombat("☠❄ Poison + Freeze → Strong DoT (0.2/sec for 5s)");
+        LogCombat(" Poison + Freeze = Strong DoT (0.2/sec for 5s)");
 
     }
 
@@ -337,7 +335,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
 
         // poison +0.1 per tick (with 1s tick this is +0.1 dps)
         StartDot(StatusType.Poison, dps: 0.1f, duration: 5f);
-        LogCombat("☠🧠 Poison + Confusion → Confusion +50% duration + Poison +0.1/tick");
+        LogCombat(" Poison + Confusion = Confusion +50% duration + Poison +0.1/tick");
 
     }
 
@@ -347,7 +345,7 @@ public virtual void ReceiveDamage(DamageInfo dmg)
         freezeConfusionThawBonus = true;
         ApplyFreeze(3f);
         ApplyConfusion(3f);
-        LogCombat("❄🧠 Freeze + Confusion → Extra Confusion on thaw (3s)");
+        LogCombat(" Freeze + Confusion = Extra Confusion on thaw (3s)");
     }
 
     // ----- Apply BASE STATUS if no combo consumed it -----
@@ -536,7 +534,7 @@ private void ApplyFragile(float duration)
 private void LogCombat(string message)
 {
     if (textbox == null) return;
-    textbox.text += $"\n{message}";
+    textbox.text = $"\n{message}";
 }
 
 
