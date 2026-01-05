@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3807409212022251595}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.578, y: 0.019, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -135,18 +135,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     maxHealth: 20
-    moveSpeed: 0.5
+    moveSpeed: 1
     expReward: 10
-    enemyTag: Normal
-    damage: 2
-    attackCooldown: 1
+    damage: 5
+    attackCooldown: 5
     knockbackForce: 3
     attackElement: 0
     attackStyle: 0
   currentState: 0
   isAttackReady: 1
-  explosionRadius: 2.5
-  explosionDamage: 3
   wakeUpRange: 3.5
   dormantColor: {r: 0.5, g: 0.4, b: 0.3, a: 1}
 --- !u!61 &2752482579069551627

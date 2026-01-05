@@ -40,12 +40,12 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = original;
     }
-    public void ReceiveDamage(float dmg)
+    public void ReceiveDamage(DamageInfo damageInfo)
     {
         // 1. Apply Damage
         // Note: You can add Defense/Armor logic here later
-        Debug.Log($"Player took {dmg} {dmg} damage!");
-        currentHealth -= dmg;
+        Debug.Log($"Player took {damageInfo.amount} {damageInfo.element} damage!");
+        currentHealth -= damageInfo.amount;
         
         // 2. Clamp values (Cannot go below 0 or above Max)
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);

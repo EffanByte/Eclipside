@@ -25,7 +25,8 @@ public enum EnemyState
     {
         Flip, Rotate
     }
-    [System.Serializable]
+
+    [Serializable]
     public struct DamageInfo
     {
         public float amount;
@@ -52,38 +53,46 @@ public enum EnemyState
     public class EnemyStats
     {
         [Header("General Stats")]
-        public float maxHealth = 20f;
-        public float moveSpeed = 3f;
-        public float expReward = 10f;
-        public string enemyTag = "Normal"; 
-        
-
+        public float maxHealth;
+        public float moveSpeed;
+        public float expReward;
+    
         [Header("Attack Configuration")]
-        public float damage = 5f;          // Base Damage amount
-        public float attackCooldown = 1f;
-        public float knockbackForce = 3f;  // How hard they hit the player
+        public float damage;        // Base Damage amount
+        public float attackCooldown;
+        public float knockbackForce; // How hard they hit the player
         
         public DamageElement attackElement = DamageElement.Physical; 
         public AttackStyle attackStyle = AttackStyle.MeleeLight;
+
+        public EnemyStats(float maxHealth, float moveSpeed, float expReward, float damage, float attackCooldown, float knockbackForce, DamageElement attackElement, AttackStyle attackStyle)
+        {
+            this.maxHealth = maxHealth;
+            this.moveSpeed = moveSpeed;
+            this.expReward = expReward;
+            this.damage = damage;
+            this.attackCooldown = attackCooldown;
+            this.knockbackForce = knockbackForce;
+            this.attackElement = attackElement;
+            this.attackStyle = attackStyle;
+        }
+
     }
 
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     public abstract class EnemyBase : MonoBehaviour
     {
+
         private TextMeshProUGUI textbox;
         [Header("Configuration")]
-        public EnemyStats stats;
-
+        [SerializeField] protected EnemyStats stats;
         [Header("Runtime State")]
         public EnemyState currentState = EnemyState.Idle;
         protected float currentHealth;
-        
         // Flag for cooldowns
         public bool isAttackReady = true;
-
         protected Transform playerTarget;
-        
         // Components
         protected Rigidbody2D rb;
         protected SpriteRenderer spriteRenderer;
@@ -92,11 +101,10 @@ public enum EnemyState
 
         // Status Modifiers
         protected float speedMultiplier = 1.0f; 
-        private enum StatusType { Burn, Poison, Freeze, Confusion, Fragile }
-
-[SerializeField] private float explosionRadius = 2.5f;
-[SerializeField] private float explosionDamage = 3f;
-
+        private enum StatusType
+        { 
+            Burn, Poison, Freeze, Confusion, Fragile
+        }
 // active status end-times
 private readonly System.Collections.Generic.Dictionary<StatusType, float> statusEnd =
     new System.Collections.Generic.Dictionary<StatusType, float>();
@@ -110,60 +118,56 @@ private float damageTakenMultiplier = 1f;         // used by Fragile
 private float selfAttackMaxHpPercent = 0f;        // used by Burn+Confusion
 private bool freezeConfusionThawBonus = false;    // used by Freeze+Confusion
 
-        protected virtual void Start()
+    protected virtual void Start()
+    {   
+        textbox = FindObjectOfType<TextMeshProUGUI>();
+        rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        currentHealth = stats.maxHealth;
+        
+        // Find player
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+            playerTarget = playerObj.transform;
+
+        // Ensure attack is ready at start
+        isAttackReady = true;
+
+        ChangeState(EnemyState.Chasing);
+    }
+
+    protected virtual void Update()
+    {
+        if (currentState == EnemyState.Dead) return;
+
+        switch (currentState)
         {
-            textbox = FindObjectOfType<TextMeshProUGUI>();
-            rb = GetComponent<Rigidbody2D>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            anim = GetComponent<Animator>();
+            case EnemyState.Idle:
+                LogicIdle();
+                break;
+            case EnemyState.Chasing:
+                LogicChasing();
+                break;
+            case EnemyState.Attacking:
+                LogicAttacking();
+                break;
+        }
+        if (transform.position.y < -50f)
+        {
+            Die();
+        }
+        CleanupExpiredStatuses();
 
-            currentHealth = stats.maxHealth;
-            
-            // Find player
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null) playerTarget = playerObj.transform;
+    }
 
-            // Ensure attack is ready at start
-            isAttackReady = true;
-
+    protected virtual void LogicIdle()
+    {
+        if (playerTarget != null)
+        {
             ChangeState(EnemyState.Chasing);
         }
-
-        protected virtual void Update()
-        {
-            if (currentState == EnemyState.Dead) return;
-
-            switch (currentState)
-            {
-                case EnemyState.Idle:
-                    LogicIdle();
-                    break;
-                case EnemyState.Chasing:
-                    LogicChasing();
-                    break;
-                case EnemyState.Attacking:
-                    LogicAttacking();
-                    break;
-            }
-            if (transform.position.y < -50f)
-            {
-                Die();
-            }
-            CleanupExpiredStatuses();
-
-        }
-
-        // ---------------------------------------------------------
-        // STATE LOGIC 
-        // ---------------------------------------------------------
-
-        protected virtual void LogicIdle()
-        {
-            if (playerTarget != null)
-            {
-                ChangeState(EnemyState.Chasing);
-            }
-        }
+    }
 
     protected virtual void LogicChasing()
     {
@@ -179,7 +183,7 @@ private bool freezeConfusionThawBonus = false;    // used by Freeze+Confusion
         if (movementType == MovementType.Flip)
         {
             // Flip based on X direction
-            spriteRenderer.flipX = direction.x < 0; 
+            spriteRenderer.flipX = direction.x > 0; 
         }
         else if (movementType == MovementType.Rotate)
         {
@@ -196,346 +200,278 @@ private bool freezeConfusionThawBonus = false;    // used by Freeze+Confusion
         rb.linearVelocity = direction * (stats.moveSpeed * speedMultiplier);
     }
 
-        protected virtual void LogicAttacking()
-        {
-            ChangeState(EnemyState.Chasing);
-        }
+    protected virtual void LogicAttacking()
+    {
+        ChangeState(EnemyState.Chasing);
+    }
 
-        // ---------------------------------------------------------
-        // CORE MECHANICS
-        // ---------------------------------------------------------
-
-        protected virtual void OnTriggerEnter2D(Collider2D collision)
+    // Basic Collision Attack 
+    protected virtual void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.CompareTag("Player"))
+            if (isAttackReady)
             {
-                if (isAttackReady)
-                {
-                    PerformAttack(collision.gameObject);
-                }
+                PerformAttack(collision.gameObject);  
+                StartCoroutine(AttackCooldownRoutine());  // prevents attack from hitting again
             }
         }
+    }
 
-        // ---------------------------------------------------------
-        // ATTACK LOGIC
-        // ---------------------------------------------------------
-
-        public virtual void PerformAttack(GameObject target)
+    public virtual void PerformAttack(GameObject target)
+    {
+        PlayerHealth damageable = target.GetComponent<PlayerHealth>();
+        float selfDmg = stats.maxHealth * selfAttackMaxHpPercent;
+        currentHealth -= selfDmg;
+        if (damageable != null)
         {
-            PlayerHealth damageable = target.GetComponent<PlayerHealth>();
-
-    float selfDmg = stats.maxHealth * selfAttackMaxHpPercent;
-    currentHealth -= selfDmg;
-
-            if (damageable != null)
-            {
-                DamageInfo info = new DamageInfo(
-                    amount: stats.damage,
-                    element: stats.attackElement,  
-                    style: stats.attackStyle,      
-                    sourcePosition: transform.position,
-                    knockbackForce: stats.knockbackForce
+            DamageInfo info = new DamageInfo(
+                amount: stats.damage,
+                element: stats.attackElement,  
+                style: stats.attackStyle,      
+                sourcePosition: transform.position,
+                knockbackForce: stats.knockbackForce
                 );
-
-                damageable.ReceiveDamage(2f);
-                
-            }
+            damageable.ReceiveDamage(info);
         }
 
-        protected IEnumerator AttackCooldownRoutine()
+    }
+
+    protected IEnumerator AttackCooldownRoutine()
+    {
+        isAttackReady = false; 
+        yield return new WaitForSeconds(stats.attackCooldown); 
+        isAttackReady = true; 
+    }
+
+    public static event Action<EnemyBase> OnEnemyKilled;
+    public virtual void ReceiveDamage(DamageInfo dmg)
+    {
+        if (currentState == EnemyState.Dead) return;
+
+        // Apply fragile multiplier to incoming damage
+        float finalDamage = dmg.amount * damageTakenMultiplier;
+        currentHealth -= finalDamage;
+
+
+        StartCoroutine(FlashSpriteRoutine());
+
+        if (rb != null && dmg.knockbackForce > 0)
         {
-            isAttackReady = false; 
-            yield return new WaitForSeconds(stats.attackCooldown); 
-            isAttackReady = true; 
+            Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
+            rb.AddForce(knockbackDir * 3f, ForceMode2D.Impulse);
+            StartCoroutine(StunRoutine(0.2f));
         }
 
-        // ---------------------------------------------------------
-        // DAMAGE RECEIVER (UPDATED)
-        // ---------------------------------------------------------
+        // ----- COMBO CHECKS -----
+        // Map incoming element to status
+        bool incomingBurn = dmg.element == DamageElement.Fire;
+        bool incomingPoison = dmg.element == DamageElement.Poison;
+        bool incomingFreeze = dmg.element == DamageElement.Ice;
+        bool incomingConfuse = dmg.element == DamageElement.Psychic;
 
-        public static event Action<EnemyBase> OnEnemyKilled;
-public virtual void ReceiveDamage(DamageInfo dmg)
-{
-    if (currentState == EnemyState.Dead) return;
-
-    // Apply fragile multiplier to incoming damage
-    float finalDamage = dmg.amount * damageTakenMultiplier;
-    currentHealth -= finalDamage;
-
-
-    StartCoroutine(FlashSpriteRoutine());
-
-    if (rb != null && dmg.knockbackForce > 0)
-    {
-        Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
-        rb.AddForce(knockbackDir * 3f, ForceMode2D.Impulse);
-        StartCoroutine(StunRoutine(0.2f));
-    }
-
-    // ----- COMBO CHECKS -----
-    // Map incoming element to status
-    bool incomingBurn = dmg.element == DamageElement.Fire;
-    bool incomingPoison = dmg.element == DamageElement.Poison;
-    bool incomingFreeze = dmg.element == DamageElement.Ice;
-    bool incomingConfuse = dmg.element == DamageElement.Psychic;
-
-    // Burn + Poison: area explosion + extra DoT (0.2 hearts/sec for 3s).
-    if (incomingBurn && HasStatus(StatusType.Poison))
-    {
-        TriggerExplosion(transform.position);
-        StartDot(StatusType.Burn, dps: 0.2f, duration: 3f);
-        ClearStatus(StatusType.Poison);
-
-        //LogCombat("Burn + Poison = Explosion + DoT (0.2/sec for 3s)");
-    }
-    else if (incomingPoison && HasStatus(StatusType.Burn))
-    {
-        TriggerExplosion(transform.position);
-        StartDot(StatusType.Poison, dps: 0.2f, duration: 3f);
-        ClearStatus(StatusType.Burn);
-        // LogCombat(" Poison + Burn = Explosion + DoT (0.2/sec for 3s)");
-    }
-
-    // Burn + Freeze: instant damage + Fragile (+20% damage taken for 3s).
-    if ((incomingBurn && HasStatus(StatusType.Freeze)) || (incomingFreeze && HasStatus(StatusType.Burn)))
-    {
-        currentHealth -= 2f;          // "instant damage" (tune this number)
-        ApplyFragile(3f);
-        ClearStatus(StatusType.Burn);
-        ClearStatus(StatusType.Freeze);
-        LogCombat(" Burn + Freeze = Instant damage + Fragile (+20% for 3s)");
-    }
-
-    // Burn + Confusion: extra DoT (0.3 hearts/sec for 3s) + self-attacks deal 5% max HP.
-    if ((incomingBurn && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Burn)))
-    {
-        StartDot(StatusType.Burn, dps: 0.3f, duration: 3f);
-        ApplyConfusion(3f);
-        selfAttackMaxHpPercent = 0.05f; // 5% max HP self-damage on attacks (see PerformAttack hook below)
-        ClearStatus(StatusType.Burn);
-        LogCombat(" Burn + Confusion = DoT (0.3/sec) + Self-damage (5% max HP)");
-    }
-
-    // Poison + Freeze: strong damage (0.2 hearts/sec for 5s).
-    if ((incomingPoison && HasStatus(StatusType.Freeze)) || (incomingFreeze && HasStatus(StatusType.Poison)))
-    {
-        StartDot(StatusType.Poison, dps: 0.2f, duration: 5f);
-        ClearStatus(StatusType.Poison);
-        ClearStatus(StatusType.Freeze);
-        LogCombat(" Poison + Freeze = Strong DoT (0.2/sec for 5s)");
-
-    }
-
-    // Poison + Confusion: Confusion duration +50% + poison deals +0.1 heart per tick.
-    if ((incomingPoison && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Poison)))
-    {
-        // extend confusion by +50% (assume base 3s -> +1.5s)
-        float extra = 1.5f;
-        SetStatus(StatusType.Confusion, (statusEnd.TryGetValue(StatusType.Confusion, out var end) ? (end - Time.time) : 0f) + extra);
-
-        // poison +0.1 per tick (with 1s tick this is +0.1 dps)
-        StartDot(StatusType.Poison, dps: 0.1f, duration: 5f);
-        LogCombat(" Poison + Confusion = Confusion +50% duration + Poison +0.1/tick");
-
-    }
-
-    // Freeze + Confusion: when thawing, enters extra Confusion (3s).
-    if ((incomingFreeze && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Freeze)))
-    {
-        freezeConfusionThawBonus = true;
-        ApplyFreeze(3f);
-        ApplyConfusion(3f);
-        LogCombat(" Freeze + Confusion = Extra Confusion on thaw (3s)");
-    }
-
-    // ----- Apply BASE STATUS if no combo consumed it -----
-    if (incomingBurn && !HasStatus(StatusType.Burn)) ApplyBurn(3f);
-    if (incomingPoison && !HasStatus(StatusType.Poison)) ApplyPoison(3f);
-    if (incomingFreeze && !HasStatus(StatusType.Freeze)) ApplyFreeze(3f);
-    if (incomingConfuse && !HasStatus(StatusType.Confusion)) ApplyConfusion(3f);
-
-    if (currentHealth <= 0f)
-        Die();
-}
-        protected virtual void Die()
+        // Burn + Freeze: instant damage + Fragile (+20% damage taken for 3s).
+        if ((incomingBurn && HasStatus(StatusType.Freeze)) || (incomingFreeze && HasStatus(StatusType.Burn)))
         {
-            Debug.Log($"{name} Died!");
-            currentState = EnemyState.Dead;
-            OnEnemyKilled?.Invoke(this);
-            // Stop movement immediately
-            rb.linearVelocity = Vector2.zero;
-            
-            // Disable collider so player walks through corpse
-            GetComponent<Collider2D>().enabled = false;
-
-            // TODO: Spawn EXP Orbs or Loot here
-
-            // Destroy the GameObject after a short delay (e.g. for death animation)
-            Destroy(gameObject); 
+            currentHealth -= 2f;          // "instant damage" (tune this number)
+            ApplyFragile(3f);
+            ClearStatus(StatusType.Burn);
+            ClearStatus(StatusType.Freeze);
+            LogCombat(" Burn + Freeze = Instant damage + Fragile (+20% for 3s)");
         }
 
-        protected void ChangeState(EnemyState newState)
+        // Burn + Confusion: extra DoT (0.3 hearts/sec for 3s) + self-attacks deal 5% max HP.
+        if ((incomingBurn && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Burn)))
         {
-            currentState = newState;
-        }
-
-        // ---------------------------------------------------------
-        // VISUALS
-        // ---------------------------------------------------------
-
-        IEnumerator FlashSpriteRoutine()
-        {
-            Color original = Color.white; // Assuming sprite is white by default
-            spriteRenderer.color = Color.red; // Flash Red
-            yield return new WaitForSeconds(0.1f);
-            spriteRenderer.color = original;
-        }
-
-        IEnumerator StunRoutine(float duration)
-        {
-            // Only switch to stunned if not dead
-            if (currentState == EnemyState.Dead) yield break;
-
-            EnemyState previousState = currentState;
-            ChangeState(EnemyState.Stunned);
-            
-            yield return new WaitForSeconds(duration);
-            
-            // Return to    previous state if still alive
-            if (currentState != EnemyState.Dead)
-            {
-                ChangeState(previousState);
-            }
-        }
-        private bool HasStatus(StatusType s)
-{
-    return statusEnd.TryGetValue(s, out float end) && Time.time < end;
-}
-
-private void SetStatus(StatusType s, float duration)
-{
-    statusEnd[s] = Time.time + duration;
-}
-
-private void ClearStatus(StatusType s)
-{
-    statusEnd.Remove(s);
-    if (statusCo.TryGetValue(s, out var co) && co != null)
-        StopCoroutine(co);
-    statusCo.Remove(s);
-
-    // clean side-effects
-    if (s == StatusType.Fragile) damageTakenMultiplier = 1f;
-    if (s == StatusType.Confusion) selfAttackMaxHpPercent = 0f;
-}
-
-private void StartDot(StatusType key, float dps, float duration)
-{
-    // restart dot if already running
-    if (statusCo.TryGetValue(key, out var co) && co != null)
-        StopCoroutine(co);
-
-    statusCo[key] = StartCoroutine(DotRoutine(key, dps, duration));
-}
-
-private IEnumerator DotRoutine(StatusType key, float dps, float duration)
-{
-    SetStatus(key, duration);
-
-    float t = 0f;
-    const float tick = 1f;
-
-    while (t < duration && currentState != EnemyState.Dead)
-    {
-        // deal dps per second
-        currentHealth -= dps * tick;
-        if (currentHealth <= 0f)
-        {
-            Die();
-            yield break;
-        }
-
-        yield return new WaitForSeconds(tick);
-        t += tick;
-    }
-
-    // dot ended
-    ClearStatus(key);
-}
-
-private void TriggerExplosion(Vector2 center)
-{
-    var hits = Physics2D.OverlapCircleAll(center, explosionRadius);
-
-    foreach (var h in hits)
-    {
-        if (!h) continue;
-
-        // Example: damage other enemies (skip self)
-        var otherEnemy = h.GetComponentInParent<EnemyBase>();
-        if (otherEnemy != null && otherEnemy != this && otherEnemy.currentState != EnemyState.Dead)
-        {
-            otherEnemy.ReceiveDamage(new DamageInfo(
-                amount: explosionDamage,
-                element: DamageElement.Fire,
-                style: AttackStyle.Environment,
-                sourcePosition: center,
-                knockbackForce: 0f
-            ));
-        }
-
-        // If you also want to damage player, do it here (optional):
-        // var ph = h.GetComponentInParent<PlayerHealth>();
-        // if (ph != null) ph.ReceiveDamage(explosionDamage);
-    }
-}
-
-// Call this from Update() to auto-expire non-coroutine statuses
-private void CleanupExpiredStatuses()
-{
-    // handle Freeze thaw bonus
-    if (HasStatus(StatusType.Freeze) == false && statusEnd.ContainsKey(StatusType.Freeze))
-    {
-        // freeze just ended
-        statusEnd.Remove(StatusType.Freeze);
-
-        if (freezeConfusionThawBonus)
-        {
-            freezeConfusionThawBonus = false;
-            // "when thawing, enters extra Confusion (3s)."
+            StartDot(StatusType.Burn, dps: 0.3f, duration: 3f);
             ApplyConfusion(3f);
+            selfAttackMaxHpPercent = 0.05f; // 5% max HP self-damage on attacks (see PerformAttack hook below)
+            ClearStatus(StatusType.Burn);
+            LogCombat(" Burn + Confusion = DoT (0.3/sec) + Self-damage (5% max HP)");
+        }
+
+        // Poison + Freeze: strong damage (0.2 hearts/sec for 5s).
+        if ((incomingPoison && HasStatus(StatusType.Freeze)) || (incomingFreeze && HasStatus(StatusType.Poison)))
+        {
+            StartDot(StatusType.Poison, dps: 0.2f, duration: 5f);
+            ClearStatus(StatusType.Poison);
+            ClearStatus(StatusType.Freeze);
+            LogCombat(" Poison + Freeze = Strong DoT (0.2/sec for 5s)");
+
+        }
+
+        // Poison + Confusion: Confusion duration +50% + poison deals +0.1 heart per tick.
+        if ((incomingPoison && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Poison)))
+        {
+            // extend confusion by +50% (assume base 3s -> +1.5s)
+            float extra = 1.5f;
+            SetStatus(StatusType.Confusion, (statusEnd.TryGetValue(StatusType.Confusion, out var end) ? (end - Time.time) : 0f) + extra);
+
+            // poison +0.1 per tick (with 1s tick this is +0.1 dps)
+            StartDot(StatusType.Poison, dps: 0.1f, duration: 5f);
+            LogCombat(" Poison + Confusion = Confusion +50% duration + Poison +0.1/tick");
+
+        }
+
+        // Freeze + Confusion: when thawing, enters extra Confusion (3s).
+        if ((incomingFreeze && HasStatus(StatusType.Confusion)) || (incomingConfuse && HasStatus(StatusType.Freeze)))
+        {
+            freezeConfusionThawBonus = true;
+            ApplyFreeze(3f);
+            ApplyConfusion(3f);
+            LogCombat(" Freeze + Confusion = Extra Confusion on thaw (3s)");
+        }
+
+        // ----- Apply BASE STATUS if no combo consumed it -----
+        if (incomingBurn && !HasStatus(StatusType.Burn)) ApplyBurn(3f);
+        if (incomingPoison && !HasStatus(StatusType.Poison)) ApplyPoison(3f);
+        if (incomingFreeze && !HasStatus(StatusType.Freeze)) ApplyFreeze(3f);
+        if (incomingConfuse && !HasStatus(StatusType.Confusion)) ApplyConfusion(3f);
+
+        if (currentHealth <= 0f)
+            Die();
+    }
+    protected virtual void Die()
+    {
+        Debug.Log($"{name} Died!");
+        currentState = EnemyState.Dead;
+        OnEnemyKilled?.Invoke(this);
+        // Stop movement immediately
+        rb.linearVelocity = Vector2.zero;
+        
+        // Disable collider so player walks through corpse
+        GetComponent<Collider2D>().enabled = false;
+
+        // TODO: Spawn EXP Orbs or Loot here
+
+        // Destroy the GameObject after a short delay (e.g. for death animation)
+        Destroy(gameObject); 
+    }
+    protected void ChangeState(EnemyState newState)
+    {
+        currentState = newState;
+    }
+    IEnumerator FlashSpriteRoutine()
+    {
+        Color original = Color.white; // Assuming sprite is white by default
+        spriteRenderer.color = Color.red; // Flash Red
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = original;
+    }
+
+    IEnumerator StunRoutine(float duration)
+    {
+        // Only switch to stunned if not dead
+        if (currentState == EnemyState.Dead) yield break;
+
+        EnemyState previousState = currentState;
+        ChangeState(EnemyState.Stunned);
+        
+        yield return new WaitForSeconds(duration);
+        
+        // Return to    previous state if still alive
+        if (currentState != EnemyState.Dead)
+        {
+            ChangeState(previousState);
         }
     }
-
-    // expire Fragile
-    if (statusEnd.ContainsKey(StatusType.Fragile) && !HasStatus(StatusType.Fragile))
-        ClearStatus(StatusType.Fragile);
-
-    // expire Confusion (if not coroutine-based)
-    if (statusEnd.ContainsKey(StatusType.Confusion) && !HasStatus(StatusType.Confusion))
-        ClearStatus(StatusType.Confusion);
-}
-
-private void ApplyBurn(float duration = 3f) => SetStatus(StatusType.Burn, duration);
-private void ApplyPoison(float duration = 3f) => SetStatus(StatusType.Poison, duration);
-private void ApplyFreeze(float duration = 3f) => SetStatus(StatusType.Freeze, duration);
-
-private void ApplyConfusion(float duration)
+    private bool HasStatus(StatusType s)
 {
-    SetStatus(StatusType.Confusion, duration);
+return statusEnd.TryGetValue(s, out float end) && Time.time < end;
 }
 
-private void ApplyFragile(float duration)
-{
-    damageTakenMultiplier = 1.2f; // +20% damage taken
-    SetStatus(StatusType.Fragile, duration);
-}
-
-private void LogCombat(string message)
-{
-    if (textbox == null) return;
-    textbox.text = $"\n{message}";
-}
-
-
+    private void SetStatus(StatusType s, float duration)
+    {
+        statusEnd[s] = Time.time + duration;
     }
+
+    private void ClearStatus(StatusType s)
+    {
+        statusEnd.Remove(s);
+        if (statusCo.TryGetValue(s, out var co) && co != null)
+            StopCoroutine(co);
+        statusCo.Remove(s);
+
+        // clean side-effects
+        if (s == StatusType.Fragile) damageTakenMultiplier = 1f;
+        if (s == StatusType.Confusion) selfAttackMaxHpPercent = 0f;
+    }
+
+    private void StartDot(StatusType key, float dps, float duration)
+    {
+        // restart dot if already running
+        if (statusCo.TryGetValue(key, out var co) && co != null)
+            StopCoroutine(co);
+
+        statusCo[key] = StartCoroutine(DotRoutine(key, dps, duration));
+    }
+
+    private IEnumerator DotRoutine(StatusType key, float dps, float duration)
+    {
+        SetStatus(key, duration);
+
+        float t = 0f;
+        const float tick = 1f;
+
+        while (t < duration && currentState != EnemyState.Dead)
+        {
+            // deal dps per second
+            currentHealth -= dps * tick;
+            if (currentHealth <= 0f)
+            {
+                Die();
+                yield break;
+            }
+
+            yield return new WaitForSeconds(tick);
+            t += tick;
+        }
+        ClearStatus(key);
+    }
+
+    private void CleanupExpiredStatuses()
+    {
+        // handle Freeze thaw bonus
+        if (HasStatus(StatusType.Freeze) == false && statusEnd.ContainsKey(StatusType.Freeze))
+        {
+            // freeze just ended
+            statusEnd.Remove(StatusType.Freeze);
+
+            if (freezeConfusionThawBonus)
+            {
+                freezeConfusionThawBonus = false;
+                // "when thawing, enters extra Confusion (3s)."
+                ApplyConfusion(3f);
+            }
+        }
+
+        // expire Fragile
+        if (statusEnd.ContainsKey(StatusType.Fragile) && !HasStatus(StatusType.Fragile))
+            ClearStatus(StatusType.Fragile);
+
+        // expire Confusion (if not coroutine-based)
+        if (statusEnd.ContainsKey(StatusType.Confusion) && !HasStatus(StatusType.Confusion))
+            ClearStatus(StatusType.Confusion);
+    }
+
+    private void ApplyBurn(float duration = 3f) => SetStatus(StatusType.Burn, duration);
+    private void ApplyPoison(float duration = 3f) => SetStatus(StatusType.Poison, duration);
+    private void ApplyFreeze(float duration = 3f) => SetStatus(StatusType.Freeze, duration);
+
+    private void ApplyConfusion(float duration)
+    {
+        SetStatus(StatusType.Confusion, duration);
+    }
+
+    private void ApplyFragile(float duration)
+    {
+        damageTakenMultiplier = 1.2f; // +20% damage taken
+        SetStatus(StatusType.Fragile, duration);
+    }
+
+    private void LogCombat(string message)
+    {
+        if (textbox == null) return;
+        textbox.text = $"\n{message}";
+    }
+}

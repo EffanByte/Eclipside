@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class BarkGuardian : EnemyBase
 {
@@ -13,7 +12,6 @@ public class BarkGuardian : EnemyBase
     protected override void Start()
     {
         movementType = MovementType.Flip;
-        // PDF Page 28: "Camouflaged"
         // Start visually dormant
         if (spriteRenderer != null) spriteRenderer.color = dormantColor;
 
@@ -38,9 +36,6 @@ public class BarkGuardian : EnemyBase
 
     }
 
-    // We do NOT override LogicChasing or LogicAttacking.
-    // The standard EnemyBase melee logic is perfect for this enemy.
-
     // ----------------------------------------------------------------------
     // SPECIAL BEHAVIOR
     // ----------------------------------------------------------------------
@@ -50,12 +45,6 @@ public class BarkGuardian : EnemyBase
         ChangeState(EnemyState.Chasing);
     }
 
-    // ----------------------------------------------------------------------
-    // DAMAGE OVERRIDE (Optional Visuals)
-    // ----------------------------------------------------------------------
-
-    // The Base class handles the math and death. 
-    // We override this ONLY to add specific visual flair for the Fire Weakness.
     public override void ReceiveDamage(DamageInfo dmg)
     {
         base.ReceiveDamage(dmg); // Let the parent do the math and HP reduction

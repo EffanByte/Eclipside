@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8199334210253525225}
   - component: {fileID: 8594987055099756447}
   - component: {fileID: 189752446530855869}
-  - component: {fileID: 688719641214363060}
   - component: {fileID: 5750524994496240652}
+  - component: {fileID: 688719641214363060}
   m_Layer: 7
   m_Name: Spider
   m_TagString: Enemy
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6323778565200181168}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25183585, y: 1.1210036, z: 1.003987}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,6 +121,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5750524994496240652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6323778565200181168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87aca74cafda084ca7d5471b77138f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    maxHealth: 10
+    moveSpeed: 2
+    expReward: 10
+    damage: 2
+    attackCooldown: 5
+    knockbackForce: 3
+    attackElement: 0
+    attackStyle: 0
+  currentState: 0
+  isAttackReady: 1
+  webPrefab: {fileID: 5787050453614856421, guid: 4f234018a7030964eb888496782e48aa, type: 3}
+  webShootRange: 5
+  webCooldown: 4
 --- !u!61 &688719641214363060
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -167,32 +193,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
---- !u!114 &5750524994496240652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6323778565200181168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a87aca74cafda084ca7d5471b77138f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-    maxHealth: 10
-    moveSpeed: 2
-    expReward: 10
-    enemyTag: Normal
-    damage: 2
-    attackCooldown: 1
-    knockbackForce: 3
-    attackElement: 0
-    attackStyle: 0
-  currentState: 0
-  isAttackReady: 1
-  explosionRadius: 2.5
-  explosionDamage: 3
-  webPrefab: {fileID: 5787050453614856421, guid: 4f234018a7030964eb888496782e48aa, type: 3}
-  webShootRange: 5
-  webCooldown: 4

@@ -17,8 +17,6 @@ public class Aracnola : EnemyBase
     protected override void Start()
     {
         base.Start();
-        // Initialize specific spider stats if not set in Inspector
-        if (stats.enemyTag == "Normal") stats.enemyTag = "Spider";
     }
 
     // ----------------------------------------------------------------------
