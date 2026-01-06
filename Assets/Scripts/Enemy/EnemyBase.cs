@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum EnemyState
 {
@@ -104,6 +105,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     // Status Modifiers
     protected float speedMultiplier = 1.0f; 
+    protected float originalSpeedMultiplier;
 
     // Active status end-times
     private readonly Dictionary<StatusType, float> statusEnd = new Dictionary<StatusType, float>();
@@ -127,6 +129,7 @@ public abstract class EnemyBase : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        originalSpeedMultiplier = speedMultiplier;
         currentHealth = stats.maxHealth;
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -146,6 +149,7 @@ public abstract class EnemyBase : MonoBehaviour
             case EnemyState.Idle: LogicIdle(); break;
             case EnemyState.Chasing: LogicChasing(); break;
             case EnemyState.Attacking: LogicAttacking(); break;
+            case EnemyState.Stunned: LogicStunned(); break;
         }
 
         if (transform.position.y < -30f) Die();
@@ -173,8 +177,8 @@ public abstract class EnemyBase : MonoBehaviour
         if (rb != null && dmg.knockbackForce > 0)
         {
             Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
-            rb.AddForce(knockbackDir * 3f, ForceMode2D.Impulse); // Fixed force for test, use dmg.knockbackForce in prod
-            StartCoroutine(StunRoutine(0.2f));
+            rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
+            StartCoroutine(KnockbackRoutine(0.2f));
         }
 
         // 3. ATTEMPT TO APPLY STATUS / SYNERGY
@@ -239,6 +243,7 @@ private void InitializeSynergies()
     AddSynergy(StatusType.Poison, StatusType.Freeze, () => {
         LogCombat("SYNERGY: Strong DoT");
         StartDot(StatusType.Poison, dps: 2f, duration: 5f);
+        ApplyFreeze(3f, originalSpeedMultiplier);
     });
 
     AddSynergy(StatusType.Poison, StatusType.Confusion, () => {
@@ -249,7 +254,7 @@ private void InitializeSynergies()
 
     AddSynergy(StatusType.Freeze, StatusType.Confusion, () => {
         LogCombat("SYNERGY: Thaw Nightmare");
-        ApplyFreeze(3f);
+        ApplyFreeze(3f, originalSpeedMultiplier);
         freezeConfusionThawBonus = true;
     });
 }
@@ -282,8 +287,8 @@ public void TryAddStatus(StatusType incoming)
             return; 
         }
     }
-
     // 4. No synergy found? Just apply the status normally.
+    Debug.Log("Applying Base status, no synergy found.");
     ApplyBaseStatus(incoming);
 }
 
@@ -295,7 +300,7 @@ public void TryAddStatus(StatusType incoming)
         {
             case StatusType.Burn: ApplyBurn(3f); break;
             case StatusType.Poison: ApplyPoison(3f); break;
-            case StatusType.Freeze: ApplyFreeze(3f); break;
+            case StatusType.Freeze: ApplyFreeze(3f, originalSpeedMultiplier); break;
             case StatusType.Confusion: ApplyConfusion(3f); break;
         }
     }
@@ -398,7 +403,11 @@ public void TryAddStatus(StatusType incoming)
 
     private void ApplyBurn(float duration) => StartDot(StatusType.Burn, 2f, duration); // 0.2 hearts = 2.0 hp
     private void ApplyPoison(float duration) => StartDot(StatusType.Poison, 1f, duration); // 0.1 hearts = 1.0 hp
-    private void ApplyFreeze(float duration) => SetStatus(StatusType.Freeze, duration);
+    private void ApplyFreeze(float duration, float currentSpeed)
+    {
+        SetStatus(StatusType.Freeze, duration); 
+        StartCoroutine(FreezeRoutine(duration, currentSpeed));;
+    }
     private void ApplyConfusion(float duration) => SetStatus(StatusType.Confusion, duration);
     private void ApplyFragile(float duration)
     {
@@ -406,6 +415,20 @@ public void TryAddStatus(StatusType incoming)
         SetStatus(StatusType.Fragile, duration);
     }
 
+    private IEnumerator FreezeRoutine(float duration, float currentSpeed)
+    {
+        speedMultiplier = 0.6f; // hard-coded for now
+        Debug.Log("Decreased speed");
+
+        yield return new WaitForSeconds(duration);
+
+        // Only restore if Freeze really ended
+        if (!HasStatus(StatusType.Freeze))
+        {
+            speedMultiplier = currentSpeed;
+            Debug.Log("Speed back to normal");
+        }
+    }
     // ---------------------------------------------------------
     // STANDARD BEHAVIOR (Movement, Attack, etc)
     // ---------------------------------------------------------
@@ -415,9 +438,13 @@ public void TryAddStatus(StatusType incoming)
         if (playerTarget != null) ChangeState(EnemyState.Chasing);
     }
 
+    protected virtual void LogicStunned()
+    {
+        Debug.Log($"{name} is stunned and cannot move.");
+    }   
     protected virtual void LogicChasing()
     {
-        if (playerTarget == null || HasStatus(StatusType.Freeze)) return; // Don't move if frozen
+        if (playerTarget == null) return;
 
         Vector2 direction = (playerTarget.position - transform.position).normalized;
         if(HasStatus(StatusType.Confusion)) direction = -direction; // Inverted movement
@@ -438,7 +465,6 @@ public void TryAddStatus(StatusType incoming)
         if (currentState != EnemyState.Chasing) return;
         
         float finalSpeed = stats.moveSpeed * speedMultiplier;
-        if (HasStatus(StatusType.Freeze)) finalSpeed = 0; // Backup check
 
         rb.linearVelocity = direction * finalSpeed;
     }
@@ -520,13 +546,13 @@ public void TryAddStatus(StatusType incoming)
         };
     }
 
-    IEnumerator StunRoutine(float duration)
+    IEnumerator KnockbackRoutine(float duration)
     {
         if (currentState == EnemyState.Dead) yield break;
         EnemyState previousState = currentState;
         ChangeState(EnemyState.Stunned);
         yield return new WaitForSeconds(duration);
-        if (currentState != EnemyState.Dead) ChangeState(previousState);
+        if (currentState != EnemyState.Dead) ChangeState(EnemyState.Idle); // removed previousState since it might loop stunned forever
     }
 
     private void LogCombat(string message)
