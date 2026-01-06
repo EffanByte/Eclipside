@@ -17,46 +17,54 @@ public abstract class WeaponData : ScriptableObject
     public float cooldown;
     public float knockbackForce;
     public float hitDuration = 0.2f;
+    public float criticalChance;
 
     [Header("Damage Type")]
     public DamageElement element;
     public AttackStyle style;
 
-    public DamageInfo damageInfo
-    {
-        get
-        {
-            return new DamageInfo(
-                amount: damage,
-                element: element,
-                style: style,
-                sourcePosition: Vector2.zero, // Placeholder, should be set when attacking
-                knockbackForce: knockbackForce,
-                isCritical: false // Placeholder, can be modified based on player stats
-            );
-        }
-    }
-
-    // --- NEW: THE EFFECTS LIST ---
+    // --- EFFECTS LIST ---
     [Header("Special Effects")]
     public List<WeaponEffect> effects = new List<WeaponEffect>();
 
-    public abstract IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox);
+    // --- PIPELINE METHODS ---
 
-    // Helper to process hits
-    public float ApplyEffectsOnHit(PlayerController player, EnemyBase target, float baseDamage)
+    public void Initialize(PlayerController player)
     {
-        float finalDamage = baseDamage;
+        foreach (var effect in effects) effect.OnEquip(player);
+    }
+
+    public void Cleanup(PlayerController player)
+    {
+        foreach (var effect in effects) effect.OnUnequip(player);
+    }
+
+    // This calculates the FINAL damage packet by running it through all effects
+    public DamageInfo GetDamageInfoOnHit(PlayerController player, EnemyBase target)
+    {
+        // 1. Start with Base Stats
+        float finalDamage = damage;
+        // Apply Player stat multipliers here if needed (e.g. finalDamage *= player.damageMultiplier)
+        
+        bool isCrit = criticalChance >= Random.Range(0f, 100f);
+
+        DamageInfo info = new DamageInfo(
+            amount: finalDamage,
+            element: element,
+            style: style,
+            sourcePosition: player.transform.position,
+            knockbackForce: knockbackForce,
+            isCritical: isCrit
+        );
+
+        // 2. Run through Effects (They can modify 'info' or apply statuses to 'target')
         foreach (var effect in effects)
         {
-            finalDamage = effect.OnHit(player, target, finalDamage);
+            effect.OnHit(player, target, ref info);
         }
-        return finalDamage;
+
+        return info;
     }
-    
-    // Helper for kills
-    public void NotifyKill(PlayerController player, EnemyBase target)
-    {
-         foreach (var effect in effects) effect.OnKill(player, target);
-    }
-}   
+
+    public abstract IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox);
+}

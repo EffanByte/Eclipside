@@ -10,12 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
-  m_Name: Rusty Sword
-  m_EditorClassIdentifier: 
-  weaponName: Rusty Sword
-  icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  m_Name: Twin Fang Daggers
+  m_EditorClassIdentifier: Assembly-CSharp::LightMeleeWeapon
+  weaponName: 
+  icon: {fileID: 0}
   animatorOverride: {fileID: 0}
-  damage: 5
-  cooldown: 0.5
-  knockbackForce: 3
-  attackRange: 1.2
+  weaponPrefab: {fileID: 0}
+  damage: 0
+  cooldown: 0
+  knockbackForce: 0
+  hitDuration: 0.2
+  element: 0
+  style: 0
+  effects: []

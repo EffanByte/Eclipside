@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEngine.Rendering;
-
 public enum EnemyState
 {
     Idle, Chasing, Attacking, Stunned, Dead

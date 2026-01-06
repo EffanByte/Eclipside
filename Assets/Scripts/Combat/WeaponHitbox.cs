@@ -50,7 +50,7 @@ public class WeaponHitbox : MonoBehaviour
             style: playerController.currentWeapon.style,
             sourcePosition: transform.parent.position,
             knockbackForce: playerController.currentWeapon.knockbackForce,
-            isCritical: false
+            isCritical: playerController.currentWeapon.criticalChance >= UnityEngine.Random.Range(0f,100f)  
         );
 
         EnemyBase target = collision.GetComponent<EnemyBase>();

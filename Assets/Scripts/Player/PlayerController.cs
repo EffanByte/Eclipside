@@ -1,10 +1,22 @@
 using UnityEngine;
-using UnityEngine.InputSystem; 
 using System.Collections;
-using UnityEngine.SceneManagement;
+
+
+
+    public enum StatType 
+    { 
+        AttackSpeed, 
+        BaseDamage, 
+        MagicDamage, 
+        ProjectileSpeed, 
+        MaxHealth,
+        CritChance,
+        CritDamage
+    }
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InventoryManager))] 
+
 public class PlayerController : MonoBehaviour
 {
     [Header("--- Stats (Page 1) ---")]
@@ -287,6 +299,13 @@ public class PlayerController : MonoBehaviour
         speedModified = true;
     }
 
+    public void ModifyPlayerStat(StatType statType, float value)
+    {
+        if (statType == StatType.MaxHealth)
+            maxHearts += value;
+        if (statType == StatType.AttackSpeed)
+            playerAttackSpeedMultiplier += value;
+    }
     public void ToggleLuck(bool state)
     {
         hasLuck = state;
