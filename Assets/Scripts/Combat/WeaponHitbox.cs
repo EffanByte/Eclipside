@@ -43,12 +43,13 @@ public class WeaponHitbox : MonoBehaviour
     // Extracted logic so we can call it from both OnTriggerEnter and Initialize
     private void TryDealDamage(Collider2D collision)
     {
+        // Won't hold up sourceposition when attack is something besides a sword
     currentDamageInfo = new DamageInfo(
-            amount: 5f,
+            amount: playerController.currentWeapon.damage,
             element: GetRandomDamageElement(),
-            style: AttackStyle.MeleeLight,
+            style: playerController.currentWeapon.style,
             sourcePosition: transform.parent.position,
-            knockbackForce: 1f,
+            knockbackForce: playerController.currentWeapon.knockbackForce,
             isCritical: false
         );
 

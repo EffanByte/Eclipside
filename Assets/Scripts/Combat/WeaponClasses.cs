@@ -11,24 +11,10 @@ public class LightMeleeWeapon : WeaponData
 {
     public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
-        // 1. Create the Damage Packet
-        DamageInfo info = new DamageInfo(
-            5f,
-            DamageElement.Physical,
-            AttackStyle.MeleeLight,
-            player.transform.position,
-            knockbackForce: 1f,
-            isCritical: false
-        );
-
-        // 2. Play Animation
         if (player.anim != null) player.anim.SetTrigger("Attack");
 
-
-        // 4. Wait for the swing duration (defined in WeaponData)
         yield return new WaitForSeconds(hitDuration);
 
-        // 5. DISABLE COLLIDER
         if (activeHitbox != null)
         {
             activeHitbox.DisableHitbox();

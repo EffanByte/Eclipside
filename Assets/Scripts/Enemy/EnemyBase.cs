@@ -45,6 +45,23 @@ public struct DamageInfo
     }
 }
 
+// Simple struct to act as a Dictionary Key
+public struct SynergyPair : IEquatable<SynergyPair>
+{
+    public readonly StatusType First;
+    public readonly StatusType Second;
+
+    public SynergyPair(StatusType a, StatusType b)
+    {
+        // Always sort them so (Fire, Ice) is the same key as (Ice, Fire)
+        if (a < b) { First = a; Second = b; }
+        else       { First = b; Second = a; }
+    }
+
+    // make it work as a Dictionary Key
+    public bool Equals(SynergyPair other) => First == other.First && Second == other.Second;
+    public override int GetHashCode() => HashCode.Combine(First, Second);
+}
     // Define Status Types strictly for Logic
     public enum StatusType
     { None, Burn, Poison, Freeze, Confusion, Fragile }
@@ -64,8 +81,6 @@ public class EnemyStats
     
     public DamageElement attackElement;
     public AttackStyle attackStyle;
-
-
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -102,6 +117,9 @@ public abstract class EnemyBase : MonoBehaviour
     private bool freezeConfusionThawBonus = false;    
 
     public static event Action<EnemyBase> OnEnemyKilled;
+    private Dictionary<SynergyPair, Action> synergyLibrary;
+    // for status effects
+    private static readonly WaitForSeconds DotTickWait = new WaitForSeconds(1f);
 
     protected virtual void Start()
     {   
@@ -116,6 +134,7 @@ public abstract class EnemyBase : MonoBehaviour
 
         isAttackReady = true;
         ChangeState(EnemyState.Chasing);
+        InitializeSynergies(); 
     }
 
     protected virtual void Update()
@@ -129,7 +148,7 @@ public abstract class EnemyBase : MonoBehaviour
             case EnemyState.Attacking: LogicAttacking(); break;
         }
 
-        if (transform.position.y < -50f) Die();
+        if (transform.position.y < -30f) Die();
         
         CleanupExpiredStatuses();
     }
@@ -170,118 +189,103 @@ public abstract class EnemyBase : MonoBehaviour
         // 4. Death Check
         if (currentHealth <= 0f) Die();
     }
+// Same as ReceiveDamage but no knockback and no apply status effect
+    public virtual void StatusDamage(DamageInfo dmg)
+        {
+            if (currentState == EnemyState.Dead) return;
 
-    // ---------------------------------------------------------
-    // SYNERGY & STATUS LOGIC
-    // ---------------------------------------------------------
+            // 1. Apply Immediate Damage (Physical Calculation)
+            float finalDamage = dmg.amount * damageTakenMultiplier;
+            currentHealth -= finalDamage;
+            
+            Debug.Log($"{name} Hit by {dmg.element}. HP: {currentHealth}");
 
-    public void TryAddStatus(StatusType incoming)
+            Color flashColor = GetDamageFlashColor(dmg.element);
+            StartCoroutine(FlashSpriteRoutine(flashColor)); 
+
+            if (currentHealth <= 0f) Die();
+        }
+private void InitializeSynergies()
+{
+    synergyLibrary = new Dictionary<SynergyPair, Action>();
+
+    // Helper to add recipes easily
+    void AddSynergy(StatusType s1, StatusType s2, Action effect)
     {
-        // Checking for specific pairings. 
-        // If find a match, return early so don't have to apply the base status.
-
-        // --- PAIRINGS WITH BURN ---
-        if (incoming == StatusType.Burn)
-        {
-            if (CheckSynergy(StatusType.Poison)) { TriggerSynergy_BurnPoison(); return; }
-            if (CheckSynergy(StatusType.Freeze)) { TriggerSynergy_BurnFreeze(); return; }
-            if (CheckSynergy(StatusType.Confusion)) { TriggerSynergy_BurnConfusion(); return; }
-        }
-
-        // --- PAIRINGS WITH POISON ---
-        if (incoming == StatusType.Poison)
-        {
-            if (CheckSynergy(StatusType.Burn)) { TriggerSynergy_BurnPoison(); return; } // Symmetric
-            if (CheckSynergy(StatusType.Freeze)) { TriggerSynergy_PoisonFreeze(); return; }
-            if (CheckSynergy(StatusType.Confusion)) { TriggerSynergy_PoisonConfusion(); return; }
-        }
-
-        // --- PAIRINGS WITH FREEZE ---
-        if (incoming == StatusType.Freeze)
-        {
-            if (CheckSynergy(StatusType.Burn)) { TriggerSynergy_BurnFreeze(); return; }
-            if (CheckSynergy(StatusType.Poison)) { TriggerSynergy_PoisonFreeze(); return; }
-            if (CheckSynergy(StatusType.Confusion)) { TriggerSynergy_FreezeConfusion(); return; }
-        }
-
-        // --- PAIRINGS WITH CONFUSION ---
-        if (incoming == StatusType.Confusion)
-        {
-            if (CheckSynergy(StatusType.Burn)) { TriggerSynergy_BurnConfusion(); return; }
-            if (CheckSynergy(StatusType.Poison)) { TriggerSynergy_PoisonConfusion(); return; }
-            if (CheckSynergy(StatusType.Freeze)) { TriggerSynergy_FreezeConfusion(); return; }
-        }
-
-        // --- NO SYNERGY FOUND: APPLY BASE STATUS ---
-        ApplyBaseStatus(incoming);
+        synergyLibrary.Add(new SynergyPair(s1, s2), effect);
     }
 
-    /// <summary>
-    /// Helper: If the enemy has the 'existing' status, clear it and return true.
-    /// This effectively "Consumes" the existing status for the synergy.
-    /// </summary>
-    private bool CheckSynergy(StatusType existing)
-    {
-        if (HasStatus(existing))
-        {
-            ClearStatus(existing); // Remove the old one
-            return true;           // Confirm synergy
-        }
-        return false;
-    }
+    // --- DEFINE YOUR COMBOS ---
+    
+    AddSynergy(StatusType.Burn, StatusType.Poison, () => {
+        LogCombat("SYNERGY: Explosion + DoT");
+        StartDot(StatusType.Poison, dps: 2f, duration: 3f);
+        // Add explosion prefab logic here
+    });
 
-    // --- INDIVIDUAL SYNERGY EFFECTS ---
-
-    private void TriggerSynergy_BurnPoison()
-    {
-        // Burn + Poison: Area explosion + extra DoT (0.2 hearts/sec for 3s).
-        LogCombat("SYNERGY: Burn + Poison! (Explosion + DoT)");
-        // TODO: Spawn Explosion Prefab here
-        StartDot(StatusType.Poison, dps: 2f, duration: 3f); // 2f = 0.2 hearts * 10 health scale
-    }
-
-    private void TriggerSynergy_BurnFreeze()
-    {
-        // Burn + Freeze: Instant damage + Fragile (+20% damage taken for 3s).
-        LogCombat("SYNERGY: Burn + Freeze! (Thermal Shock + Fragile)");
-        currentHealth -= 20f; // Instant damage (2 hearts)
+    AddSynergy(StatusType.Burn, StatusType.Freeze, () => {
+        LogCombat("SYNERGY: Thermal Shock (Instant Dmg + Fragile)");
+        currentHealth -= 20f;
         ApplyFragile(3f);
-    }
+    });
 
-    private void TriggerSynergy_BurnConfusion()
-    {
-        // Burn + Confusion: Extra DoT + self-attacks deal 5% max HP.
-        LogCombat("SYNERGY: Burn + Confusion! (Self-Harm Mode)");
-        StartDot(StatusType.Burn, dps: 3f, duration: 3f); // 0.3 hearts/sec
-        selfAttackMaxHpPercent = 0.05f; 
-        // We set a hidden timer to clear the self-attack flag since Confusion was consumed
+    AddSynergy(StatusType.Burn, StatusType.Confusion, () => {
+        LogCombat("SYNERGY: Self-Harm Mode");
+        StartDot(StatusType.Burn, dps: 3f, duration: 3f);
+        selfAttackMaxHpPercent = 0.05f;
         StartCoroutine(ResetSelfAttackBonus(3f));
-    }
+    });
 
-    private void TriggerSynergy_PoisonFreeze()
-    {
-        // Poison + Freeze: Strong damage (0.2 hearts/sec for 5s).
-        LogCombat("SYNERGY: Poison + Freeze! (Strong DoT)");
+    AddSynergy(StatusType.Poison, StatusType.Freeze, () => {
+        LogCombat("SYNERGY: Strong DoT");
         StartDot(StatusType.Poison, dps: 2f, duration: 5f);
+    });
+
+    AddSynergy(StatusType.Poison, StatusType.Confusion, () => {
+        LogCombat("SYNERGY: Extended Confusion + Poison");
+        ApplyConfusion(4.5f);
+        StartDot(StatusType.Poison, dps: 2f, duration: 5f);
+    });
+
+    AddSynergy(StatusType.Freeze, StatusType.Confusion, () => {
+        LogCombat("SYNERGY: Thaw Nightmare");
+        ApplyFreeze(3f);
+        freezeConfusionThawBonus = true;
+    });
+}
+
+public void TryAddStatus(StatusType incoming)
+{
+    // 1. Loop through all currently ACTIVE statuses on this enemy
+    // (We copy keys to a list to avoid "Collection Modified" errors if we remove one)
+    List<StatusType> currentStatuses = new List<StatusType>(statusEnd.Keys);
+
+    foreach (StatusType existing in currentStatuses)
+    {
+        // 2. Check if active?
+        if (!HasStatus(existing)) continue;
+
+        // 3. Create a pair and check the library
+        SynergyPair pair = new SynergyPair(incoming, existing);
+
+        if (synergyLibrary.ContainsKey(pair))
+        {
+            // FOUND A SYNERGY!
+            
+            // A. Execute the specific code defined in InitializeSynergies
+            synergyLibrary[pair].Invoke();
+
+            // B. Consume the OLD status (Standard mechanic)
+            ClearStatus(existing);
+
+            // C. Return early (So we don't apply the NEW status base effect)
+            return; 
+        }
     }
 
-    private void TriggerSynergy_PoisonConfusion()
-    {
-        // Poison + Confusion: Confusion duration +50% + poison deals +0.1 heart per tick.
-        LogCombat("SYNERGY: Poison + Confusion! (Extended Confusion + Strong Poison)");
-        // Since we consumed confusion, we re-apply it longer
-        ApplyConfusion(4.5f); // 3s base + 50%
-        StartDot(StatusType.Poison, dps: 1f + 1f, duration: 5f); // Base + Bonus
-    }
-
-    private void TriggerSynergy_FreezeConfusion()
-    {
-        // Freeze + Confusion: When thawing, enters extra Confusion (3s).
-        LogCombat("SYNERGY: Freeze + Confusion! (Thaw Nightmare)");
-        // We apply Freeze, but set the flag so confusion triggers when it ends
-        ApplyFreeze(3f); 
-        freezeConfusionThawBonus = true; 
-    }
+    // 4. No synergy found? Just apply the status normally.
+    ApplyBaseStatus(incoming);
+}
 
     // --- BASE STATUS APPLICATION ---
 
@@ -348,9 +352,15 @@ public abstract class EnemyBase : MonoBehaviour
 
         while (t < duration && currentState != EnemyState.Dead)
         {
-            currentHealth -= dps * tick;
+            StatusDamage(new DamageInfo(
+                amount: dps * tick,
+                element: key == StatusType.Burn ? DamageElement.Fire :
+                         key == StatusType.Poison ? DamageElement.Poison : DamageElement.True,
+                style: AttackStyle.Environment,
+                sourcePosition: transform.position
+            ));
             if (currentHealth <= 0f) { Die(); yield break; }
-            yield return new WaitForSeconds(tick);
+            yield return DotTickWait;
             t += tick;
         }
         ClearStatus(key);
@@ -534,5 +544,5 @@ public abstract class EnemyBase : MonoBehaviour
     {
         return stats.maxHealth;
     }
-    
+
 }

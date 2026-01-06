@@ -22,6 +22,21 @@ public abstract class WeaponData : ScriptableObject
     public DamageElement element;
     public AttackStyle style;
 
+    public DamageInfo damageInfo
+    {
+        get
+        {
+            return new DamageInfo(
+                amount: damage,
+                element: element,
+                style: style,
+                sourcePosition: Vector2.zero, // Placeholder, should be set when attacking
+                knockbackForce: knockbackForce,
+                isCritical: false // Placeholder, can be modified based on player stats
+            );
+        }
+    }
+
     // --- NEW: THE EFFECTS LIST ---
     [Header("Special Effects")]
     public List<WeaponEffect> effects = new List<WeaponEffect>();
