@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour
     private void PerformBasicAttack()
     {
         // Calculate Cooldown
-        float actualCooldown = currentWeapon.cooldown / playerAttackSpeedMultiplier;
+        float actualCooldown = currentWeapon.Cooldown / playerAttackSpeedMultiplier;
 
         if (Time.time >= lastAttackTime + actualCooldown)
         {
@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(currentWeapon.OnAttack(this, currentWeaponHitBox));
         
             // Special Meter Fill 
-            OnDealtDamage(currentWeapon.damage);
+            OnDealtDamage(5f); // Hard-coded fix later 
         }
     }
 

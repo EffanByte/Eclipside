@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
+  m_Name: Rusty Dagger
+  m_EditorClassIdentifier: 
+  weaponName: Rusty Sword
+  icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  animatorOverride: {fileID: 0}
+  weaponPrefab: {fileID: 0}
+  element: 0
+  style: 0
+  effects:
+  - {fileID: 11400000, guid: 5a850b357eae89d4c9f61a6e5a101cac, type: 2}
+  - {fileID: 11400000, guid: 5915833e387b34c4a952f7d687135db1, type: 2}
+  - {fileID: 11400000, guid: 25bf3f416b4924748b713c4bc8064297, type: 2}
+  - {fileID: 11400000, guid: 25bf3f416b4924748b713c4bc8064297, type: 2}
+  - {fileID: 11400000, guid: 25bf3f416b4924748b713c4bc8064297, type: 2}
