@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 public enum EnemyState
 {
@@ -12,7 +13,7 @@ public enum EnemyState
 
 public enum DamageElement
 {
-    Physical, Magic, Fire, Ice, Poison, Psychic, True
+    Fire, Poison, Magic, Physical, Ice, Psychic, True
 }
 
 public enum AttackStyle
@@ -223,8 +224,14 @@ private void InitializeSynergies()
     
     AddSynergy(StatusType.Burn, StatusType.Poison, () => {
         LogCombat("SYNERGY: Explosion + DoT");
-        StartDot(StatusType.Poison, dps: 2f, duration: 3f);
-        // Add explosion prefab logic here
+
+        TriggerAreaExplosion(new DamageInfo(
+            amount: 8f,
+            element: DamageElement.Fire,
+            style: AttackStyle.Environment,
+            sourcePosition: transform.position,
+            knockbackForce: 4f
+        ), 3f);  // 3f is the radius of explosion
     });
 
     AddSynergy(StatusType.Burn, StatusType.Freeze, () => {
@@ -259,6 +266,15 @@ private void InitializeSynergies()
     });
 }
 
+// ---------------------------------------------------------
+    // DEBUG GIZMOS
+    // ---------------------------------------------------------
+    protected virtual void OnDrawGizmosSelected()
+    {
+        // Draw the Explosion Radius for Burn+Poison Synergy
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 3f);
+    }
 public void TryAddStatus(StatusType incoming)
 {
     // 1. Loop through all currently ACTIVE statuses on this enemy
@@ -302,6 +318,32 @@ public void TryAddStatus(StatusType incoming)
             case StatusType.Poison: ApplyPoison(3f); break;
             case StatusType.Freeze: ApplyFreeze(3f, originalSpeedMultiplier); break;
             case StatusType.Confusion: ApplyConfusion(3f); break;
+        }
+    }
+
+    private void TriggerAreaExplosion(DamageInfo dmg, float radius)
+    {
+        // 1. Find everything inside the radius
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+
+        // 2. Create the explosion damage packet
+        // Note: We use Fire element for the explosion. 
+        // WARNING: If neighbors have Poison, this might trigger a chain reaction explosion!
+
+
+        foreach (var hit in hits)
+        {
+            // 3. Filter for Enemies
+            // We use EnemyBase to find other enemies. 
+            // Change to IDamageable if you want it to hurt the Player too.
+            EnemyBase neighbor = hit.GetComponent<EnemyBase>();
+
+            // 4. Apply Damage
+            // neighbor != this: Prevents the enemy from exploding itself twice
+            if (neighbor != null && neighbor != this)
+            {
+                neighbor.ReceiveDamage(dmg);
+            }
         }
     }
 
