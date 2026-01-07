@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     private bool isSpecialReady = false;
 
     // --- Internal State ---
-    private float currentHealth; 
     private SpecialMeterFill specialMeterFill;
     private Rigidbody2D rb;
     private Vector2 rawInputMovement;
@@ -92,7 +91,6 @@ public class PlayerController : MonoBehaviour
         statusMgr = GetComponent<StatusManager>();
         statusMgr.Initialize(rb, this, StatusDamage, GetComponent<SpriteRenderer>());
         baseMovementSpeed = movementSpeed;
-        currentHealth = maxHearts * 10f;
 
         // Input Bindings
         controls.Player.Move.performed += ctx => rawInputMovement = ctx.ReadValue<Vector2>();
@@ -184,10 +182,51 @@ public class PlayerController : MonoBehaviour
 
     public void StatusDamage(DamageInfo dmg)
     {
-
+        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
+    
+        statusMgr.FlashSpriteRoutine(dmg.element);
+        // 4. Pass the FINAL result to Health
+        healthComp.ReceiveDamage(finalAmount, dmg.element);
     }
 
+    public void ApplyBuff(EffectStatBuff.BuffType type, float amount, float duration)
+    {
+        StartCoroutine(BuffRoutine(type, amount, duration));
+    }
 
+    private IEnumerator BuffRoutine(EffectStatBuff.BuffType type, float amount, float duration)
+    {
+        // Apply Buff
+        switch (type)
+        {
+            case EffectStatBuff.BuffType.Defense:
+                statusMgr.ChangeDamageMultiplier(-amount);
+                break;
+            case EffectStatBuff.BuffType.Attack:
+                playerAttackSpeedMultiplier += amount;
+                break;
+            case EffectStatBuff.BuffType.Speed:
+                movementSpeed += baseMovementSpeed * amount;
+                break;
+        }
+
+        // Wait for duration
+        yield return new WaitForSeconds(duration);
+
+        // Revert Buff
+        switch (type)
+        {
+            case EffectStatBuff.BuffType.Defense:
+                statusMgr.ChangeDamageMultiplier(amount);
+                break;
+            case EffectStatBuff.BuffType.Attack:
+                playerAttackSpeedMultiplier -= amount;
+                break;
+            case EffectStatBuff.BuffType.Speed:
+                movementSpeed -= baseMovementSpeed * amount;
+                break;
+        }
+    }
     #region 1. Movement & Controls
     
     private void Move()

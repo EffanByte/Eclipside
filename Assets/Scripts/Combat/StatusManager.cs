@@ -214,7 +214,10 @@ public class StatusManager : MonoBehaviour
         statusEndTimes[StatusType.Fragile] = Time.time + duration;
         DamageTakenMultiplier = 1.2f;
     }
-
+    public void ChangeDamageMultiplier(float amount)
+    {
+        DamageTakenMultiplier += amount;
+    }
     private void CleanupExpiredStatuses()
     {
         List<StatusType> toRemove = new List<StatusType>();

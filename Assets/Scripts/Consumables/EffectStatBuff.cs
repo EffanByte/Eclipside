@@ -1,16 +1,17 @@
 using UnityEngine;
 
-public class EffectStatBuff : MonoBehaviour
+[CreateAssetMenu(menuName = "Eclipside/Item Effects/Stat Buff")]
+public class EffectStatBuff : ItemEffect
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public enum BuffType { Defense, Attack, Speed }
+    public BuffType type;
+    public float duration;
+    public float amount; // 0.15 for 15%
 
-    // Update is called once per frame
-    void Update()
+    public override void Apply(PlayerController player)
     {
-        
+        // You'll need to add a "ApplyBuff" method to PlayerController
+        // that handles coroutines for these stats
+        player.ApplyBuff(type, amount, duration);
     }
-}
+}   
