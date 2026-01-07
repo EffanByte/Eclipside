@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
@@ -117,7 +116,7 @@ public abstract class EnemyBase : MonoBehaviour
         anim = GetComponent<Animator>();
         originalSpeedMultiplier = speedMultiplier;
         currentHealth = stats.maxHealth;
-            statusMgr = GetComponent<StatusManager>();
+        statusMgr = GetComponent<StatusManager>();
         statusMgr.Initialize(rb, this, StatusDamage, spriteRenderer);
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -154,13 +153,19 @@ public abstract class EnemyBase : MonoBehaviour
         currentHealth -= finalDamage;
 
         // 2. Logic to PREVENT Infinite Loops
-        // Only try to apply status if the damage is NOT "True" damage (which comes from DoTs)
         if (dmg.element != DamageElement.True && dmg.element != DamageElement.Physical)
         {
             StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
             statusMgr.TryAddStatus(effect);
         }
+                if (rb != null && dmg.knockbackForce > 0)
+        {
+            Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
+            rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
+            StartCoroutine(KnockbackRoutine(0.2f));
+        }
 
+        StartCoroutine(statusMgr.FlashSpriteRoutine(dmg.element)); // NOT GOOD PRACTICE TO put flash logic from statusMgr
         if (currentHealth <= 0f) Die();
     }
 

@@ -13,12 +13,12 @@ public abstract class WeaponData : ScriptableObject
     public GameObject weaponPrefab;
 
     [Header("Stats")]
-    protected float damage;
-    protected float cooldown;
+    [SerializeField] protected float damage;
+    [SerializeField] protected float cooldown;
     public float Cooldown => cooldown;
-    protected float knockbackForce;
-    protected float hitDuration = 0.2f;
-    protected float criticalChance;
+    [SerializeField] protected float knockbackForce;
+    [SerializeField] protected float hitDuration = 0.2f;
+    [SerializeField] protected float criticalChance;
 
     [Header("Damage Type")]
     public DamageElement element;
