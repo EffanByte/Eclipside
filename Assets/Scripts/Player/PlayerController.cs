@@ -309,13 +309,15 @@ public class PlayerController : MonoBehaviour
     #region 3. Health & Status Effects
 
 
-    public void Heal(float hearts)
+    public void Heal(float amount)
     {
-        currentHealth += hearts * 10f;
-        if (currentHealth > maxHearts * 10f) currentHealth = maxHearts * 10f;
-        onUIUpdate?.Invoke();
+        healthComp.Heal(amount);
     }
    
+    public void AddTemporaryHearts(float amount)
+    {
+        healthComp.AddTemporaryHearts(amount);
+    }
     #endregion
 
     #region 4. Interactions & NEW API
@@ -356,12 +358,6 @@ public class PlayerController : MonoBehaviour
                 // Trigger your Loot Drop logic here later
             }
             else Debug.Log("Need keys!");
-        }
-        
-        if (collision.CompareTag("Potion"))
-        {
-            Heal(0.5f); 
-            Destroy(collision.gameObject);
         }
 
         if (collision.CompareTag("Rupee"))

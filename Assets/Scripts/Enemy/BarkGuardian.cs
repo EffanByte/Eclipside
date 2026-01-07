@@ -44,10 +44,4 @@ public class BarkGuardian : EnemyBase
     {
         ChangeState(EnemyState.Chasing);
     }
-
-    public override void ReceiveDamage(DamageInfo dmg)
-    {
-        base.ReceiveDamage(dmg); // Let the parent do the math and HP reduction
-    }
-
 }

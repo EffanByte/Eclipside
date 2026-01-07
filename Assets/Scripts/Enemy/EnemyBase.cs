@@ -104,21 +104,11 @@ public abstract class EnemyBase : MonoBehaviour
     protected float speedMultiplier = 1.0f; 
     protected float originalSpeedMultiplier;
 
-    // Active status end-times
-    private readonly Dictionary<StatusType, float> statusEnd = new Dictionary<StatusType, float>();
-
-    // Running coroutines (for DoT etc.)
-    private readonly Dictionary<StatusType, Coroutine> statusCo = new Dictionary<StatusType, Coroutine>();
-
     // Modifiers      
     private float selfAttackMaxHpPercent = 0f;        
-    private bool freezeConfusionThawBonus = false;    
 
     public static event Action<EnemyBase> OnEnemyKilled;
-    private Dictionary<SynergyPair, Action> synergyLibrary;
     // for status effects
-    private static readonly WaitForSeconds DotTickWait = new WaitForSeconds(1f);
-
     protected virtual void Start()
     {   
         textbox = FindObjectOfType<TextMeshProUGUI>();

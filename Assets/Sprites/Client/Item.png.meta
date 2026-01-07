@@ -10914,7 +10914,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_437
+      name: Heart
       rect:
         serializedVersion: 2
         x: 16
@@ -10936,7 +10936,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_438
+      name: Temp Heart
       rect:
         serializedVersion: 2
         x: 48
@@ -12308,7 +12308,7 @@ TextureImporter:
         width: 34
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12330,7 +12330,7 @@ TextureImporter:
         width: 31
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12358,7 +12358,9 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Blue Web: 1698198584
+      Heart: 6273962568160558567
       Item: -9191427274821700472
+      Temp Heart: 8652019896354499425
       The Roguelike Remastered 1-6-10 Alpha_1: -6951518270194642895
       The Roguelike Remastered 1-6-10 Alpha_10: -6873789366587834118
       The Roguelike Remastered 1-6-10 Alpha_100: -1563766906642717040
@@ -12734,8 +12736,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_434: 5491304129864436124
       The Roguelike Remastered 1-6-10 Alpha_435: -1911771487166494412
       The Roguelike Remastered 1-6-10 Alpha_436: 4520407030701243442
-      The Roguelike Remastered 1-6-10 Alpha_437: 6273962568160558567
-      The Roguelike Remastered 1-6-10 Alpha_438: 8652019896354499425
       The Roguelike Remastered 1-6-10 Alpha_439: 7775729309775170023
       The Roguelike Remastered 1-6-10 Alpha_44: -1041026795678539802
       The Roguelike Remastered 1-6-10 Alpha_440: 5303591145849499398

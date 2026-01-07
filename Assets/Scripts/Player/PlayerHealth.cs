@@ -1,59 +1,81 @@
-using System; // Required for Actions
+using System; 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHealth : MonoBehaviour
 {
     protected SpriteRenderer spriteRenderer;
+    
     [Header("Health Stats")]
-    // PDF Page 12: "1 Heart = 10 damage units". 
-    // If you want 10 hearts, set this to 10.
-    [SerializeField] private float maxHearts = 100f; 
+    [SerializeField] private float maxHearts = 100f; // 10 Hearts (10 units each)
     
     private float currentHealth;
+    private float temporaryHealth = 0f; // NEW: Golden/Blue Hearts
 
-    // Events: The UI will listen to these
-    public event Action<int> OnMaxHealthChanged; // Sends max hearts count
-    public event Action<float> OnHealthChanged;  // Sends current health value
-    public event Action OnPlayerDeath;           // Notification for Game Over
+    // Events
+    public event Action<int> OnMaxHealthChanged; 
+    public event Action<float> OnHealthChanged;  
+    public event Action<float> OnTempHealthChanged; // NEW: UI needs to know about temp hearts
+    public event Action OnPlayerDeath;           
 
     private void Start()
     {
-        // Initialize HP
         currentHealth = maxHearts;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // Notify the UI immediately so it draws the hearts
+        
         OnMaxHealthChanged?.Invoke((int)maxHearts);
         OnHealthChanged?.Invoke(currentHealth);
+        OnTempHealthChanged?.Invoke(temporaryHealth);
     }
 
     // ----------------------------------------------------
-    // IDamageable Implementation
+    // DAMAGE LOGIC
     // ----------------------------------------------------
 
     public void ReceiveDamage(float finalDamage, DamageElement element)
     {
-        // 1. Apply Damage
-        // Note: You can add Defense/Armor logic here later
-        Debug.Log($"Player took {finalDamage} {element} damage!");
-        currentHealth -= finalDamage;
+        Debug.Log($"Player hit for {finalDamage} ({element})");
 
-        // 2. Clamp values (Cannot go below 0 or above Max)
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
-        
-        // 3. Notify UI
-        
-        OnHealthChanged?.Invoke(currentHealth);
-        Debug.Log("Health Change Invoked");
+        // 1. Absorb Damage with Temporary Health First
+        if (temporaryHealth > 0)
+        {
+            // Determine how much temp health can absorb
+            float damageToTemp = Mathf.Min(finalDamage, temporaryHealth);
+            
+            temporaryHealth -= damageToTemp;
+            finalDamage -= damageToTemp; // Reduce incoming damage by amount absorbed
 
-        // 4. Check Death
+            // Update Temp Health UI
+            OnTempHealthChanged?.Invoke(temporaryHealth);
+        }
+
+        // 2. Apply remaining damage to Real Health
+        if (finalDamage > 0)
+        {
+            currentHealth -= finalDamage;
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
+            
+            OnHealthChanged?.Invoke(currentHealth);
+        }
+
         if (currentHealth <= 0)
             Die();
     }
 
-    // Public method for Potions (Healing)
+    // ----------------------------------------------------
+    // HEALING & BUFFS
+    // ----------------------------------------------------
+
+    // NEW: Adds health that sits on top of max health but doesn't heal back
+    public void AddTemporaryHearts(float amount)
+    {
+        temporaryHealth += amount;
+        Debug.Log($"Added {amount} Temp HP. Total: {temporaryHealth}");
+        OnTempHealthChanged?.Invoke(temporaryHealth);
+    }
+
+    // Standard healing (Only affects Red Hearts)
     public void Heal(float amount)
     {
         currentHealth += amount;
@@ -65,8 +87,12 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player Died!");
         OnPlayerDeath?.Invoke();
-        // Disable controls, show Game Over screen, etc.
         gameObject.SetActive(false); 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    // ----------------------------------------------------
+    // HELPERS
+    // ----------------------------------------------------
+
 }
