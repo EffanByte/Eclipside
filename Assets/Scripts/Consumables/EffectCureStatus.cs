@@ -7,6 +7,6 @@ public class EffectCureStatus : ItemEffect
 
     public override void Apply(PlayerController player)
     {
-        player.CureStatus(statusToRemove);
+   //     player.CureStatus(statusToRemove);
     }
 }

@@ -110,8 +110,7 @@ public abstract class EnemyBase : MonoBehaviour
     // Running coroutines (for DoT etc.)
     private readonly Dictionary<StatusType, Coroutine> statusCo = new Dictionary<StatusType, Coroutine>();
 
-    // Modifiers
-    private float damageTakenMultiplier = 1f;         
+    // Modifiers      
     private float selfAttackMaxHpPercent = 0f;        
     private bool freezeConfusionThawBonus = false;    
 
@@ -129,14 +128,13 @@ public abstract class EnemyBase : MonoBehaviour
         originalSpeedMultiplier = speedMultiplier;
         currentHealth = stats.maxHealth;
             statusMgr = GetComponent<StatusManager>();
-        statusMgr.Initialize(rb, this, ReceiveDamage, spriteRenderer);
+        statusMgr.Initialize(rb, this, StatusDamage, spriteRenderer);
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
 
         isAttackReady = true;
         ChangeState(EnemyState.Chasing);
-        InitializeSynergies(); 
     }
 
     protected virtual void Update()
@@ -152,8 +150,6 @@ public abstract class EnemyBase : MonoBehaviour
         }
 
         if (transform.position.y < -30f) Die();
-        
-        CleanupExpiredStatuses();
     }
 
     // ---------------------------------------------------------
@@ -184,7 +180,7 @@ public abstract class EnemyBase : MonoBehaviour
             if (currentState == EnemyState.Dead) return;
 
             // 1. Apply Immediate Damage (Physical Calculation)
-            float finalDamage = dmg.amount * damageTakenMultiplier;
+            float finalDamage = dmg.amount * statusMgr.DamageTakenMultiplier;
             currentHealth -= finalDamage;
             
             Debug.Log($"{name} Hit by {dmg.element}. HP: {currentHealth}");
@@ -193,61 +189,6 @@ public abstract class EnemyBase : MonoBehaviour
 
             if (currentHealth <= 0f) Die();
         }
-private void InitializeSynergies()
-{
-    synergyLibrary = new Dictionary<SynergyPair, Action>();
-
-    // Helper to add recipes easily
-    void AddSynergy(StatusType s1, StatusType s2, Action effect)
-    {
-        synergyLibrary.Add(new SynergyPair(s1, s2), effect);
-    }
-
-    // --- DEFINE YOUR COMBOS ---
-    
-    AddSynergy(StatusType.Burn, StatusType.Poison, () => {
-        LogCombat("SYNERGY: Explosion + DoT");
-
-        TriggerAreaExplosion(new DamageInfo(
-            amount: 8f,
-            element: DamageElement.Fire,
-            style: AttackStyle.Environment,
-            sourcePosition: transform.position,
-            knockbackForce: 4f
-        ), 3f);  // 3f is the radius of explosion
-    });
-
-    AddSynergy(StatusType.Burn, StatusType.Freeze, () => {
-        LogCombat("SYNERGY: Thermal Shock (Instant Dmg + Fragile)");
-        currentHealth -= 20f;
-        ApplyFragile(3f);
-    });
-
-    AddSynergy(StatusType.Burn, StatusType.Confusion, () => {
-        LogCombat("SYNERGY: Self-Harm Mode");
-        StartDot(StatusType.Burn, dps: 3f, duration: 3f);
-        selfAttackMaxHpPercent = 0.05f;
-        StartCoroutine(ResetSelfAttackBonus(3f));
-    });
-
-    AddSynergy(StatusType.Poison, StatusType.Freeze, () => {
-        LogCombat("SYNERGY: Strong DoT");
-        StartDot(StatusType.Poison, dps: 2f, duration: 5f);
-        ApplyFreeze(3f, originalSpeedMultiplier);
-    });
-
-    AddSynergy(StatusType.Poison, StatusType.Confusion, () => {
-        LogCombat("SYNERGY: Extended Confusion + Poison");
-        ApplyConfusion(4.5f);
-        StartDot(StatusType.Poison, dps: 2f, duration: 5f);
-    });
-
-    AddSynergy(StatusType.Freeze, StatusType.Confusion, () => {
-        LogCombat("SYNERGY: Thaw Nightmare");
-        ApplyFreeze(3f, originalSpeedMultiplier);
-        freezeConfusionThawBonus = true;
-    });
-}
 
 // ---------------------------------------------------------
     // DEBUG GIZMOS
@@ -258,132 +199,42 @@ private void InitializeSynergies()
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, 3f);
     }
-public void TryAddStatus(StatusType incoming)
-{
-    // 1. Loop through all currently ACTIVE statuses on this enemy
-    // (We copy keys to a list to avoid "Collection Modified" errors if we remove one)
-    List<StatusType> currentStatuses = new List<StatusType>(statusEnd.Keys);
-
-    foreach (StatusType existing in currentStatuses)
-    {
-        // 2. Check if active?
-        if (!HasStatus(existing)) continue;
-
-        // 3. Create a pair and check the library
-        SynergyPair pair = new SynergyPair(incoming, existing);
-
-        if (synergyLibrary.ContainsKey(pair))
-        {
-            // FOUND A SYNERGY!
-            
-            // A. Execute the specific code defined in InitializeSynergies
-            synergyLibrary[pair].Invoke();
-
-            // B. Consume the OLD status (Standard mechanic)
-            ClearStatus(existing);
-
-            // C. Return early (So we don't apply the NEW status base effect)
-            return; 
-        }
-    }
-    // 4. No synergy found? Just apply the status normally.
-    Debug.Log("Applying Base status, no synergy found.");
-    ApplyBaseStatus(incoming);
-}
 
     // --- BASE STATUS APPLICATION ---
 
-    private void ApplyBaseStatus(StatusType type)
-    {
-        switch (type)
-        {
-            case StatusType.Burn: ApplyBurn(3f); break;
-            case StatusType.Poison: ApplyPoison(3f); break;
-            case StatusType.Freeze: ApplyFreeze(3f, originalSpeedMultiplier); break;
-            case StatusType.Confusion: ApplyConfusion(3f); break;
-        }
-    }
 
-    private void TriggerAreaExplosion(DamageInfo dmg, float radius)
-    {
-        // 1. Find everything inside the radius
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+    // private void TriggerAreaExplosion(DamageInfo dmg, float radius)
+    // {
+    //     // 1. Find everything inside the radius
+    //     Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
 
-        // 2. Create the explosion damage packet
-        // Note: We use Fire element for the explosion. 
-        // WARNING: If neighbors have Poison, this might trigger a chain reaction explosion!
+    //     // 2. Create the explosion damage packet
+    //     // Note: We use Fire element for the explosion. 
+    //     // WARNING: If neighbors have Poison, this might trigger a chain reaction explosion!
 
 
-        foreach (var hit in hits)
-        {
-            // 3. Filter for Enemies
-            // We use EnemyBase to find other enemies. 
-            // Change to IDamageable if you want it to hurt the Player too.
-            EnemyBase neighbor = hit.GetComponent<EnemyBase>();
+    //     foreach (var hit in hits)
+    //     {
+    //         // 3. Filter for Enemies
+    //         // We use EnemyBase to find other enemies. 
+    //         // Change to IDamageable if you want it to hurt the Player too.
+    //         EnemyBase neighbor = hit.GetComponent<EnemyBase>();
 
-            // 4. Apply Damage
-            // neighbor != this: Prevents the enemy from exploding itself twice
-            if (neighbor != null && neighbor != this)
-            {
-                neighbor.ReceiveDamage(dmg);
-            }
-        }
-    }
+    //         // 4. Apply Damage
+    //         // neighbor != this: Prevents the enemy from exploding itself twice
+    //         if (neighbor != null && neighbor != this)
+    //         {
+    //             neighbor.ReceiveDamage(dmg);
+    //         }
+    //     }
+    // }
 
     // ---------------------------------------------------------
     // HELPERS & IMPLEMENTATIONS
     // ---------------------------------------------------------
 
 
-    public bool HasStatus(StatusType s)
-    {
-        return statusEnd.TryGetValue(s, out float end) && Time.time < end;
-    }
 
-    private void SetStatus(StatusType s, float duration)
-    {
-        statusEnd[s] = Time.time + duration;
-    }
-
-    private void ClearStatus(StatusType s)
-    {
-        statusEnd.Remove(s);
-        if (statusCo.TryGetValue(s, out var co) && co != null) StopCoroutine(co);
-        statusCo.Remove(s);
-
-        // Cleanup modifiers immediately
-        if (s == StatusType.Fragile) damageTakenMultiplier = 1f;
-        // Note: We don't clear selfAttackMaxHpPercent here immediately because some synergies
-        // rely on it persisting after the status is consumed.
-    }
-
-    private void StartDot(StatusType key, float dps, float duration)
-    {
-        if (statusCo.TryGetValue(key, out var co) && co != null) StopCoroutine(co);
-        statusCo[key] = StartCoroutine(DotRoutine(key, dps, duration));
-    }
-
-    private IEnumerator DotRoutine(StatusType key, float dps, float duration)
-    {
-        SetStatus(key, duration);
-        float t = 0f;
-        const float tick = 1f;
-
-        while (t < duration && currentState != EnemyState.Dead)
-        {
-            StatusDamage(new DamageInfo(
-                amount: dps * tick,
-                element: key == StatusType.Burn ? DamageElement.Fire :
-                         key == StatusType.Poison ? DamageElement.Poison : DamageElement.True,
-                style: AttackStyle.Environment,
-                sourcePosition: transform.position
-            ));
-            if (currentHealth <= 0f) { Die(); yield break; }
-            yield return DotTickWait;
-            t += tick;
-        }
-        ClearStatus(key);
-    }
 
     private IEnumerator ResetSelfAttackBonus(float delay)
     {
@@ -391,58 +242,6 @@ public void TryAddStatus(StatusType incoming)
         selfAttackMaxHpPercent = 0f;
     }
 
-    private void CleanupExpiredStatuses()
-    {
-        // Handle Freeze Thaw
-        if (!HasStatus(StatusType.Freeze) && statusEnd.ContainsKey(StatusType.Freeze))
-        {
-            statusEnd.Remove(StatusType.Freeze);
-            if (freezeConfusionThawBonus)
-            {
-                freezeConfusionThawBonus = false;
-                ApplyConfusion(3f);
-                LogCombat("Thawed into Confusion!");
-            }
-        }
-        
-        // General cleanup
-        List<StatusType> toRemove = new List<StatusType>();
-        foreach(var kvp in statusEnd)
-        {
-            if(Time.time >= kvp.Value) toRemove.Add(kvp.Key);
-        }
-
-        foreach(var s in toRemove) ClearStatus(s);
-    }
-
-    private void ApplyBurn(float duration) => StartDot(StatusType.Burn, 2f, duration); // 0.2 hearts = 2.0 hp
-    private void ApplyPoison(float duration) => StartDot(StatusType.Poison, 1f, duration); // 0.1 hearts = 1.0 hp
-    private void ApplyFreeze(float duration, float currentSpeed)
-    {
-        SetStatus(StatusType.Freeze, duration); 
-        StartCoroutine(FreezeRoutine(duration, currentSpeed));;
-    }
-    private void ApplyConfusion(float duration) => SetStatus(StatusType.Confusion, duration);
-    private void ApplyFragile(float duration)
-    {
-        damageTakenMultiplier = 1.2f;
-        SetStatus(StatusType.Fragile, duration);
-    }
-
-    private IEnumerator FreezeRoutine(float duration, float currentSpeed)
-    {
-        speedMultiplier = 0.6f; // hard-coded for now
-        Debug.Log("Decreased speed");
-
-        yield return new WaitForSeconds(duration);
-
-        // Only restore if Freeze really ended
-        if (!HasStatus(StatusType.Freeze))
-        {
-            speedMultiplier = currentSpeed;
-            Debug.Log("Speed back to normal");
-        }
-    }
     // ---------------------------------------------------------
     // STANDARD BEHAVIOR (Movement, Attack, etc)
     // ---------------------------------------------------------
@@ -461,7 +260,7 @@ public void TryAddStatus(StatusType incoming)
         if (playerTarget == null) return;
 
         Vector2 direction = (playerTarget.position - transform.position).normalized;
-        if(HasStatus(StatusType.Confusion)) direction = -direction; // Inverted movement
+        if(statusMgr.HasStatus(StatusType.Confusion)) direction = -direction; // Inverted movement
 
         MoveTowardsTarget(direction);
 
@@ -485,11 +284,21 @@ public void TryAddStatus(StatusType incoming)
 
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && isAttackReady && !HasStatus(StatusType.Freeze))
+        if (collision.gameObject.CompareTag("Player") && isAttackReady && !statusMgr.HasStatus(StatusType.Freeze))
         {
             PerformAttack(collision.gameObject);  
             StartCoroutine(AttackCooldownRoutine());
         }
+    }
+    // exposing methods for Weapon Effects (convenient)
+    public bool HasStatus(StatusType status)
+    {
+        return statusMgr.HasStatus(status);
+    }
+
+    public void TryAddStatus(StatusType status)
+    {
+        statusMgr.TryAddStatus(status);
     }
 
     public virtual void PerformAttack(GameObject target)

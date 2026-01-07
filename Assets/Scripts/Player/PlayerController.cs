@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         healthComp = GetComponent<PlayerHealth>();
         statusMgr = GetComponent<StatusManager>();
-        statusMgr.Initialize(rb, this, ReceiveDamage, GetComponent<SpriteRenderer>());
+        statusMgr.Initialize(rb, this, StatusDamage, GetComponent<SpriteRenderer>());
         baseMovementSpeed = movementSpeed;
         currentHealth = maxHearts * 10f;
 
@@ -180,6 +180,11 @@ public class PlayerController : MonoBehaviour
         statusMgr.FlashSpriteRoutine(dmg.element);
         // 4. Pass the FINAL result to Health
         healthComp.ReceiveDamage(finalAmount, dmg.element);
+    }
+
+    public void StatusDamage(DamageInfo dmg)
+    {
+
     }
 
 

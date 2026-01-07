@@ -67,6 +67,7 @@ public class StatusManager : MonoBehaviour
         return statusEndTimes.TryGetValue(type, out float endTime) && Time.time < endTime;
     }
 
+
     public void ClearStatus(StatusType type)
     {
         if (statusEndTimes.ContainsKey(type))
