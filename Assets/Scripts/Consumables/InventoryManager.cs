@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour
         if (itemToUse != null)
         {
             // Pass the Player GameObject to the item logic
-            itemToUse.Use(this.gameObject);
+            itemToUse.Use(PlayerController.instance);
             Debug.Log($"Used item: {itemToUse.itemName} from slot {slotIndex + 1}");
             // Remove item (Consume)
             slots[slotIndex] = null;

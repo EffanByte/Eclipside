@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
-
     public enum StatType 
     { 
         AttackSpeed, 
@@ -11,7 +9,8 @@ using System.Collections;
         ProjectileSpeed, 
         MaxHealth,
         CritChance,
-        CritDamage
+        CritDamage,
+        Luck
     }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -24,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxHearts = 3f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float luck = 0;
+    public float playerAttackSpeedMultiplier = 1f; 
     [Header("--- Progression ---")]
     public int currentLevel = 1;
     public float currentExp = 0f;
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour
     public WeaponData currentWeapon; // The data file (Stats)
     public Transform weaponHolder;   // The empty child object where sword spawns
     private WeaponHitbox currentWeaponHitBox; // The hitbox script on the spawned weapon
+    private StatusManager statusMgr;
+    private PlayerHealth healthComp;
 
     [Header("--- Special Ability ---")]
     public float specialChargeMax = 100f;
@@ -66,19 +69,28 @@ public class PlayerController : MonoBehaviour
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
 
-    public float playerAttackSpeedMultiplier = 1f; 
     private float lastAttackTime = -999f; 
     
     [HideInInspector] public Animator anim; 
-    [HideInInspector] public bool speedModified = false;
+
+    public static PlayerController instance {get; private set;}
 
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
         rb = GetComponent<Rigidbody2D>();
         inventory = GetComponent<InventoryManager>();
         controls = new PlayerControls();
         anim = GetComponent<Animator>();
-
+        healthComp = GetComponent<PlayerHealth>();
+        statusMgr = GetComponent<StatusManager>();
+        statusMgr.Initialize(rb, this, ReceiveDamage, GetComponent<SpriteRenderer>());
         baseMovementSpeed = movementSpeed;
         currentHealth = maxHearts * 10f;
 
@@ -113,10 +125,6 @@ public class PlayerController : MonoBehaviour
         if (isAttackPressed && canAttack)
         {
             PerformBasicAttack();
-        }
-        if (speedModified)
-        {
-            StartCoroutine(ReturnSpeed());
         }
     }
 
@@ -153,6 +161,27 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void ReceiveDamage(DamageInfo dmg)
+    {
+        // 1. Controller Logic: Check I-Frames / Dodging
+        if (isDashing) return;
+
+        // 2. Status Logic: Check Fragile / Protection Buffs
+        // The Controller asks the StatusManager for the multiplier
+        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
+
+        // 3. Status Application: Check for new effects (Burn/Poison)
+        if (dmg.element != DamageElement.True)
+        {
+            StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
+            statusMgr.TryAddStatus(effect);
+        }
+        statusMgr.FlashSpriteRoutine(dmg.element);
+        // 4. Pass the FINAL result to Health
+        healthComp.ReceiveDamage(finalAmount, dmg.element);
+    }
+
 
     #region 1. Movement & Controls
     
@@ -196,13 +225,6 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(DashRoutine());
         }
-    }
-
-    private IEnumerator ReturnSpeed()
-    {
-        yield return new WaitForSeconds(1.5f);
-        movementSpeed = baseMovementSpeed;
-        speedModified = false;
     }
     private IEnumerator DashRoutine()
     {
@@ -295,8 +317,7 @@ public class PlayerController : MonoBehaviour
 
     public void ModifySpeed(float percentageAmount)
     {
-        movementSpeed += (baseMovementSpeed * percentageAmount);
-        speedModified = true;
+        movementSpeed += baseMovementSpeed * percentageAmount;
     }
 
     public void ModifyPlayerStat(StatType statType, float value)

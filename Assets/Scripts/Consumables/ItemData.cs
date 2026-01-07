@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 // ---------------- BASE CLASS ----------------
@@ -11,7 +10,7 @@ public abstract class ItemData : ScriptableObject
     [TextArea] public string description;
 
     // The Item receives the GameObject of the user to manipulate it
-    public abstract void Use(GameObject user);
+    public abstract void Use(PlayerController player);
 }
 
 // ---------------- 1. HEALING LOGIC ----------------
@@ -19,11 +18,9 @@ public abstract class ItemData : ScriptableObject
 public class HealingItem : ItemData
 {
     public float heartsToHeal; // 0.5
-
-    public override void Use(GameObject user)
+    
+    public override void Use(PlayerController player)
     {
-        // We look for the PlayerController (or a HealthComponent)
-        var player = user.GetComponent<PlayerController>();
         if (player != null)
         {
             player.Heal(heartsToHeal);
@@ -41,34 +38,9 @@ public class StatBuffItem : ItemData
     public float duration;
     public float percentageAmount; // 0.12 for 12%
 
-    public override void Use(GameObject user)
+    public override void Use(PlayerController player)
     {
-        var player = user.GetComponent<PlayerController>();
-        if (player != null)
-        {
-            // We need to run a Coroutine, but ScriptableObjects can't do that.
-            // We tell the Player (MonoBehaviour) to run the logic defined here.
-            player.StartCoroutine(ApplyBuffRoutine(player));
-        }
-    }
 
-    private IEnumerator ApplyBuffRoutine(PlayerController player)
-    {
-        Debug.Log($"<color=cyan>Buff Active: {type}</color>");
-        
-        if (type == StatType.Speed)
-            player.ModifySpeed(percentageAmount); // Increase
-        else if (type == StatType.Luck)
-            player.ToggleLuck(true);
-
-        yield return new WaitForSeconds(duration);
-
-        if (type == StatType.Speed)
-            player.ModifySpeed(-percentageAmount); // Decrease (Revert)
-        else if (type == StatType.Luck)
-            player.ToggleLuck(false);
-            
-        Debug.Log($"Buff Ended: {type}");
     }
 }
 
@@ -80,10 +52,10 @@ public class ThunderItem : ItemData
     public float range = 10f;
     public GameObject lightningVFXPrefab; // Drag a particle prefab here later
 
-    public override void Use(GameObject user)
+    public override void Use(PlayerController player)
     {
         // The logic for finding enemies is HERE, not in PlayerController
-        Collider2D[] hits = Physics2D.OverlapCircleAll(user.transform.position, range);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(player.transform.position, range);
         List<Collider2D> enemies = new List<Collider2D>();
 
         foreach (var hit in hits)

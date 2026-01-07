@@ -33,25 +33,18 @@ public class PlayerHealth : MonoBehaviour
     // IDamageable Implementation
     // ----------------------------------------------------
 
-        IEnumerator FlashSpriteRoutine()
-    {
-        Color original = Color.white; // Assuming sprite is white by default
-        spriteRenderer.color = Color.red; // Flash Red
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = original;
-    }
-    public void ReceiveDamage(DamageInfo damageInfo)
+    public void ReceiveDamage(float finalDamage, DamageElement element)
     {
         // 1. Apply Damage
         // Note: You can add Defense/Armor logic here later
-        Debug.Log($"Player took {damageInfo.amount} {damageInfo.element} damage!");
-        currentHealth -= damageInfo.amount;
-        
+        Debug.Log($"Player took {finalDamage} {element} damage!");
+        currentHealth -= finalDamage;
+
         // 2. Clamp values (Cannot go below 0 or above Max)
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
-
+        
         // 3. Notify UI
-        StartCoroutine(FlashSpriteRoutine());
+        
         OnHealthChanged?.Invoke(currentHealth);
         Debug.Log("Health Change Invoked");
 

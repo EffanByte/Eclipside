@@ -61,9 +61,6 @@ public struct SynergyPair : IEquatable<SynergyPair>
     public bool Equals(SynergyPair other) => First == other.First && Second == other.Second;
     public override int GetHashCode() => HashCode.Combine(First, Second);
 }
-    // Define Status Types strictly for Logic
-    public enum StatusType
-    { None, Burn, Poison, Freeze, Confusion, Fragile }
 
 [System.Serializable]
 public class EnemyStats
@@ -86,6 +83,8 @@ public class EnemyStats
 [RequireComponent(typeof(SpriteRenderer))]
 public abstract class EnemyBase : MonoBehaviour
 {
+    protected StatusManager statusMgr;
+
     private TextMeshProUGUI textbox;
     [Header("Configuration")]
     [SerializeField] protected EnemyStats stats;
@@ -129,6 +128,8 @@ public abstract class EnemyBase : MonoBehaviour
         anim = GetComponent<Animator>();
         originalSpeedMultiplier = speedMultiplier;
         currentHealth = stats.maxHealth;
+            statusMgr = GetComponent<StatusManager>();
+        statusMgr.Initialize(rb, this, ReceiveDamage, spriteRenderer);
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
@@ -162,35 +163,21 @@ public abstract class EnemyBase : MonoBehaviour
     {
         if (currentState == EnemyState.Dead) return;
 
-        // 1. Apply Immediate Damage (Physical Calculation)
-        float finalDamage = dmg.amount * damageTakenMultiplier;
+        // 1. Apply Damage (Fragile Multiplier from Manager)
+        float finalDamage = dmg.amount * statusMgr.DamageTakenMultiplier;
         currentHealth -= finalDamage;
-        
-        Debug.Log($"{name} Hit by {dmg.element}. HP: {currentHealth}");
 
-        // 2. Visuals & Physics
-        Color flashColor = GetDamageFlashColor(dmg.element);
-        StartCoroutine(FlashSpriteRoutine(flashColor)); 
-
-        if (rb != null && dmg.knockbackForce > 0)
+        // 2. Logic to PREVENT Infinite Loops
+        // Only try to apply status if the damage is NOT "True" damage (which comes from DoTs)
+        if (dmg.element != DamageElement.True && dmg.element != DamageElement.Physical)
         {
-            Vector2 knockbackDir = (rb.position - dmg.sourcePosition).normalized;
-            rb.AddForce(knockbackDir * dmg.knockbackForce, ForceMode2D.Impulse);
-            StartCoroutine(KnockbackRoutine(0.2f));
+            StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
+            statusMgr.TryAddStatus(effect);
         }
 
-        // 3. ATTEMPT TO APPLY STATUS / SYNERGY
-        // We convert the element to a status type, then check for combos
-        StatusType incomingStatus = GetStatusFromElement(dmg.element);
-        
-        if (incomingStatus != StatusType.None)
-        {
-            TryAddStatus(incomingStatus);
-        }
-
-        // 4. Death Check
         if (currentHealth <= 0f) Die();
     }
+
 // Same as ReceiveDamage but no knockback and no apply status effect
     public virtual void StatusDamage(DamageInfo dmg)
         {
@@ -202,8 +189,7 @@ public abstract class EnemyBase : MonoBehaviour
             
             Debug.Log($"{name} Hit by {dmg.element}. HP: {currentHealth}");
 
-            Color flashColor = GetDamageFlashColor(dmg.element);
-            StartCoroutine(FlashSpriteRoutine(flashColor)); 
+            StartCoroutine(statusMgr.FlashSpriteRoutine(dmg.element)); 
 
             if (currentHealth <= 0f) Die();
         }
@@ -348,17 +334,6 @@ public void TryAddStatus(StatusType incoming)
     // HELPERS & IMPLEMENTATIONS
     // ---------------------------------------------------------
 
-    private StatusType GetStatusFromElement(DamageElement element)
-    {
-        return element switch
-        {
-            DamageElement.Fire => StatusType.Burn,
-            DamageElement.Poison => StatusType.Poison,
-            DamageElement.Ice => StatusType.Freeze,
-            DamageElement.Psychic => StatusType.Confusion,
-            _ => StatusType.None
-        };
-    }
 
     public bool HasStatus(StatusType s)
     {
@@ -527,7 +502,7 @@ public void TryAddStatus(StatusType incoming)
             LogCombat("Confused! Hurt itself in confusion.");
         }
 
-        PlayerHealth damageable = target.GetComponent<PlayerHealth>();
+        PlayerController damageable = target.GetComponent<PlayerController>();
         if (damageable != null)
         {
             DamageInfo info = new DamageInfo(
@@ -565,25 +540,7 @@ public void TryAddStatus(StatusType incoming)
     protected virtual void LogicAttacking() { ChangeState(EnemyState.Chasing); }
 
     // Visuals
-    IEnumerator FlashSpriteRoutine(Color color)
-    {
-        Color original = Color.white;
-        spriteRenderer.color = color;
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = original;
-    }
 
-    private Color GetDamageFlashColor(DamageElement element)
-    {
-        return element switch
-        {
-            DamageElement.Fire => new Color(1f, 0.5f, 0f), 
-            DamageElement.Poison => Color.green,
-            DamageElement.Ice => Color.cyan,
-            DamageElement.Psychic => new Color(0.6f, 0.2f, 0.8f),
-            _ => Color.red
-        };
-    }
 
     IEnumerator KnockbackRoutine(float duration)
     {
