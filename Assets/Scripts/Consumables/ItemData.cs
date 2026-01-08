@@ -1,84 +1,30 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// ---------------- BASE CLASS ----------------
-public abstract class ItemData : ScriptableObject
+public enum ItemRarity { Common, Rare, Epic, Mythical }
+
+[CreateAssetMenu(menuName = "Eclipside/Items/Consumable")]
+public class ConsumableItem : ScriptableObject // Or inherit from a lighter ItemData base
 {
     [Header("General Info")]
     public string itemName;
     public Sprite icon;
     [TextArea] public string description;
+    public ItemRarity rarity;
 
-    // The Item receives the GameObject of the user to manipulate it
-    public abstract void Use(PlayerController player);
-}
+    [Header("Configuration")]
+    public bool consumeOnUse = true;
 
-// ---------------- 1. HEALING LOGIC ----------------
-[CreateAssetMenu(menuName = "Eclipside/Items/Healing Potion")]
-public class HealingItem : ItemData
-{
-    public float heartsToHeal; // 0.5
-    
-    public override void Use(PlayerController player)
+    [Header("Logic")]
+    // THIS IS THE KEY: A list of effects instead of hardcoded logic
+    public List<ItemEffect> effects = new List<ItemEffect>();
+
+    public void Use(PlayerController player)
     {
-        if (player != null)
+        // Run all effects (e.g., Heal + Cure Poison)
+        foreach (var effect in effects)
         {
-            player.Heal(heartsToHeal);
-            Debug.Log($"<color=green>Used {itemName}: Healed {heartsToHeal} hearts.</color>");
-        }
-    }
-}
-
-// ---------------- 2. BUFF LOGIC (Speed / Luck) ----------------
-[CreateAssetMenu(menuName = "Eclipside/Items/Stat Buff")]
-public class StatBuffItem : ItemData
-{
-    public enum StatType { Speed, Luck }
-    public StatType type;
-    public float duration;
-    public float percentageAmount; // 0.12 for 12%
-
-    public override void Use(PlayerController player)
-    {
-
-    }
-}
-
-// ---------------- 3. COMBAT LOGIC (Thunder Stone) ----------------
-[CreateAssetMenu(menuName = "Eclipside/Items/Thunder Stone")]
-public class ThunderItem : ItemData
-{
-    public float damage;
-    public float range = 10f;
-    public GameObject lightningVFXPrefab; // Drag a particle prefab here later
-
-    public override void Use(PlayerController player)
-    {
-        // The logic for finding enemies is HERE, not in PlayerController
-        Collider2D[] hits = Physics2D.OverlapCircleAll(player.transform.position, range);
-        List<Collider2D> enemies = new List<Collider2D>();
-
-        foreach (var hit in hits)
-        {
-            if (hit.CompareTag("Enemy")) enemies.Add(hit);
-        }
-
-        if (enemies.Count > 0)
-        {
-            var target = enemies[Random.Range(0, enemies.Count)];
-            
-            // Logic to deal damage
-            // target.GetComponent<EnemyHealth>()?.TakeDamage(damage);
-            
-            // Visuals
-            if(lightningVFXPrefab != null) 
-                Instantiate(lightningVFXPrefab, target.transform.position, Quaternion.identity);
-
-            Debug.Log($"<color=yellow>THUNDER struck {target.name}!</color>");
-        }
-        else
-        {
-            Debug.Log("Thunder Stone used, but no targets found.");
+            effect.Apply(player);
         }
     }
 }

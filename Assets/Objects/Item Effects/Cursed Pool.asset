@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9131de5d097f164597f309e318207a8, type: 3}
+  m_Name: Cursed Pool
+  m_EditorClassIdentifier: Assembly-CSharp::EffectSpawnPool
+  poolPrefab: {fileID: 0}
+  duration: 10
+  tickRate: 1
+  effectsPerSecond:
+  - {fileID: 11400000, guid: 8ee761d5c92d07c44adeb781b2dfdb3d, type: 2}
+  effectsOnEnter:
+  - {fileID: 11400000, guid: 633e60cf5a51fa5438dd4abc419d282c, type: 2}

@@ -6,11 +6,12 @@ using System.Collections;
         AttackSpeed, 
         BaseDamage, 
         MagicDamage, 
-        ProjectileSpeed, 
         MaxHealth,
         CritChance,
         CritDamage,
-        Luck
+        Luck,
+        Defense,
+        Speed
     }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -101,9 +102,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Special.performed += ctx => AttemptSpecial();
 
         // Items (0, 1, 2 are the array indexes)
-        controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
-        controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1);
-        controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2);
+        controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(); 
     }
 
     // FIX: added Start to spawn the weapon visual
@@ -189,24 +188,27 @@ public class PlayerController : MonoBehaviour
         healthComp.ReceiveDamage(finalAmount, dmg.element);
     }
 
-    public void ApplyBuff(EffectStatBuff.BuffType type, float amount, float duration)
+    public void ApplyBuff(StatType type, float amount, float duration)
     {
         StartCoroutine(BuffRoutine(type, amount, duration));
     }
 
-    private IEnumerator BuffRoutine(EffectStatBuff.BuffType type, float amount, float duration)
+    private IEnumerator BuffRoutine(StatType type, float amount, float duration)
     {
         // Apply Buff
         switch (type)
         {
-            case EffectStatBuff.BuffType.Defense:
+            case StatType.Defense:
                 statusMgr.ChangeDamageMultiplier(-amount);
                 break;
-            case EffectStatBuff.BuffType.Attack:
-                playerAttackSpeedMultiplier += amount;
+            case StatType.BaseDamage:
+                currentWeapon.damage += currentWeapon.damage * amount; // its in %age
                 break;
-            case EffectStatBuff.BuffType.Speed:
+            case StatType.Speed:
                 movementSpeed += baseMovementSpeed * amount;
+                break;
+            case StatType.AttackSpeed:
+                playerAttackSpeedMultiplier += amount;
                 break;
         }
 
@@ -216,14 +218,18 @@ public class PlayerController : MonoBehaviour
         // Revert Buff
         switch (type)
         {
-            case EffectStatBuff.BuffType.Defense:
+            case StatType.Defense:
                 statusMgr.ChangeDamageMultiplier(amount);
                 break;
-            case EffectStatBuff.BuffType.Attack:
-                playerAttackSpeedMultiplier -= amount;
+            case StatType.BaseDamage:
+                currentWeapon.damage -= currentWeapon.damage * amount; // its in %age 
+                // fix this later cos rn it reduces from buffed value
                 break;
-            case EffectStatBuff.BuffType.Speed:
+            case StatType.Speed:
                 movementSpeed -= baseMovementSpeed * amount;
+                break;
+            case StatType.AttackSpeed:
+                playerAttackSpeedMultiplier -= amount;
                 break;
         }
     }
@@ -379,10 +385,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Luck set to: {state}");
     }
 
-    public void UseItemFromUI(int slotNumber)
+    public void UseItemFromUI()
     {
         // FIX: Subtract 1 because Array is 0-2, but UI usually sends 1-3
-        inventory.TriggerItemUse(slotNumber - 1);
+        inventory.TriggerItemUse();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

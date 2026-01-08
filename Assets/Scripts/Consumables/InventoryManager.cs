@@ -3,44 +3,47 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     [Header("Storage")]
-    public ItemData[] slots = new ItemData[3];
+    public ConsumableItem[] slots = new ConsumableItem[3];
+    public int currentItemIndex = 0; 
 
     // Called by PlayerController input
-    public void TriggerItemUse(int slotIndex)
+    public void TriggerItemUse()
     {
         // Check bounds
-        if (slotIndex < 0 || slotIndex >= slots.Length) return;
+        if (currentItemIndex < 0 || currentItemIndex >= slots.Length) return;
 
-        ItemData itemToUse = slots[slotIndex];
+        ConsumableItem itemToUse = slots[currentItemIndex];
 
         if (itemToUse != null)
         {
             // Pass the Player GameObject to the item logic
             itemToUse.Use(PlayerController.instance);
-            Debug.Log($"Used item: {itemToUse.itemName} from slot {slotIndex + 1}");
+            Debug.Log($"Used item: {itemToUse.itemName} from slot {currentItemIndex + 1}");
             // Remove item (Consume)
-            slots[slotIndex] = null;
-            
-            // TODO: Update UI Event here
+            slots[currentItemIndex] = null;
         }
         else
         {
-            Debug.Log($"Slot {slotIndex + 1} is empty.");
+            Debug.Log($"Slot {currentItemIndex + 1} is empty.");
         }
     }
+    public void NextItem()
+    {
+        currentItemIndex = (currentItemIndex + 1) % slots.Length;
+        Debug.Log($"Selected item slot: {currentItemIndex + 1}");
+    }
 
-    public bool AddItem(ItemData newItem)
+    public void AddItem(ConsumableItem newItem)
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i] == null)
             {
                 slots[i] = newItem;
-                Debug.Log($"Picked up {newItem.itemName}");
-                return true;
+                Debug.Log($"Added item: {newItem.itemName} to slot {i + 1}");
+                return;
             }
         }
-        Debug.Log("Inventory Full!");
-        return false;
+        Debug.Log("Inventory full! Could not add item: " + newItem.itemName);
     }
 }

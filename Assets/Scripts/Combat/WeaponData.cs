@@ -13,7 +13,7 @@ public abstract class WeaponData : ScriptableObject
     public GameObject weaponPrefab;
 
     [Header("Stats")]
-    [SerializeField] protected float damage;
+    public float damage;
     [SerializeField] protected float cooldown;
     public float Cooldown => cooldown;
     [SerializeField] protected float knockbackForce;

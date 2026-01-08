@@ -5634,7 +5634,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_197
+      name: Healing Pool
       rect:
         serializedVersion: 2
         x: 142
@@ -10936,7 +10936,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Temp Heart
+      name: Half Heart
       rect:
         serializedVersion: 2
         x: 48
@@ -11134,7 +11134,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_447
+      name: Temp Heart
       rect:
         serializedVersion: 2
         x: 368
@@ -12358,9 +12358,11 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Blue Web: 1698198584
+      Half Heart: 8652019896354499425
+      Healing Pool: 470842967897012258
       Heart: 6273962568160558567
       Item: -9191427274821700472
-      Temp Heart: 8652019896354499425
+      Temp Heart: -7854153158142843513
       The Roguelike Remastered 1-6-10 Alpha_1: -6951518270194642895
       The Roguelike Remastered 1-6-10 Alpha_10: -6873789366587834118
       The Roguelike Remastered 1-6-10 Alpha_100: -1563766906642717040
@@ -12469,7 +12471,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_194: 8050972750218409997
       The Roguelike Remastered 1-6-10 Alpha_195: -9201845394148624483
       The Roguelike Remastered 1-6-10 Alpha_196: 2062398358419877689
-      The Roguelike Remastered 1-6-10 Alpha_197: 470842967897012258
       The Roguelike Remastered 1-6-10 Alpha_198: 2074027349399704545
       The Roguelike Remastered 1-6-10 Alpha_199: -7747964517508538923
       The Roguelike Remastered 1-6-10 Alpha_2: -165175803755959475
@@ -12745,7 +12746,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_444: 7093226309108023610
       The Roguelike Remastered 1-6-10 Alpha_445: 6253510025453807631
       The Roguelike Remastered 1-6-10 Alpha_446: -6736410148318783339
-      The Roguelike Remastered 1-6-10 Alpha_447: -7854153158142843513
       The Roguelike Remastered 1-6-10 Alpha_448: 7630944118496784604
       The Roguelike Remastered 1-6-10 Alpha_449: -545820761715490570
       The Roguelike Remastered 1-6-10 Alpha_45: -813510352978042947
