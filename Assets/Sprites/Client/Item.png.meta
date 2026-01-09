@@ -9550,7 +9550,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_375
+      name: Small Potion
       rect:
         serializedVersion: 2
         x: 18
@@ -9572,7 +9572,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_376
+      name: Large Potion
       rect:
         serializedVersion: 2
         x: 50
@@ -9858,7 +9858,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_389
+      name: Blessed Roots
       rect:
         serializedVersion: 2
         x: 494
@@ -9880,7 +9880,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_390
+      name: Cursed Roots
       rect:
         serializedVersion: 2
         x: 526
@@ -10232,28 +10232,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_406
-      rect:
-        serializedVersion: 2
-        x: 460
-        y: 128
-        width: 34
-        height: 97
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 38075b94e6d1a2920800000000000000
-      internalID: 2966215664097128579
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: The Roguelike Remastered 1-6-10 Alpha_407
       rect:
         serializedVersion: 2
@@ -10562,7 +10540,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_421
+      name: Glass Orb
       rect:
         serializedVersion: 2
         x: 430
@@ -10606,7 +10584,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_423
+      name: Quick Berry
       rect:
         serializedVersion: 2
         x: 52
@@ -10804,7 +10782,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_432
+      name: Quick Berr
       rect:
         serializedVersion: 2
         x: 369
@@ -10980,7 +10958,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_440
+      name: Shielded Charm
       rect:
         serializedVersion: 2
         x: 114
@@ -12343,6 +12321,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Herbal Tea
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 128
+        width: 31
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29a3d261f1cc6f74ea90041b21773db7
+      internalID: 2966215664097128579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -12357,11 +12357,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Blessed Roots: -7091367089039682177
       Blue Web: 1698198584
+      Cursed Roots: -1470626955654299389
+      Glass Orb: -1372165304353773876
       Half Heart: 8652019896354499425
       Healing Pool: 470842967897012258
       Heart: 6273962568160558567
+      Herbal Tea: 2966215664097128579
       Item: -9191427274821700472
+      Large Potion: -2630476455808661796
+      Quick Berr: 5963437217261167676
+      Quick Berry: 4160961982350503567
+      Shielded Charm: 5303591145849499398
+      Small Potion: 4568424741632283291
       Temp Heart: -7854153158142843513
       The Roguelike Remastered 1-6-10 Alpha_1: -6951518270194642895
       The Roguelike Remastered 1-6-10 Alpha_10: -6873789366587834118
@@ -12668,8 +12677,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_372: -5626320564328737954
       The Roguelike Remastered 1-6-10 Alpha_373: 783904309890862772
       The Roguelike Remastered 1-6-10 Alpha_374: 5537794171648992334
-      The Roguelike Remastered 1-6-10 Alpha_375: 4568424741632283291
-      The Roguelike Remastered 1-6-10 Alpha_376: -2630476455808661796
       The Roguelike Remastered 1-6-10 Alpha_377: -8685915463626723603
       The Roguelike Remastered 1-6-10 Alpha_378: -3032103139145270696
       The Roguelike Remastered 1-6-10 Alpha_379: 3825018928867498252
@@ -12683,9 +12690,7 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_386: -4588865699255446076
       The Roguelike Remastered 1-6-10 Alpha_387: -6752329998490327382
       The Roguelike Remastered 1-6-10 Alpha_388: -8306919292468994946
-      The Roguelike Remastered 1-6-10 Alpha_389: -7091367089039682177
       The Roguelike Remastered 1-6-10 Alpha_39: -3823641667824070050
-      The Roguelike Remastered 1-6-10 Alpha_390: -1470626955654299389
       The Roguelike Remastered 1-6-10 Alpha_391: -9024074997002851060
       The Roguelike Remastered 1-6-10 Alpha_392: -4151201270262283721
       The Roguelike Remastered 1-6-10 Alpha_393: 7299980559103607558
@@ -12703,7 +12708,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_403: -3047739823941902094
       The Roguelike Remastered 1-6-10 Alpha_404: -8435393053887905433
       The Roguelike Remastered 1-6-10 Alpha_405: 6544965604038878201
-      The Roguelike Remastered 1-6-10 Alpha_406: 2966215664097128579
       The Roguelike Remastered 1-6-10 Alpha_407: 2927680730898038240
       The Roguelike Remastered 1-6-10 Alpha_408: -6805914047989493977
       The Roguelike Remastered 1-6-10 Alpha_409: -1272799453658153128
@@ -12720,9 +12724,7 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_419: -2054462289083631983
       The Roguelike Remastered 1-6-10 Alpha_42: -4034481893195964088
       The Roguelike Remastered 1-6-10 Alpha_420: 7738124627483270151
-      The Roguelike Remastered 1-6-10 Alpha_421: -1372165304353773876
       The Roguelike Remastered 1-6-10 Alpha_422: 759414395179953816
-      The Roguelike Remastered 1-6-10 Alpha_423: 4160961982350503567
       The Roguelike Remastered 1-6-10 Alpha_424: 2293760090050582395
       The Roguelike Remastered 1-6-10 Alpha_425: -6116557874018067561
       The Roguelike Remastered 1-6-10 Alpha_426: 4315200861815294901
@@ -12732,14 +12734,12 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_43: 6294328135907994599
       The Roguelike Remastered 1-6-10 Alpha_430: 4834797833482955136
       The Roguelike Remastered 1-6-10 Alpha_431: 3787282610211549765
-      The Roguelike Remastered 1-6-10 Alpha_432: 5963437217261167676
       The Roguelike Remastered 1-6-10 Alpha_433: -4680522686114662251
       The Roguelike Remastered 1-6-10 Alpha_434: 5491304129864436124
       The Roguelike Remastered 1-6-10 Alpha_435: -1911771487166494412
       The Roguelike Remastered 1-6-10 Alpha_436: 4520407030701243442
       The Roguelike Remastered 1-6-10 Alpha_439: 7775729309775170023
       The Roguelike Remastered 1-6-10 Alpha_44: -1041026795678539802
-      The Roguelike Remastered 1-6-10 Alpha_440: 5303591145849499398
       The Roguelike Remastered 1-6-10 Alpha_441: -9193933915071717641
       The Roguelike Remastered 1-6-10 Alpha_442: 8303677564487896597
       The Roguelike Remastered 1-6-10 Alpha_443: -7106246142080097258

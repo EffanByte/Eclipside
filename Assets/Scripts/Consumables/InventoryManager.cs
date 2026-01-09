@@ -5,6 +5,7 @@ public class InventoryManager : MonoBehaviour
     [Header("Storage")]
     public ConsumableItem[] slots = new ConsumableItem[3];
     public int currentItemIndex = 0; 
+    public ItemData keyItem; // Reference to Key item
 
     // Called by PlayerController input
     public void TriggerItemUse()
@@ -33,13 +34,17 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"Selected item slot: {currentItemIndex + 1}");
     }
 
-    public void AddItem(ConsumableItem newItem)
+    public void AddItem(ItemData newItem)
     {
+        if (newItem.name == "Key")
+        {
+            
+        }
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i] == null)
             {
-                slots[i] = newItem;
+                slots[i] = newItem as ConsumableItem;
                 Debug.Log($"Added item: {newItem.itemName} to slot {i + 1}");
                 return;
             }

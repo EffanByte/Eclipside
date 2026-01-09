@@ -330,6 +330,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void NotifyUIUpdate()
+    {
+        onUIUpdate?.Invoke();
+    }
+
     private void AttemptSpecial()
     {
         if (isSpecialReady && !isDead)
@@ -403,13 +408,6 @@ public class PlayerController : MonoBehaviour
                 // Trigger your Loot Drop logic here later
             }
             else Debug.Log("Need keys!");
-        }
-
-        if (collision.CompareTag("Rupee"))
-        {
-            rupees++;
-            Destroy(collision.gameObject);
-            onUIUpdate?.Invoke();
         }
     }
 
