@@ -1,8 +1,5 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-
 public class ItemRender : MonoBehaviour
 {
      private SpriteRenderer spriteRenderer;
@@ -21,17 +18,13 @@ public class ItemRender : MonoBehaviour
         {
             Destroy(spriteRenderer);
             TextMeshProUGUI itemText = Instantiate(new TextMeshProUGUI(), transform);
-            itemText.text = itemData.itemName;        }
+            itemText.text = itemData.itemName;
+        }
         spriteRenderer.sprite = itemData.icon;
         Price = GetComponentInChildren<TextMeshProUGUI>();
         MapPricetoRarity(itemData.rarity);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void MapPricetoRarity(ItemRarity rarity)
     {
         switch (rarity)

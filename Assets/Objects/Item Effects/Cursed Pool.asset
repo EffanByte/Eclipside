@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9131de5d097f164597f309e318207a8, type: 3}
   m_Name: Cursed Pool
   m_EditorClassIdentifier: Assembly-CSharp::EffectSpawnPool
-  poolPrefab: {fileID: 0}
+  poolPrefab: {fileID: 6428173203362335318, guid: 9fbe9a98a45b5c542935301946beb832, type: 3}
   duration: 10
   tickRate: 1
   effectsPerSecond:

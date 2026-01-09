@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Glass Orb
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   itemName: Glass Orb
-  icon: {fileID: 0}
+  icon: {fileID: -1372165304353773876, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: Heals Half a Heart
   rarity: 1
   consumeOnUse: 1
