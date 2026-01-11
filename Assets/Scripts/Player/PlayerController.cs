@@ -395,6 +395,20 @@ public class PlayerController : MonoBehaviour
         // FIX: Subtract 1 because Array is 0-2, but UI usually sends 1-3
         inventory.TriggerItemUse();
     }
+    public void AddCurrency(CurrencyType type, int amount)
+    {
+        switch (type)
+        {
+            case CurrencyType.Rupee:
+                rupees += amount;
+                break;
+            case CurrencyType.Key:
+                keys += amount;
+                break;
+            // ...
+        }
+        onUIUpdate?.Invoke(); // Updates the UI Text
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

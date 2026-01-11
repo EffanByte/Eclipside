@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125d2e8b771185e42b9e207b24877348, type: 3}
   m_Name: Quick Berry
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
-  itemName: 
+  itemName: Quick Berry
   icon: {fileID: 5963437217261167676, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: 
   rarity: 0
   consumeOnUse: 1
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: 92de8abafa6c77741837c0ff8efcd905, type: 2}

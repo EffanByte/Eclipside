@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cursed Roots
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   itemName: Cursed Roots
-  icon: {fileID: 0}
+  icon: {fileID: -1470626955654299389, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: 
   rarity: 2
   consumeOnUse: 1

@@ -119,7 +119,7 @@ private void RollNewItems()
 
         int cost = GetRefreshCost();
         PlayerController player = PlayerController.instance;
-
+    
         if (player.rupees >= cost)
         {
             player.rupees -= cost;
@@ -183,13 +183,10 @@ private void RollNewItems()
             
             // NOTE: Ideally, Key and XP are just ConsumableItems with "EffectAddKey" or "EffectAddXP"
             // But if you handle them specially:
-            if (item == keyItem)
+            if (item is CurrencyItem currencyItem) 
             {
-                player.keys++;
-            }
-            else if (item == xpItem) 
-            {
-                player.AddExperience(50); // Or defined amount
+                // This calls the method in PlayerController
+                player.AddCurrency(currencyItem.currencyType, currencyItem.amount);
             }
             else
             {
