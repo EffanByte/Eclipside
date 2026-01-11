@@ -138,6 +138,7 @@ MonoBehaviour:
     maxHealth: 20
     moveSpeed: 1
     expReward: 10
+    rupeeReward: 5
     damage: 7
     attackCooldown: 5
     knockbackForce: 3

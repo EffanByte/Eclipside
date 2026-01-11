@@ -68,6 +68,7 @@ public class EnemyStats
     public float maxHealth;
     public float moveSpeed;
     public float expReward;
+    public int rupeeReward;
     
     [Header("Attack Configuration")]
     public float damage;        
@@ -76,6 +77,7 @@ public class EnemyStats
     
     public DamageElement attackElement;
     public AttackStyle attackStyle;
+
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -121,7 +123,6 @@ public abstract class EnemyBase : MonoBehaviour
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
-
         isAttackReady = true;
         ChangeState(EnemyState.Chasing);
     }
@@ -327,12 +328,13 @@ public abstract class EnemyBase : MonoBehaviour
         isAttackReady = true; 
     }
 
-    protected virtual void Die()
+    protected void Die()
     {
         currentState = EnemyState.Dead;
         OnEnemyKilled?.Invoke(this);
         rb.linearVelocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
+        PlayerController.Instance.AddCurrency(CurrencyType.Rupee, stats.rupeeReward);
         Destroy(gameObject); 
     }
 

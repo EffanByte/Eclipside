@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
     public enum StatType 
@@ -69,16 +70,18 @@ public class PlayerController : MonoBehaviour
     public delegate void OnStatChange();
     public event OnStatChange onUIUpdate;
 
+    public event Action onCurrencyUpdate;
+
     private float lastAttackTime = -999f; 
     
     [HideInInspector] public Animator anim; 
 
-    public static PlayerController instance {get; private set;}
+    public static PlayerController Instance {get; private set;}
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
+        if (Instance == null)
+            Instance = this;
         else
         {
             Destroy(gameObject);
@@ -405,9 +408,8 @@ public class PlayerController : MonoBehaviour
             case CurrencyType.Key:
                 keys += amount;
                 break;
-            // ...
         }
-        onUIUpdate?.Invoke(); // Updates the UI Text
+        onCurrencyUpdate?.Invoke();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -435,6 +437,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Level Up!");
         }
     }
+
 
     
     #endregion

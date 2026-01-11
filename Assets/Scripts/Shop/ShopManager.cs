@@ -118,7 +118,7 @@ private void RollNewItems()
         }
 
         int cost = GetRefreshCost();
-        PlayerController player = PlayerController.instance;
+        PlayerController player = PlayerController.Instance;
     
         if (player.rupees >= cost)
         {
@@ -171,7 +171,7 @@ private void RollNewItems()
         if (item == null) return;
 
         int price = GetItemPrice(item);
-        PlayerController player = PlayerController.instance;
+        PlayerController player = PlayerController.Instance;
 
         if (player.rupees >= price)
         {
