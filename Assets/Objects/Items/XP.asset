@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: XP
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyItem
   itemName: 
-  icon: {fileID: 0}
+  icon: {fileID: -4662783380376193228, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: 
   rarity: 0
   currencyType: 0

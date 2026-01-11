@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Key
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyItem
   itemName: Key
-  icon: {fileID: 0}
+  icon: {fileID: -3032103139145270696, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: 
   rarity: 0
   currencyType: 0

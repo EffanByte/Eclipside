@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     public int currentLevel = 1;
     public float currentExp = 0f;
     public float expToNextLevel = 100f;
-    public int rupees = 0;
+    public int rupees = 100;
     public int keys = 0;
 
     [Header("--- Combat Setup ---")]

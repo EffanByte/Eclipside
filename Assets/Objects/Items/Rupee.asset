@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rupee
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyItem
   itemName: Rupee
-  icon: {fileID: 0}
+  icon: {fileID: -9024074997002851060, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: 
   rarity: 0
   currencyType: 0
