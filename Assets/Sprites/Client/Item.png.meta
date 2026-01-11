@@ -4292,11 +4292,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_133
+      name: Demo Grass
       rect:
         serializedVersion: 2
-        x: 13
-        y: 1089
+        x: 14
+        y: 1088
         width: 32
         height: 32
       alignment: 0
@@ -12215,8 +12215,8 @@ TextureImporter:
       name: The Roguelike Remastered 1-6-10 Alpha_497
       rect:
         serializedVersion: 2
-        x: 140
-        y: 1090
+        x: 139
+        y: 1091
         width: 32
         height: 32
       alignment: 0
@@ -12330,7 +12330,7 @@ TextureImporter:
         width: 31
         height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12339,6 +12339,28 @@ TextureImporter:
       bones: []
       spriteID: 29a3d261f1cc6f74ea90041b21773db7
       internalID: 2966215664097128579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_0
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 777
+        width: 13
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f978fb481144fa4f8fa5494277ddfd7
+      internalID: 722583148
       vertices: []
       indices: 
       edges: []
@@ -12360,12 +12382,14 @@ TextureImporter:
       Blessed Roots: -7091367089039682177
       Blue Web: 1698198584
       Cursed Roots: -1470626955654299389
+      Demo Grass: -2535949457075985131
       Glass Orb: -1372165304353773876
       Half Heart: 8652019896354499425
       Healing Pool: 470842967897012258
       Heart: 6273962568160558567
       Herbal Tea: 2966215664097128579
       Item: -9191427274821700472
+      Item_0: 722583148
       Large Potion: -2630476455808661796
       Quick Berr: 5963437217261167676
       Quick Berry: 4160961982350503567
@@ -12410,7 +12434,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_130: 5790267084196911878
       The Roguelike Remastered 1-6-10 Alpha_131: 4327668183106340707
       The Roguelike Remastered 1-6-10 Alpha_132: 6294702480921787867
-      The Roguelike Remastered 1-6-10 Alpha_133: -2535949457075985131
       The Roguelike Remastered 1-6-10 Alpha_134: 3320800019210539198
       The Roguelike Remastered 1-6-10 Alpha_135: -2049749866863232664
       The Roguelike Remastered 1-6-10 Alpha_136: -6902790293531072045
