@@ -5,7 +5,7 @@ public class UpdateCurrency : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rupeeText;
     [SerializeField] private TextMeshProUGUI keyText;
     
-    void Start()
+    void Awake()
     {
         PlayerController.Instance.onCurrencyUpdate += UpdateUI;
     }
