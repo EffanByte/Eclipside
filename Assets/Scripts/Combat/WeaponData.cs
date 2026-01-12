@@ -2,11 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class WeaponData : ScriptableObject
+public abstract class WeaponData : ItemData
 {
     [Header("Core Info")]
-    public string weaponName;
-    public Sprite icon;
+    
     public AnimatorOverrideController animatorOverride;
 
     [Header("Visuals")]

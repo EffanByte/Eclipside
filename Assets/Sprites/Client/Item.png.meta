@@ -6140,7 +6140,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_220
+      name: Chest
       rect:
         serializedVersion: 2
         x: 144
@@ -6184,7 +6184,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_222
+      name: Open Chest
       rect:
         serializedVersion: 2
         x: 176
@@ -12352,7 +12352,7 @@ TextureImporter:
         width: 13
         height: 40
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12381,6 +12381,8 @@ TextureImporter:
     nameFileIdTable:
       Blessed Roots: -7091367089039682177
       Blue Web: 1698198584
+      C: -1425281147272944058
+      Chest: 8227724429845345141
       Cursed Roots: -1470626955654299389
       Demo Grass: -2535949457075985131
       Glass Orb: -1372165304353773876
@@ -12391,6 +12393,7 @@ TextureImporter:
       Item: -9191427274821700472
       Item_0: 722583148
       Large Potion: -2630476455808661796
+      Open Chest: 3867480421349359556
       Quick Berr: 5963437217261167676
       Quick Berry: 4160961982350503567
       Shielded Charm: 5303591145849499398
@@ -12529,9 +12532,7 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_218: 1685639334105824286
       The Roguelike Remastered 1-6-10 Alpha_219: -8631889994254341080
       The Roguelike Remastered 1-6-10 Alpha_22: -1762622600354076082
-      The Roguelike Remastered 1-6-10 Alpha_220: 8227724429845345141
       The Roguelike Remastered 1-6-10 Alpha_221: -4932992176714918100
-      The Roguelike Remastered 1-6-10 Alpha_222: 3867480421349359556
       The Roguelike Remastered 1-6-10 Alpha_223: -1425281147272944058
       The Roguelike Remastered 1-6-10 Alpha_224: -58637066391808477
       The Roguelike Remastered 1-6-10 Alpha_225: 2922790633103193732
