@@ -1,8 +1,9 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using Unity.Multiplayer.Center.Common.Analytics;
 
-    public enum StatType 
+public enum StatType 
     { 
         AttackSpeed, 
         BaseDamage, 
@@ -27,6 +28,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float luck = 0;
     public float playerAttackSpeedMultiplier = 1f; 
+
+    
+    [Header("Interaction")]
+    [SerializeField] private float interactionRadius = 1.5f;
+    [SerializeField] private LayerMask interactionLayer; // Set this to "Interactable" layer
+    
     [Header("--- Progression ---")]
     public int currentLevel = 1;
     public float currentExp = 0f;
@@ -103,6 +110,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Fire.canceled += ctx => isAttackPressed = false;
         controls.Player.Dash.performed += ctx => AttemptDash();
         controls.Player.Special.performed += ctx => AttemptSpecial();
+        controls.Player.Interact.performed += ctx => AttemptInteract(); 
 
         // Items (0, 1, 2 are the array indexes)
         controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(); 
@@ -111,7 +119,7 @@ public class PlayerController : MonoBehaviour
     // FIX: added Start to spawn the weapon visual
     private void Start()
     {
-        specialMeterFill = FindObjectOfType<SpecialMeterFill>();
+        specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
         EquipWeapon(currentWeapon);
     }
 
@@ -338,6 +346,35 @@ public class PlayerController : MonoBehaviour
         onUIUpdate?.Invoke();
     }
 
+    private void AttemptInteract()
+    {
+        // 1. Find all interactables nearby
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactionLayer);
+        
+        IInteractable closestInteractable = null;
+        float closestDist = Mathf.Infinity;
+
+        // 2. Find the closest one
+        foreach (var hit in hits)
+        {
+            IInteractable interactable = hit.GetComponent<IInteractable>();
+            if (interactable != null)
+            {
+                float dist = Vector2.Distance(transform.position, hit.transform.position);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestInteractable = interactable;
+                }
+            }
+        }
+
+        // 3. Perform Interaction
+        if (closestInteractable != null)
+        {
+            closestInteractable.Interact(this);
+        }
+    }
     private void AttemptSpecial()
     {
         if (isSpecialReady && !isDead)

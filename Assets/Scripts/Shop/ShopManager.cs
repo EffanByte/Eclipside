@@ -176,10 +176,8 @@ private void RollNewItems()
         if (player.rupees >= price)
         {
             // 1. Deduct Money
-            player.rupees -= price;
+            PlayerController.Instance.AddCurrency(CurrencyType.Rupee, -price);
             
-            // 2. Give Item
-            // If it's a key/xp, apply immediately. If consumable, try add to inventory.
             
             // NOTE: Ideally, Key and XP are just ConsumableItems with "EffectAddKey" or "EffectAddXP"
             // But if you handle them specially:

@@ -112,7 +112,7 @@ public abstract class EnemyBase : MonoBehaviour
     // for status effects
     protected virtual void Start()
     {   
-        textbox = FindObjectOfType<TextMeshProUGUI>();
+        textbox = FindFirstObjectByType<TextMeshProUGUI>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();

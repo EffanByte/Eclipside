@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class ShopPedestal : MonoBehaviour
+public class ShopPedestal : MonoBehaviour, IInteractable
 {
     [Header("Component References")]
     [Tooltip("The SpriteRenderer that shows the item icon")]
@@ -16,7 +16,6 @@ public class ShopPedestal : MonoBehaviour
     // --- State ---
     private int slotIndex;
     private bool isSoldOut = false;
-    private bool playerInRange = false;
     private ItemData currentItem;
 
     private void Awake()
@@ -87,26 +86,11 @@ public class ShopPedestal : MonoBehaviour
         if (soldOutVisual != null) soldOutVisual.SetActive(true);
     }
 
-    private void Update()
-    {
-        // Interaction Logic
-        if (playerInRange && !isSoldOut && Input.GetKeyDown(KeyCode.E))
-        {
-            // Block buying during combat
-            if (GameDirector.Instance != null && GameDirector.Instance.IsWaveActive)
-            {
-                return;
-            }
-
-            ShopManager.Instance.TryBuyItem(slotIndex);
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            playerInRange = true;
             // Highlight text if valid
             if(!isSoldOut && priceText != null) priceText.fontStyle = FontStyles.Bold;
         }
@@ -116,7 +100,6 @@ public class ShopPedestal : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            playerInRange = false;
             if(priceText != null) priceText.fontStyle = FontStyles.Normal;
         }
     }
@@ -132,5 +115,26 @@ public class ShopPedestal : MonoBehaviour
             case ItemRarity.Mythical: return new Color(1f, 0.8f, 0f); // Gold
             default: return Color.white;
         }
+    }
+
+    public void Interact(PlayerController player)
+    {
+        if (isSoldOut) return;
+        // Safety Check
+        if (GameDirector.Instance != null && GameDirector.Instance.IsWaveActive)
+        {
+            Debug.Log("Cannot shop during combat!");
+            return;
+        }
+        Debug.Log("Trying to Buy Item");
+        ShopManager.Instance.TryBuyItem(slotIndex);
+        return;
+    }
+
+    public string GetInteractionPrompt()
+    {
+        if (isSoldOut) return "";
+        int price = ShopManager.Instance.GetItemPrice(currentItem);
+        return $"Buy {price} R";
     }
 }
