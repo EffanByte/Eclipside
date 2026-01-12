@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -7504912260745989103}
   - component: {fileID: 5252382342043516985}
   m_Layer: 10
-  m_Name: ItemRender
+  m_Name: ShopPedestal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

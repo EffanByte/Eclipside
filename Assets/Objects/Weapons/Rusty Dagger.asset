@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
   m_Name: Rusty Dagger
   m_EditorClassIdentifier: 
-  weaponName: Rusty Sword
-  icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  itemName: Rusty Dagger
+  icon: {fileID: 6657205154130263698, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  description: 
+  rarity: 0
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 5
@@ -21,6 +23,6 @@ MonoBehaviour:
   knockbackForce: 3
   hitDuration: 0.2
   criticalChance: 5
-  element: 6
+  element: 3
   style: 0
   effects: []

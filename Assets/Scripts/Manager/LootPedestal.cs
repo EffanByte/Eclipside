@@ -5,9 +5,7 @@ using TMPro;
 public class LootPedestal : MonoBehaviour, IInteractable
 {
     [Header("Visuals")]
-    [SerializeField] private SpriteRenderer itemSprite;
-    [SerializeField] private TextMeshPro nameText; // Floating text above item
-
+    [SerializeField] private SpriteRenderer spriteRenderer;
     private ItemData content;
     private bool isCollected = false;
 
@@ -15,10 +13,8 @@ public class LootPedestal : MonoBehaviour, IInteractable
     {
         content = item;
         
-        if (itemSprite != null) itemSprite.sprite = item.icon;
-        if (nameText != null) nameText.text = item.itemName;
-        
-        // Optional: Add a simple bobbing animation component here
+        spriteRenderer.sprite = item.icon;
+
     }
 
     public void Interact(PlayerController player)

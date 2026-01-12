@@ -8780,7 +8780,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_340
+      name: Dull Sword
       rect:
         serializedVersion: 2
         x: 44
@@ -9088,7 +9088,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_354
+      name: Rusty Dagger
       rect:
         serializedVersion: 2
         x: 14
@@ -12385,6 +12385,7 @@ TextureImporter:
       Chest: 8227724429845345141
       Cursed Roots: -1470626955654299389
       Demo Grass: -2535949457075985131
+      Dull Sword: 4816236785699132433
       Glass Orb: -1372165304353773876
       Half Heart: 8652019896354499425
       Healing Pool: 470842967897012258
@@ -12396,6 +12397,7 @@ TextureImporter:
       Open Chest: 3867480421349359556
       Quick Berr: 5963437217261167676
       Quick Berry: 4160961982350503567
+      Rusty Dagger: 6657205154130263698
       Shielded Charm: 5303591145849499398
       Small Potion: 4568424741632283291
       Temp Heart: -7854153158142843513
@@ -12663,7 +12665,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_338: 8992668032446795821
       The Roguelike Remastered 1-6-10 Alpha_339: -8179996184899065743
       The Roguelike Remastered 1-6-10 Alpha_34: 6682415017875439508
-      The Roguelike Remastered 1-6-10 Alpha_340: 4816236785699132433
       The Roguelike Remastered 1-6-10 Alpha_341: -3045287816232799000
       The Roguelike Remastered 1-6-10 Alpha_342: 524775487081554882
       The Roguelike Remastered 1-6-10 Alpha_343: 1454822916286071938
@@ -12678,7 +12679,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_351: -1572217609258574163
       The Roguelike Remastered 1-6-10 Alpha_352: 1373537583161181516
       The Roguelike Remastered 1-6-10 Alpha_353: 5081569068832798005
-      The Roguelike Remastered 1-6-10 Alpha_354: 6657205154130263698
       The Roguelike Remastered 1-6-10 Alpha_355: -3136715094364316802
       The Roguelike Remastered 1-6-10 Alpha_356: 6522347442271817505
       The Roguelike Remastered 1-6-10 Alpha_357: -5120712364130494121

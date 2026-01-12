@@ -31,9 +31,9 @@ public class TimedChest : MonoBehaviour, IInteractable
     {
         if (isOpened) return;
 
-        // Check if player has a key (if you want these chests to require keys)
-        // For "Wave Reward" chests, they are usually free. 
-        // If you want a cost: if (player.keys <= 0) return false; player.keys--;
+        if (player.keys <= 0) 
+        return;
+        PlayerController.Instance.AddCurrency(CurrencyType.Key, -1);
 
         OpenChest(player);
         return;
@@ -58,15 +58,15 @@ public class TimedChest : MonoBehaviour, IInteractable
             reward = consumablePool[Random.Range(0, consumablePool.Count)];
         else if (keyItem != null)
             reward = keyItem;
-
+        Debug.Log(reward.icon);
+        Debug.Log(reward.name);
         // 2. Spawn Visual Loot
         if (reward != null && lootPedestalPrefab != null)
         {
             // Spawn slightly above chest
-            Vector3 spawnPos = transform.position + Vector3.up * 0.5f;
+            Vector3 spawnPos = transform.position + Vector3.up * 0.2f;
             
             GameObject lootObj = Instantiate(lootPedestalPrefab, spawnPos, Quaternion.identity);
-            
             LootPedestal pedestal = lootObj.GetComponent<LootPedestal>();
             if (pedestal != null)
             {
@@ -74,12 +74,9 @@ public class TimedChest : MonoBehaviour, IInteractable
             }
         }
 
-        // 3. Cleanup Chest
-        if (openVisual) gameObject.GetComponent<SpriteRenderer>().sprite = openVisual;
-        if (closedVisual) gameObject.GetComponent<SpriteRenderer>().sprite = closedVisual;
+        gameObject.GetComponent<SpriteRenderer>().sprite = openVisual;
         
         StopAllCoroutines(); // Stop disappearance timer
-        Destroy(gameObject, 0.5f); // Fade out chest quickly
     }
     private IEnumerator DespawnRoutine()
     {
