@@ -86,7 +86,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     {
         if (collision.CompareTag("Player"))
         {
-            // Highlight text if valid
             if(!isSoldOut && priceText != null) priceText.fontStyle = FontStyles.Bold;
         }
     }
@@ -94,9 +93,7 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-        {
-            if(priceText != null) priceText.fontStyle = FontStyles.Normal;
-        }
+            priceText.fontStyle = FontStyles.Normal;
     }
 
     // Helper for visual flair
@@ -121,7 +118,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
             Debug.Log("Cannot shop during combat!");
             return;
         }
-        Debug.Log("Trying to Buy Item");
         if (ShopManager.Instance.TryBuyItem(slotIndex))
         {
             SetSoldOut();

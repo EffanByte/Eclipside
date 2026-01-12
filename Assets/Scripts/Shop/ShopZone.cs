@@ -22,7 +22,7 @@ public class ShopZone : MonoBehaviour
 
     // --- Internal State ---
     private List<ShopPedestal> spawnedPedestals = new List<ShopPedestal>();
-    private ShopRefreshStatue spawnedStatue;
+    private ShopRefreshStatue refreshStatue;
 
     private void Start()
     {
@@ -65,7 +65,6 @@ public class ShopZone : MonoBehaviour
         if (refreshStatuePrefab != null && statueSpawnPoint != null)
         {
             GameObject obj = Instantiate(refreshStatuePrefab, statueSpawnPoint.position, Quaternion.identity, transform);
-            spawnedStatue = obj.GetComponent<ShopRefreshStatue>();
         }
 
         // B. Spawn Pedestals
@@ -101,9 +100,9 @@ public class ShopZone : MonoBehaviour
             }
         }
 
-        if (spawnedStatue != null)
+        if (refreshStatue != null)
         {
-            spawnedStatue.UpdateCost();
+            refreshStatue.UpdateCost();
         }
     }
 

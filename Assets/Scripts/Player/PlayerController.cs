@@ -74,8 +74,6 @@ public class PlayerController : MonoBehaviour
     private PlayerControls controls; 
     private InventoryManager inventory; 
 
-    public delegate void OnStatChange();
-    public event OnStatChange onUIUpdate;
 
     public event Action onCurrencyUpdate;
 
@@ -121,6 +119,7 @@ public class PlayerController : MonoBehaviour
     {
         specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
         EquipWeapon(currentWeapon);
+        onCurrencyUpdate.Invoke();
     }
 
     private void OnEnable() => controls.Enable();
@@ -337,13 +336,7 @@ public class PlayerController : MonoBehaviour
                 isSpecialReady = true;
                 Debug.Log("Special Ability Ready!"); 
             }
-            onUIUpdate?.Invoke();
         }
-    }
-
-    public void NotifyUIUpdate()
-    {
-        onUIUpdate?.Invoke();
     }
 
     private void AttemptInteract()
@@ -392,7 +385,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("SPECIAL ABILITY UNLEASHED!");
         currentSpecialCharge = 0;
         isSpecialReady = false;
-        onUIUpdate?.Invoke();
     }
     #endregion
 

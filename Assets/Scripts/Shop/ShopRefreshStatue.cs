@@ -1,39 +1,29 @@
 using UnityEngine;
 using TMPro;
+using System;
 
-public class ShopRefreshStatue : MonoBehaviour
+public class ShopRefreshStatue : MonoBehaviour, IInteractable
 {
     [SerializeField] private TextMeshPro costText;
-    private bool playerInRange = false;
 
+    public void Start()
+    {
+        UpdateCost();
+    }
     public void UpdateCost()
     {
-        if (ShopManager.Instance == null) return;
-
         int cost = ShopManager.Instance.GetRefreshCost();
         if (costText != null) costText.text = $"Reroll: {cost}";
     }
 
-    private void Update()
+    public void Interact(PlayerController player)
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            if (GameDirector.Instance != null && GameDirector.Instance.IsWaveActive)
-            {
-                return;
-            }
-
-            ShopManager.Instance.TryRefreshShop();
-        }
+        if (ShopManager.Instance.TryRefreshShop())
+            UpdateCost();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    string IInteractable.GetInteractionPrompt()
     {
-        if (collision.CompareTag("Player")) playerInRange = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player")) playerInRange = false;
+        throw new NotImplementedException();
     }
 }

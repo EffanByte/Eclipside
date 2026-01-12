@@ -71,7 +71,6 @@ private void RollNewItems()
         for (int i = 0; i < shopSlots; i++) isSoldOut[i] = false;
 
         OnShopUpdated?.Invoke();
-        Debug.Log("Shop Refreshed: Key, XP, Common, Rare, Epic");
     }
 
     private ItemData GetRandomConsumable(ItemRarity targetRarity)
@@ -103,18 +102,15 @@ private void RollNewItems()
 
     public int GetRefreshCost()
     {
-        // First refresh = 5. Increment by 5 each time.
-        // 0 refreshes done = 5 cost
-        // 1 refresh done = 10 cost
         return BASE_REFRESH_COST + (currentRefreshCount * 5);
     }
 
-    public void TryRefreshShop()
+    public bool TryRefreshShop()
     {
         if (currentRefreshCount >= MAX_REFRESHES)
         {
             OnTransactionFailed?.Invoke("Max refreshes reached!");
-            return;
+            return false;
         }
 
         int cost = GetRefreshCost();
@@ -123,14 +119,14 @@ private void RollNewItems()
         if (player.rupees >= cost)
         {
             player.rupees -= cost;
-            player.NotifyUIUpdate();
-
             currentRefreshCount++;
             RollNewItems();
+            return true;
         }
         else
         {
             OnTransactionFailed?.Invoke("Not enough Rupees to refresh!");
+            return false;
         }
     }
 
@@ -194,7 +190,6 @@ private void RollNewItems()
 
             // 3. Finalize Transaction
             isSoldOut[slotIndex] = true;
-            player.NotifyUIUpdate();
             OnShopUpdated?.Invoke();
             
             Debug.Log($"Bought {item.itemName} for {price}");
