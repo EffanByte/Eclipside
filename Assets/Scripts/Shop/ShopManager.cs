@@ -183,7 +183,7 @@ private void RollNewItems()
             // But if you handle them specially:
             if (item is CurrencyItem currencyItem) 
             {
-                // This calls the method in PlayerController
+                Debug.Log("Bought key");
                 player.AddCurrency(currencyItem.currencyType, currencyItem.amount);
             }
             else
