@@ -11,7 +11,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     [SerializeField] private TextMeshPro priceText; 
     
     [Tooltip("Optional: A visual object (like an X mark) shown when sold out")]
-    [SerializeField] private GameObject soldOutVisual; 
 
     // --- State ---
     private int slotIndex;
@@ -33,7 +32,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
         isSoldOut = false;
 
         // Reset visual state
-        if (soldOutVisual != null) soldOutVisual.SetActive(false);
         if (itemSprite != null) itemSprite.gameObject.SetActive(true);
         if (priceText != null) priceText.gameObject.SetActive(true);
 
@@ -81,9 +79,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
             priceText.text = "SOLD";
             priceText.color = Color.gray;
         }
-
-        // Show visual marker
-        if (soldOutVisual != null) soldOutVisual.SetActive(true);
     }
 
 
@@ -127,7 +122,10 @@ public class ShopPedestal : MonoBehaviour, IInteractable
             return;
         }
         Debug.Log("Trying to Buy Item");
-        ShopManager.Instance.TryBuyItem(slotIndex);
+        if (ShopManager.Instance.TryBuyItem(slotIndex))
+        {
+            SetSoldOut();
+        }
         return;
     }
 

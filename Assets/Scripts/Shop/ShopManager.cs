@@ -162,13 +162,13 @@ private void RollNewItems()
         return PRICE_COMMON; // Default fallback
     }
 
-    public void TryBuyItem(int slotIndex)
+    public bool TryBuyItem(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= shopSlots) return;
-        if (isSoldOut[slotIndex]) return;
+        if (slotIndex < 0 || slotIndex >= shopSlots) return false;
+        if (isSoldOut[slotIndex]) return false;
 
         ItemData item = currentStock[slotIndex];
-        if (item == null) return;
+        if (item == null) return false;
 
         int price = GetItemPrice(item);
         PlayerController player = PlayerController.Instance;
@@ -198,10 +198,12 @@ private void RollNewItems()
             OnShopUpdated?.Invoke();
             
             Debug.Log($"Bought {item.itemName} for {price}");
+            return true;
         }
         else
         {
             OnTransactionFailed?.Invoke("Not enough Rupees!");
+            return false;
         }
     }
 }
