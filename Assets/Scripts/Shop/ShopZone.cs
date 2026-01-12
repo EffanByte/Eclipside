@@ -13,12 +13,6 @@ public class ShopZone : MonoBehaviour
     [SerializeField] private List<Transform> pedestalSpawnPoints; 
     [SerializeField] private Transform statueSpawnPoint;
 
-    [Header("Barriers")]
-    [Tooltip("The physical wall collider. Ensure this is NOT the same object as this script.")]
-    
-    [SerializeField] private GameObject visualBarrier;
-
-    private Collider2D physicalBarrier; 
 
     // --- Internal State ---
     private List<ShopPedestal> spawnedPedestals = new List<ShopPedestal>();
@@ -42,18 +36,12 @@ public class ShopZone : MonoBehaviour
         // 4. LISTEN FOR EVENTS
         ShopManager.Instance.OnShopUpdated += UpdateVisuals;
 
-        // 5. SETUP BARRIERS
-        if (GameDirector.Instance != null)
-        {
-            GameDirector.Instance.OnCombatStateChanged += ToggleBarrier;
-            ToggleBarrier(GameDirector.Instance.IsWaveActive);
-        }
+
     }
 
     private void OnDestroy()
     {
         if (ShopManager.Instance != null) ShopManager.Instance.OnShopUpdated -= UpdateVisuals;
-        if (GameDirector.Instance != null) GameDirector.Instance.OnCombatStateChanged -= ToggleBarrier;
     }
 
     // ---------------------------------------------------------
@@ -103,36 +91,6 @@ public class ShopZone : MonoBehaviour
         if (refreshStatue != null)
         {
             refreshStatue.UpdateCost();
-        }
-    }
-
-    // ---------------------------------------------------------
-    // BARRIER LOGIC
-    // ---------------------------------------------------------
-    private void ToggleBarrier(bool isCombatActive)
-    {
-        if (physicalBarrier != null) physicalBarrier.enabled = isCombatActive;
-        if (visualBarrier != null) visualBarrier.SetActive(isCombatActive);
-    }
-
-    // ---------------------------------------------------------
-    // SAFE ZONE LOGIC
-    // ---------------------------------------------------------
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("Entered Shop: Waves Paused.");
-            GameDirector.Instance.SetSafeZoneState(true);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("Left Shop: Waves Resumed.");
-            GameDirector.Instance.SetSafeZoneState(false);
         }
     }
 }

@@ -34,7 +34,7 @@ public class GameDirector : MonoBehaviour
     private void Start()
     {
         waveTimer = timeBetweenWaves;
-        
+
         // Start Wave 1 immediately
         waveManager.TriggerWave(CurrentWave, CurrentDifficulty);
     }
@@ -77,15 +77,6 @@ public class GameDirector : MonoBehaviour
     {
         IsWaveActive = false;
         // UI: "Wave Complete! Shop Open!"
-    }
-
-    // ---------------------------------------------------------
-    // PUBLIC API (For ShopSafeZone.cs)
-    // ---------------------------------------------------------
-    public void SetSafeZoneState(bool isSafe)
-    {
-        IsPaused = isSafe;
-        Debug.Log(isSafe ? "Timer PAUSED (Shop)" : "Timer RESUMED (Combat)");
     }
     
     // UI Helpers

@@ -238,6 +238,12 @@ public abstract class EnemyBase : MonoBehaviour
         selfAttackMaxHpPercent = 0f;
     }
 
+    public void ApplyDifficultyScaling(float multiplier)
+    {
+        stats.maxHealth *= multiplier;
+        currentHealth = GetMaxHealth();
+    }
+
     // ---------------------------------------------------------
     // STANDARD BEHAVIOR (Movement, Attack, etc)
     // ---------------------------------------------------------

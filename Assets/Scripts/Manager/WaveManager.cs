@@ -9,22 +9,17 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private float spawnDistance = 12f;     // Radius around player
     [SerializeField] private float spawnStagger = 0.5f;     // Time between individual spawns
 
-    private int enemiesAlive = 0;
     private Transform playerTransform;
 
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) playerTransform = player.transform;
+        playerTransform = PlayerController.Instance.transform;
     }
 
 
     public void TriggerWave(int waveNumber, float difficultyMultiplier)
     {
-        
-        // Logic: Wave 1 = 3 enemies. Wave 10 = 30 enemies? 
         // Or Wave 1 = 3 enemies. Wave 2 = 4 enemies (based on 1.1x multiplier)
-        GameDirector.Instance.NotifyWaveFinished();
         int enemyCount = Mathf.CeilToInt(3 * difficultyMultiplier);
         
         Debug.Log($"<color=red>SPAWNING WAVE {waveNumber}</color> (Count: {enemyCount}, Diff: {difficultyMultiplier:F1}x)");
@@ -63,7 +58,7 @@ public class WaveManager : MonoBehaviour
         if (enemyScript != null)
         {
             // You need to add this method to EnemyBase to scale HP/Damage
-            // enemyScript.ApplyDifficultyScaling(difficulty);
+            enemyScript.ApplyDifficultyScaling(difficulty);
         }
     }
 }
