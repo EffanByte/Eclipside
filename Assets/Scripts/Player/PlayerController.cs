@@ -111,7 +111,10 @@ public class PlayerController : MonoBehaviour
         controls.Player.Interact.performed += ctx => AttemptInteract(); 
 
         // Items (0, 1, 2 are the array indexes)
-        controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(); 
+        controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
+        controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1); 
+        controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2); 
+
     }
 
     // FIX: added Start to spawn the weapon visual
@@ -422,11 +425,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Luck set to: {state}");
     }
 
-    public void UseItemFromUI()
-    {
-        // FIX: Subtract 1 because Array is 0-2, but UI usually sends 1-3
-        inventory.TriggerItemUse();
-    }
     public void AddCurrency(CurrencyType type, int amount)
     {
         switch (type)

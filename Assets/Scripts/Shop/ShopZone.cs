@@ -82,7 +82,7 @@ public class ShopZone : MonoBehaviour
         // Loop through our NEWLY SPAWNED pedestals list
         for (int i = 0; i < spawnedPedestals.Count; i++)
         {
-            if (i < stock.Length)
+            if (i < stock.Length && soldOut[i] == false)
             {
                 spawnedPedestals[i].Setup(stock[i], i);
             }

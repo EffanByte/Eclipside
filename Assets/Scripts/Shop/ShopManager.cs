@@ -174,7 +174,6 @@ private void RollNewItems()
             // 1. Deduct Money
             PlayerController.Instance.AddCurrency(CurrencyType.Rupee, -price);
             
-            
             // NOTE: Ideally, Key and XP are just ConsumableItems with "EffectAddKey" or "EffectAddXP"
             // But if you handle them specially:
             if (item is CurrencyItem currencyItem) 

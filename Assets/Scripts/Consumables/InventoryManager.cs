@@ -16,24 +16,24 @@ public class InventoryManager : MonoBehaviour
         if (Instance == null) Instance = this;   
     }
     // Called by PlayerController input
-    public void TriggerItemUse()
+    public void TriggerItemUse(int slot)
     {
         // Check bounds
-        if (currentItemIndex < 0 || currentItemIndex >= slots.Length) return;
+        if (currentItemIndex < 0 || slot >= slots.Length) return;
 
-        ConsumableItem itemToUse = slots[currentItemIndex];
+        ConsumableItem itemToUse = slots[slot];
 
         if (itemToUse != null)
         {
             // Pass the Player GameObject to the item logic
             itemToUse.Use(PlayerController.Instance);
-            Debug.Log($"Used item: {itemToUse.itemName} from slot {currentItemIndex + 1}");
+            Debug.Log($"Used item: {itemToUse.itemName} from slot {slot + 1}");
             slots[currentItemIndex] = null;
             OnInventoryUpdated?.Invoke();
         }
         else
         {
-            Debug.Log($"Slot {currentItemIndex + 1} is empty.");
+            Debug.Log($"Slot {slot + 1} is empty.");
         }
 
     }
