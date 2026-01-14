@@ -65,10 +65,6 @@ public class PlayerController : MonoBehaviour
     private float baseMovementSpeed; 
     public bool hasLuck = false; 
 
-    // --- Status Effects ---
-    private bool isFrozen = false;
-    private bool isConfused = false; 
-
     // --- References ---
     private PlayerControls controls; 
     private InventoryManager inventory; 
@@ -149,6 +145,10 @@ public class PlayerController : MonoBehaviour
     // FIX: New Method to handle spawning the weapon prefab
     public void EquipWeapon(WeaponData newWeapon)
     {
+        if (Challenges.theGladiator && newWeapon is MagicWeapon)
+        {
+            Debug.Log("Can't equip weapon due to gladiator");
+        }
         currentWeapon = newWeapon;
 
         // 1. Clear old weapon
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour
         if (dmg.element != DamageElement.True)
         {
             StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
-            statusMgr.TryAddStatus(effect);
+            TryAddStatus(effect);
         }
         statusMgr.FlashSpriteRoutine(dmg.element);
         // 4. Pass the FINAL result to Health
@@ -254,9 +254,9 @@ public class PlayerController : MonoBehaviour
         if (isDashing) return;
 
         Vector2 finalInput = rawInputMovement;
-        if (isConfused) finalInput *= -1; 
+        if (statusMgr.IsConfused) finalInput *= -1; 
         float finalSpeed = movementSpeed;
-        if (isFrozen) finalSpeed *= 0.6f;
+        if (statusMgr.IsFrozen) finalSpeed *= 0.6f;
 
         // FLIP LOGIC (Using your specific scale values)
         if (rawInputMovement.x > 0)
@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
     public void AttemptDash()
     {
-        if (!isDashing && !isDead && !isFrozen)
+        if (!isDashing && !isDead && !statusMgr.IsFrozen)
         {
             StartCoroutine(DashRoutine());
         }
@@ -522,6 +522,11 @@ public class PlayerController : MonoBehaviour
     public float GetMaxHealth()
     {
         return healthComp.GetMaxHealth();
+    }
+
+    public void TryAddStatus(StatusType effect)
+    {
+        statusMgr.TryAddStatus(effect);
     }
     
     #endregion

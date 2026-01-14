@@ -30,10 +30,7 @@ public class SpiderWeb : MonoBehaviour
             
             if (player != null)
             {
-                // Apply the Slow Effect
-                // We reuse the 'ModifySpeed' function we added to PlayerController earlier
-                // Note: ModifySpeed expects a percentage (e.g., -0.4 for 40% slow)
-                player.ModifySpeed(slowAmount);
+                player.ApplyBuff(StatType.Speed, slowAmount, 1);
                 
                 // We need a way to revert it. Since PlayerController handles logic,
                 // ideally PlayerController should handle the duration.
