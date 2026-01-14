@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(BoxCollider2D))] // Ensure it has a trigger
 public class TimedChest : MonoBehaviour, IInteractable
@@ -12,6 +13,8 @@ public class TimedChest : MonoBehaviour, IInteractable
 
     [Header("Reward Spawning")]
     [SerializeField] private GameObject lootPedestalPrefab; // The prefab with LootPedestal script
+    private int? keyCount;
+    private static int globalKeyCount;
 
 
     [Header("Settings")]
@@ -21,19 +24,29 @@ public class TimedChest : MonoBehaviour, IInteractable
 
     private bool isOpened = false;
 
+    public void Setup(int keyCount)
+    {
+        SetKeyCount(keyCount);
+    }
+
+    
     private void Start()
     {
         // Start the countdown immediately upon spawning
         StartCoroutine(DespawnRoutine());
+        if (keyCount != null)
+        {
+            keyCount = globalKeyCount;
+        }
     }
 
     public void Interact(PlayerController player)
     {
         if (isOpened) return;
 
-        if (player.keys <= 0) 
+        if (player.keys <= keyCount) 
         return;
-        PlayerController.Instance.AddCurrency(CurrencyType.Key, -1);
+        PlayerController.Instance.AddCurrency(CurrencyType.Key, keyCount.Value);
 
         OpenChest(player);
         return;
@@ -89,5 +102,14 @@ public class TimedChest : MonoBehaviour, IInteractable
             // Optional: Poof particle effect
             Destroy(gameObject);
         }
+    }
+
+    private void SetKeyCount(int count)
+    {
+        keyCount = count;
+    }
+    public static void SetGloalKeyCount(int count)
+    {
+        globalKeyCount = count;
     }
 }

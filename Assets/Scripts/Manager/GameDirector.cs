@@ -1,7 +1,8 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using Random = UnityEngine.Random; // Resolve ambiguity
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(WaveManager))]
 public class GameDirector : MonoBehaviour
@@ -10,28 +11,28 @@ public class GameDirector : MonoBehaviour
 
     [Header("Progression Settings")]
     [SerializeField] private float timeBetweenWaves = 30f;
-    [SerializeField] private float difficultyScaling = 0.1f; // +10% per wave
+    [SerializeField] private float difficultyScaling = 0.1f; 
+    [SerializeField] private int maxWaveCount = 10;
 
-    [Header("Level Generation (Zones)")]
-    [Tooltip("Prefabs for Shops, Elite Arenas, Shrines, etc.")]
-    [SerializeField] private List<GameObject> zonePrefabs;
-    
-    [Tooltip("Drag the parent object that holds all empty SpawnPoint objects")]
+    [Header("Generation & Rewards")]
+    public List<GameObject> zonePrefabs;
     [SerializeField] private Transform zoneSpawnPointContainer;
-
-    [Header("Rewards")]
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
 
-    // --- Events & State ---
+    // Events
     public event Action<bool> OnCombatStateChanged; 
+    public event Action<int> OnWaveAdvanced; 
+    public event Action OnLevelCompleted;    
+
+    // State
     public bool IsWaveActive { get; private set; } = false;
     public bool IsPaused { get; private set; } = false;
-    
     public int CurrentWave { get; private set; } = 1;
-    public float CurrentDifficulty { get; private set; } = 1.0f;
     
-    private float waveTimer;
+    private float currentTimerValue; 
+    private float currentDifficulty = 1.0f;
+    
     private WaveManager waveManager;
     private Transform playerTransform;
 
@@ -45,64 +46,54 @@ public class GameDirector : MonoBehaviour
 
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) playerTransform = player.transform;
-
-        // 1. Generate the Map Zones
         SpawnZones();
-
-        // 2. Start Game Loop
-        waveTimer = timeBetweenWaves;
-        waveManager.TriggerWave(CurrentWave, CurrentDifficulty);
+        StartCoroutine(GameLoopRoutine());
     }
 
-    private void Update()
+    // ---------------------------------------------------------
+    // THE GAME LOOP
+    // ---------------------------------------------------------
+    private IEnumerator GameLoopRoutine()
     {
-        if (IsPaused) return;
+        // 1. Kickoff
+        TriggerCurrentWave();
 
-        waveTimer -= Time.deltaTime;
-
-        if (waveTimer <= 0)
+        while (CurrentWave <= maxWaveCount)
         {
+            // 2. Timer Logic
+            currentTimerValue = timeBetweenWaves;
+            
+            while (currentTimerValue > 0)
+            {
+                if (IsPaused) { yield return null; continue; }
+
+                currentTimerValue -= Time.deltaTime;
+                yield return null;
+            }
+
+            // 3. Time's Up -> Next Wave
             AdvanceWave();
         }
     }
 
-    // ---------------------------------------------------------
-    // ZONE GENERATION LOGIC
-    // ---------------------------------------------------------
-    private void SpawnZones()
+    private void TriggerCurrentWave()
     {
-        if (zoneSpawnPointContainer == null || zonePrefabs.Count == 0) return;
-
-        // Get all child transforms as spawn points
-        List<Transform> points = new List<Transform>();
-        foreach (Transform child in zoneSpawnPointContainer)
-        {
-            points.Add(child);
-        }
-
-        // Shuffle logic or just iterate
-        foreach (Transform spot in points)
-        {
-            // Pick a random zone type (Shop, Shrine, etc)
-            GameObject prefabToSpawn = zonePrefabs[Random.Range(0, zonePrefabs.Count)];
-            
-            // Instantiate at the point
-            Instantiate(prefabToSpawn, spot.position, Quaternion.identity);
-        }
+        waveManager.TriggerWave(CurrentWave, currentDifficulty);
+        OnWaveAdvanced?.Invoke(CurrentWave);
     }
 
-    // ---------------------------------------------------------
-    // WAVE LOGIC
-    // ---------------------------------------------------------
     private void AdvanceWave()
     {
-        waveTimer = timeBetweenWaves;
+        if (CurrentWave >= maxWaveCount) return; // Wait for final clear
+
         CurrentWave++;
-        CurrentDifficulty += difficultyScaling;
-        waveManager.TriggerWave(CurrentWave, CurrentDifficulty);
+        currentDifficulty += difficultyScaling;
+        TriggerCurrentWave();
     }
+
+    // ---------------------------------------------------------
+    // CALLBACKS (Called by WaveManager)
+    // ---------------------------------------------------------
 
     public void NotifyWaveStarted()
     {
@@ -116,19 +107,45 @@ public class GameDirector : MonoBehaviour
         OnCombatStateChanged?.Invoke(false);
         
         SpawnWaveReward();
+
+        // Check Victory Condition
+        if (CurrentWave >= maxWaveCount)
+        {
+            Debug.Log("LEVEL COMPLETE!");
+            OnLevelCompleted?.Invoke();
+            StopAllCoroutines(); 
+        }
+    }
+
+    // ... (Keep SpawnZones / SpawnWaveReward / API code same as before) ...
+    
+    private void SpawnZones()
+    {
+        if (zoneSpawnPointContainer == null) return;
+        foreach (Transform spot in zoneSpawnPointContainer)
+        {
+            if(zonePrefabs.Count > 0)
+                Instantiate(zonePrefabs[Random.Range(0, zonePrefabs.Count)], spot.position, Quaternion.identity);
+        }
     }
 
     private void SpawnWaveReward()
     {
-        if (timedChestPrefab == null || playerTransform == null) return;
-
-        // "Spawn around the player position +-5 x and y"
-        Vector2 randomOffset = Random.insideUnitCircle * chestSpawnRadius;
-        Vector3 spawnPos = playerTransform.position + (Vector3)randomOffset;
-
-        Instantiate(timedChestPrefab, spawnPos, Quaternion.identity);
-        Debug.Log("Wave Cleared! Chest Spawned.");
+        if (timedChestPrefab)
+        {
+            playerTransform = PlayerController.Instance.transform;
+            Vector2 offset = Random.insideUnitCircle * chestSpawnRadius;
+            Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
+        }
     }
 
-    public float GetTimer() => waveTimer;
+    public void SetMaxWaveCount(int count)
+    {
+        maxWaveCount = count;
+    }
+    public int GetMaxWaveCount()
+    {
+        return maxWaveCount;
+    }
+    public float GetTimer() => currentTimerValue;
 }

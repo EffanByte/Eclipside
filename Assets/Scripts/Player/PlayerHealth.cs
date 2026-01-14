@@ -8,23 +8,23 @@ public class PlayerHealth : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     
     [Header("Health Stats")]
-    [SerializeField] private float maxHearts = 100f; // 10 Hearts (10 units each)
+    [SerializeField] private float maxHealth = 100f; // 10 Hearts (10 units each)
     
     private float currentHealth;
     private float temporaryHealth = 0f; // NEW: Golden/Blue Hearts
 
     // Events
-    public event Action<int> OnMaxHealthChanged; 
+    public event Action<float> OnMaxHealthChanged; 
     public event Action<float> OnHealthChanged;  
     public event Action<float> OnTempHealthChanged; // NEW: UI needs to know about temp hearts
     public event Action OnPlayerDeath;           
 
     private void Start()
     {
-        currentHealth = maxHearts;
+        currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         
-        OnMaxHealthChanged?.Invoke((int)maxHearts);
+        OnMaxHealthChanged?.Invoke((int)maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
         OnTempHealthChanged?.Invoke(temporaryHealth);
     }
@@ -54,7 +54,7 @@ public class PlayerHealth : MonoBehaviour
         if (finalDamage > 0)
         {
             currentHealth -= finalDamage;
-            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
             
             OnHealthChanged?.Invoke(currentHealth);
         }
@@ -79,7 +79,7 @@ public class PlayerHealth : MonoBehaviour
     public void Heal(float amount)
     {
         currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHearts);
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
     }
 
@@ -95,4 +95,13 @@ public class PlayerHealth : MonoBehaviour
     // HELPERS
     // ----------------------------------------------------
 
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
+    public void SetMaxHealth(float max)
+    {
+        maxHealth = max;
+        OnMaxHealthChanged?.Invoke(maxHealth);
+    }
 }

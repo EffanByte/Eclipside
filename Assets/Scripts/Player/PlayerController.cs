@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
-    [SerializeField] private float maxHearts = 3f; 
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float luck = 0;
@@ -415,7 +414,7 @@ public class PlayerController : MonoBehaviour
     public void ModifyPlayerStat(StatType statType, float value)
     {
         if (statType == StatType.MaxHealth)
-            maxHearts += value;
+           healthComp.SetMaxHealth(value);
         if (statType == StatType.AttackSpeed)
             playerAttackSpeedMultiplier += value;
     }
@@ -465,7 +464,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    public float GetMaxHealth()
+    {
+        return healthComp.GetMaxHealth();
+    }
     
     #endregion
     
