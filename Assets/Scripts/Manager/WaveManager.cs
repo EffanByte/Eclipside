@@ -11,6 +11,7 @@ public class WaveManager : MonoBehaviour
 
     private Transform playerTransform;
     private int enemiesAlive = 0; // Tracks active enemies
+    private bool tookDamageThisWave = false;
 
     private void Start()
     {
@@ -40,6 +41,8 @@ public class WaveManager : MonoBehaviour
         Debug.Log($"[WaveManager] Wave {waveNumber} Started! Enemies: {count}");
 
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
+        if (!tookDamageThisWave)
+            StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
     }
 
     private IEnumerator SpawnRoutine(int count, float difficulty)
@@ -85,5 +88,11 @@ public class WaveManager : MonoBehaviour
                 GameDirector.Instance.NotifyWaveFinished();
             }
         }
+    }
+
+    public void TookDamageThisWave()
+    {
+        tookDamageThisWave = true;
+        
     }
 }

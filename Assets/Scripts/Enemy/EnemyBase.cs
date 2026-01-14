@@ -343,6 +343,7 @@ public abstract class EnemyBase : MonoBehaviour
         GetComponent<Collider2D>().enabled = false;
         PlayerController.Instance.AddCurrency(CurrencyType.Rupee, stats.rupeeReward);
         PlayerController.Instance.AddExperience(EnemyStats.expReward);
+        StatisticsManager.Instance.IncrementStat("TOTAL_KILLS");
         Destroy(gameObject);
     }
 

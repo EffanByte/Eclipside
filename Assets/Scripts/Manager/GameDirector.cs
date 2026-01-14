@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 public class GameDirector : MonoBehaviour
 {
     public static GameDirector Instance { get; private set; }
-
     [Header("Progression Settings")]
     [SerializeField] private float timeBetweenWaves = 30f;
     [SerializeField] private float difficultyScaling = 0.1f; 
@@ -20,10 +19,12 @@ public class GameDirector : MonoBehaviour
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
 
+    public int CurrentDifficulty {get; private set;}
     // Events
     public event Action<bool> OnCombatStateChanged; 
     public event Action<int> OnWaveAdvanced; 
-    public event Action OnLevelCompleted;    
+    public event Action OnLevelCompleted;
+    public event Action OnRunCompleted;
 
     // State
     public bool IsWaveActive { get; private set; } = false;
@@ -47,6 +48,7 @@ public class GameDirector : MonoBehaviour
     private void Start()
     {
         SpawnZones();
+        PlayerController.Instance.OnPlayerDeath += CompleteRun;
         StartCoroutine(GameLoopRoutine());
     }
 
@@ -117,8 +119,7 @@ public class GameDirector : MonoBehaviour
         }
     }
 
-    // ... (Keep SpawnZones / SpawnWaveReward / API code same as before) ...
-    
+
     private void SpawnZones()
     {
         if (zoneSpawnPointContainer == null) return;
@@ -146,6 +147,11 @@ public class GameDirector : MonoBehaviour
     public int GetMaxWaveCount()
     {
         return maxWaveCount;
+    }
+
+    private void CompleteRun()
+    {
+        StatisticsManager.Instance.IncrementStat("RUNS_COMPLETED");
     }
     public float GetTimer() => currentTimerValue;
 }

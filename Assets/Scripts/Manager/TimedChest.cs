@@ -88,7 +88,7 @@ public class TimedChest : MonoBehaviour, IInteractable
         }
 
         gameObject.GetComponent<SpriteRenderer>().sprite = openVisual;
-        
+        StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
         StopAllCoroutines(); // Stop disappearance timer
     }
     private IEnumerator DespawnRoutine()

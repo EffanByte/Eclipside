@@ -190,7 +190,7 @@ private void RollNewItems()
             // 3. Finalize Transaction
             isSoldOut[slotIndex] = true;
             OnShopUpdated?.Invoke();
-            
+            StatisticsManager.Instance.IncrementStat("GOLD_SPENT", price);
             Debug.Log($"Bought {item.itemName} for {price}");
             return true;
         }

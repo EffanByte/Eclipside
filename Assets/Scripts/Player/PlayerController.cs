@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     public event Action onCurrencyUpdate;
     public event Action OnLevelUp; // Trigger UI
     public event Action<float, float> OnExpChanged; // Update XP Bar UI (Current, Max)
+    public event Action OnPlayerDeath;
 
     private float lastAttackTime = -999f; 
     
@@ -95,6 +96,7 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerControls();
         anim = GetComponent<Animator>();
         healthComp = GetComponent<PlayerHealth>();
+        healthComp.OnPlayerDeath += PlayerKilled;
         statusMgr = GetComponent<StatusManager>();
         statusMgr.Initialize(rb, this, StatusDamage, GetComponent<SpriteRenderer>());
         baseMovementSpeed = movementSpeed;
@@ -192,6 +194,7 @@ public class PlayerController : MonoBehaviour
         statusMgr.FlashSpriteRoutine(dmg.element);
         // 4. Pass the FINAL result to Health
         healthComp.ReceiveDamage(finalAmount, dmg.element);
+        FindFirstObjectByType<WaveManager>().TookDamageThisWave();
     }
 
     public void StatusDamage(DamageInfo dmg)
@@ -545,6 +548,11 @@ public class PlayerController : MonoBehaviour
             hasLuck = true;
             luck = value;
         }
+    }
+
+    public void PlayerKilled()
+    {
+        OnPlayerDeath.Invoke();
     }
     #endregion
     

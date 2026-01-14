@@ -6,18 +6,6 @@ public class Challenges : MonoBehaviour
 {
 
     public static bool theGladiator = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void FragileCrystal()
     {
         PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, PlayerController.Instance.GetMaxHealth()/2);

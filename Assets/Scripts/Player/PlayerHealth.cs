@@ -23,7 +23,6 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
         OnMaxHealthChanged?.Invoke(maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
         OnTempHealthChanged?.Invoke(temporaryHealth);
