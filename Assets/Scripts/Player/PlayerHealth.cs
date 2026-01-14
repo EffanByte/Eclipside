@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     
     [Header("Health Stats")]
-    [SerializeField] private float maxHealth = 100f; // 10 Hearts (10 units each)
+    [SerializeField] private float maxHealth = 40f; // 10 Hearts (10 units each)
     
     private float currentHealth;
     private float temporaryHealth = 0f; // NEW: Golden/Blue Hearts
@@ -24,7 +24,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         
-        OnMaxHealthChanged?.Invoke((int)maxHealth);
+        OnMaxHealthChanged?.Invoke(maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
         OnTempHealthChanged?.Invoke(temporaryHealth);
     }
@@ -103,5 +103,9 @@ public class PlayerHealth : MonoBehaviour
     {
         maxHealth = max;
         OnMaxHealthChanged?.Invoke(maxHealth);
+    }
+    public void ModifyMaxHealth(int value)
+    {
+        SetMaxHealth(maxHealth + value);
     }
 }

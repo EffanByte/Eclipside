@@ -67,7 +67,7 @@ public class EnemyStats
     [Header("General Stats")]
     public float maxHealth;
     public float moveSpeed;
-    public float expReward;
+    public static float expReward = 5;
     public int rupeeReward;
     
     [Header("Attack Configuration")]
@@ -341,7 +341,8 @@ public abstract class EnemyBase : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
         PlayerController.Instance.AddCurrency(CurrencyType.Rupee, stats.rupeeReward);
-        Destroy(gameObject); 
+        PlayerController.Instance.AddExperience(EnemyStats.expReward);
+        Destroy(gameObject);
     }
 
     protected void ChangeState(EnemyState newState)

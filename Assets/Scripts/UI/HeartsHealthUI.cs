@@ -55,7 +55,7 @@ public class HeartsHealthUI : MonoBehaviour
     // RED HEARTS (Permanent)
     // ---------------------------------------------------------
 
-    private void InitRedHearts(int maxHealth)
+    private void InitRedHearts(float maxHealth)
     {
         // 1. Clear ONLY the red hearts from the UI
         foreach (Image heart in redHearts)

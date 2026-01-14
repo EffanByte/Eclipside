@@ -9,6 +9,7 @@ TagManager:
   - Potion
   - Chest
   - Wall
+  - Shop
   layers:
   - Default
   - TransparentFX

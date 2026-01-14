@@ -1,13 +1,13 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using Unity.Multiplayer.Center.Common.Analytics;
 
 public enum StatType 
     { 
         AttackSpeed, 
         BaseDamage, 
-        MagicDamage, 
+        MagicDamage,
+        HeavyDamage,
         MaxHealth,
         CritChance,
         CritDamage,
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     [Header("--- Progression ---")]
     public int currentLevel = 1;
     public float currentExp = 0f;
-    public float expToNextLevel = 100f;
+    public float expToNextLevel = 10f;
     public int rupees = 100;
     public int keys = 0;
 
@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
 
 
     public event Action onCurrencyUpdate;
+    public event Action OnLevelUp; // Trigger UI
+    public event Action<float, float> OnExpChanged; // Update XP Bar UI (Current, Max)
 
     private float lastAttackTime = -999f; 
     
@@ -453,15 +455,68 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void AddExperience(float amount)
+     public void AddExperience(float amount)
     {
         currentExp += amount;
+        
+        // Notify UI (XP Bar)
+        OnExpChanged?.Invoke(currentExp, expToNextLevel);
+
         if (currentExp >= expToNextLevel)
         {
-            currentLevel++;
-            currentExp = 0;
-            Debug.Log("Level Up!");
+            LevelUp();
         }
+    }
+
+     private void LevelUp()
+    {
+        currentLevel++;
+        currentExp -= expToNextLevel;
+        
+        // Increase requirement (e.g., +20% per level)
+        expToNextLevel *= 1.2f;
+
+        // Trigger Event (Pauses game via UI)
+        Debug.Log($"Leveled Up to {currentLevel}!");
+        OnLevelUp?.Invoke();
+        
+        // If we had enough XP for multiple levels, handling carry-over:
+        // Update UI again just in case
+        OnExpChanged?.Invoke(currentExp, expToNextLevel);
+    }
+
+    public void ApplyPermanentUpgrade(StatType stat)
+    {
+        switch (stat)
+        {
+            case StatType.BaseDamage:
+                // Increase base modifier by 10%
+                // You might need a separate 'permanentDamageMultiplier' variable 
+                // so it stacks with item buffs cleanly
+                if (currentWeapon != null) currentWeapon.damage *= 1.1f; 
+                break;
+
+            case StatType.MagicDamage:
+                // magicDamageMultiplier += 0.1f;
+                break;
+
+            case StatType.MaxHealth:
+                // +1 Heart (10 units)
+                healthComp.ModifyMaxHealth(10); // Method you added previously
+                healthComp.Heal(1f); // level up heals the new heart
+                break;
+
+            case StatType.Speed:
+                baseMovementSpeed *= 1.05f;
+                movementSpeed = baseMovementSpeed; // Refresh current
+                break;
+
+            case StatType.AttackSpeed:
+                playerAttackSpeedMultiplier += 0.05f;
+                break;
+        }
+        
+        Debug.Log($"Applied Upgrade: {stat}");
     }
 
     public float GetMaxHealth()

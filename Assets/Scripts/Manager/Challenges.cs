@@ -1,4 +1,4 @@
-using UnityEditor.Rendering;
+
 using UnityEngine;
 
 public class Challenges : MonoBehaviour
@@ -31,5 +31,5 @@ public class Challenges : MonoBehaviour
         TimedChest.SetGloalKeyCount(0);
         GameDirector.Instance.SetMaxWaveCount(GameDirector.Instance.GetMaxWaveCount() + 1);
     }
-    
+
 }
