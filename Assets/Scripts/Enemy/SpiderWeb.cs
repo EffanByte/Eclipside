@@ -4,15 +4,14 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class SpiderWeb : MonoBehaviour
 {
-    private float speed = 7f;
     private float slowAmount = -0.4f; // -40% Speed
     private Rigidbody2D rb;
 
-    public void Setup(Vector2 direction)
+    public void Setup(Vector2 direction, float speed)
     {
         rb = GetComponent<Rigidbody2D>();
         // Using velocity for compatibility (Use linearVelocity in Unity 6+)
-        rb.linearVelocity = direction.normalized * speed; 
+        rb.linearVelocity = direction.normalized * speed;
         
         // Face the direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;

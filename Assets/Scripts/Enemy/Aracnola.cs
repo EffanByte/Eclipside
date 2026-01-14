@@ -76,7 +76,7 @@ protected override void LogicChasing()
             // Calculate direction
             Vector2 dir = (playerTarget.position - transform.position).normalized;
             
-            if (script != null) script.Setup(dir);
+            if (script != null) script.Setup(dir, stats.projectileSpeed);
         }
 
         // Return to normal

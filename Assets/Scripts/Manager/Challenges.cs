@@ -63,6 +63,14 @@ public class Challenges : MonoBehaviour
 
     public void TheUnlucky()
     {
-        PlayerController.Instance.ToggleLuck   
+        PlayerController.Instance.LockLuck();   
+    }
+    public void LastBreath()
+    {
+        PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, 10);
+    }
+    public void Crossfire()
+    {
+        // complete later when do projectile logic for player
     }
 }

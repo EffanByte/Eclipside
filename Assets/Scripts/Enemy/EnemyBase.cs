@@ -74,6 +74,7 @@ public class EnemyStats
     public float damage;        
     public float attackCooldown;
     public float knockbackForce; 
+    public float projectileSpeed;
     
     public DamageElement attackElement;
     public AttackStyle attackStyle;

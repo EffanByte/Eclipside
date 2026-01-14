@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections;
-
 public enum StatType 
     { 
         AttackSpeed, 
@@ -13,7 +12,8 @@ public enum StatType
         CritDamage,
         Luck,
         Defense,
-        Speed
+        Speed,
+        projectileSpeed
     }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -63,7 +63,8 @@ public class PlayerController : MonoBehaviour
 
     // --- Buff State ---
     private float baseMovementSpeed; 
-    public bool hasLuck = false; 
+    private bool hasLuck = false; 
+    private bool isLuckLocked = false;
 
     // --- References ---
     private PlayerControls controls; 
@@ -529,6 +530,22 @@ public class PlayerController : MonoBehaviour
         statusMgr.TryAddStatus(effect);
     }
     
+    public void LockLuck()
+    {
+        isLuckLocked = true;
+    }
+    public void SetLuck(int value)
+    {
+        if (isLuckLocked)
+        {
+            Debug.Log("Luck is Locked");
+        }
+        else
+        {
+            hasLuck = true;
+            luck = value;
+        }
+    }
     #endregion
     
 }

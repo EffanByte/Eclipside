@@ -18,6 +18,7 @@ public abstract class WeaponData : ItemData
     [SerializeField] protected float knockbackForce;
     [SerializeField] protected float hitDuration = 0.2f;
     [SerializeField] protected float criticalChance;
+    [SerializeField] protected float projectileSpeed;
 
     [Header("Damage Type")]
     public DamageElement element;
