@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq; // Needed for ToList()
+
 
 public class AchievementManager : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class AchievementManager : MonoBehaviour
 
     // Track which ones are already claimed
     private HashSet<string> unlockedAchievements = new HashSet<string>();
+    private const string FILE_NAME = "Save_Stats";
 
     private void Start()
     {
@@ -53,14 +56,59 @@ public class AchievementManager : MonoBehaviour
         SaveProgress();
     }
 
-    private void GrantReward(AchievementData ach)
+     private void GrantReward(AchievementData ach)
     {
-        float difficultyMult = GameDirector.Instance.CurrentDifficulty; 
-        // Logic to give Gold/Orbs/Items based on ach.rewardType
-        // e.g. PlayerController.Instance.AddCurrency(...)
+        // Ensure Player exists (in case unlocked in menu)
+        if (PlayerController.Instance == null) return;
+
+        switch (ach.rewardType)
+        {
+            case RewardType.Gold:
+                PlayerController.Instance.AddCurrency(CurrencyType.Rupee, ach.rewardAmount); // Note: Assuming Gold = Rupee logic or add Gold type
+                break;
+                
+            case RewardType.Orb:
+                 PlayerController.Instance.AddCurrency(CurrencyType.Orb, ach.rewardAmount); 
+                break;
+
+            case RewardType.Consumable:
+                if (ach.rewardItem != null && ach.rewardItem is ConsumableItem con)
+                {
+                    InventoryManager.Instance.AddItem(con); // think about this because it'd be one time use but idk when to add
+                }
+                break;
+        }
     }
 
-    
-    private void SaveProgress() { /* Save unlocked list */ }
-    private void LoadProgress() { /* Load unlocked list */ }
+    // ---------------------------------------------------------
+    // SAVE / LOAD LOGIC
+    // ---------------------------------------------------------
+
+    private void SaveProgress()
+    {
+        // 1. Load existing file (to avoid overwriting other stats)
+        SaveFile_Stats data = SaveManager.Load<SaveFile_Stats>(FILE_NAME);
+
+        // 2. Update the list
+        data.achievements.completed_achievement_ids = unlockedAchievements.ToList();
+
+        // 3. Write back to disk
+        SaveManager.Save(FILE_NAME, data);
+    }
+
+    private void LoadProgress()
+    {
+        // 1. Load file
+        SaveFile_Stats data = SaveManager.Load<SaveFile_Stats>(FILE_NAME);
+
+        // 2. Populate runtime HashSet
+        unlockedAchievements.Clear();
+        if (data.achievements != null && data.achievements.completed_achievement_ids != null)
+        {
+            foreach (string id in data.achievements.completed_achievement_ids)
+            {
+                unlockedAchievements.Add(id);
+            }
+        }
+    }
 }
