@@ -47,6 +47,10 @@ public class GameDirector : MonoBehaviour
 
     private void Start()
     {
+        if (ChallengeManager.Instance != null)
+        {
+            ChallengeManager.Instance.ApplyActiveChallenges();
+        }
         SpawnZones();
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
         StartCoroutine(GameLoopRoutine());

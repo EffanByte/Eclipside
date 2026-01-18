@@ -2,6 +2,20 @@
 using System.Collections;
 using UnityEngine;
 
+
+    public enum ChallengeType
+    {
+        FragileCrystal,
+        ThePurge,
+        EndlessGreed,
+        TheGladiator,
+        BloodForPower,
+        Crossfire,
+        TotalConfusion,
+        RainOfFire, // Mentioned in your JSON but missing in code
+        TheUnlucky,
+        LastBreath
+    }
 public class Challenges : MonoBehaviour
 {
 
