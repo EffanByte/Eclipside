@@ -1,8 +1,0 @@
-{
-  "daily_tracker": {
-    "last_reset_date": "YYYY-MM-DD",
-    "ads_watched_count": 0,             
-    "arena_ads_watched": 0,             
-    "daily_login_claimed": false
-  }
-}

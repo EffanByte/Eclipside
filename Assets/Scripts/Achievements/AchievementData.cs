@@ -7,8 +7,6 @@ public enum AchievementType
     DateCheck       // Daily logins
 }
 
-public enum RewardType { Gold, Orb, Consumable }
-
 [CreateAssetMenu(menuName = "Eclipside/Achievement")]
 public class AchievementData : ScriptableObject
 {

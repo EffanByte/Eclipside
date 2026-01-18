@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public enum ItemRarity { Common, Rare, Epic, Mythical, Key }
-public enum CurrencyType { Rupee, Key, XP }
+public enum CurrencyType { Rupee, Key, XP, Gold, Orb }
 public abstract class ItemData : ScriptableObject
 {
     [Header("Core Info")]

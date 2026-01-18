@@ -1,0 +1,44 @@
+{
+  "user_profile": {
+    "user_id": "string_uuid",
+    "username": "PlayerName",
+    "date_created": "timestamp",
+    "last_login_timestamp": "timestamp",
+    "gold": 0,
+    "orbs": 0,
+    "arena_tickets": 0,
+    "is_starter_pack_purchased": false
+  },
+  "monthly_pass": {
+    "is_active": false,
+    "expiration_date": "timestamp",
+    "current_exp_progress": 0
+  },
+  "daily_tracker": {
+    "last_reset_date": "YYYY-MM-DD",
+    "ads_watched_count": 0,
+    "arena_ads_watched": 0,
+    "daily_login_claimed": false
+  },
+  "characters": {
+    "owned_character_ids": ["char_default_01"],
+    "equipped_character_id": "char_default_01"
+  },
+  "weapons": {
+    "unlocked_weapon_ids": ["weapon_light_melee_01"],
+    "weapon_skins": []
+  },
+  "consumables_stash": {
+    "glass_orb": 2
+  },
+  "gacha_state": {
+    "total_pulls_lifetime": 0,
+    "current_pity_counter": 0,
+    "consecutive_pulls_no_epic": 0,
+    "whale_pity_tracker": 0
+  },
+  "progression": {
+    "flags": { "has_completed_tutorial": false, "is_hard_mode_unlocked": false },
+    "tutorial_steps": { "movement_done": false, "attack_done": false }
+  }
+}
