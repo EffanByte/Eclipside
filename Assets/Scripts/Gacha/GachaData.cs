@@ -14,7 +14,7 @@ public class GachaRewardEntry
     [Header("Values")]
     public int amount = 1; // For Currency/Consumables
     public ItemData itemReference; // If Weapon/Consumable
-    // Note: Character reference would go here if you have CharacterData objects`
+    public CharacterData characterReference; 
 
     [Header("Duplicate Logic")]
     public int duplicateConversionAmount; // e.g. 300

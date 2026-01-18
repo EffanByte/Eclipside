@@ -13,7 +13,7 @@ public class SaveFile_Profile
     public UserProfile user_profile = new UserProfile();
     public MonthlyPass monthly_pass = new MonthlyPass();
     public DailyTracker daily_tracker = new DailyTracker();
-    public CharacterData characters = new CharacterData();
+    public SaveCharacterData characters = new SaveCharacterData();
     public WeaponInventory weapons = new WeaponInventory();
     public ConsumableInventory consumables = new ConsumableInventory();
     public GachaState gacha_state = new GachaState();
@@ -51,7 +51,7 @@ public class DailyTracker
 }
 
 [Serializable]
-public class CharacterData
+public class SaveCharacterData
 {
     public List<string> owned_character_ids = new List<string>();
     public string equipped_character_id;

@@ -156,42 +156,66 @@ public class GachaManager : MonoBehaviour
     {
         PullResult result = new PullResult { reward = item, isDuplicate = false, convertedAmount = 0 };
 
-        // Logic based on Type
+        // 1. CURRENCY
         if (item.type == RewardType.Currency)
         {
-            // Just add it
             if (item.idName.Contains("Gold")) profile.user_profile.gold += item.amount;
             else if (item.idName.Contains("Orb")) profile.user_profile.orbs += item.amount;
         }
+        // 2. CONSUMABLE
         else if (item.type == RewardType.Consumable)
         {
-            // Add to stash
-            // Note: In real implementation, use item ID to find list index
-            // Simple generic adder:
-            profile.consumables.stash.Add(new InventoryItemEntry { item_id = item.itemReference.itemName, count = item.amount });
+            profile.consumables.stash.Add(new InventoryItemEntry { 
+                item_id = item.itemReference.itemName, 
+                count = item.amount 
+            });
         }
+        // 3. WEAPON
         else if (item.type == RewardType.Weapon)
         {
-            // Check Duplicate
-            string weaponID = item.itemReference != null ? item.itemReference.name : item.idName;
-            
+            string weaponID = item.itemReference.name; // Uses WeaponData asset name
             if (profile.weapons.unlocked_weapon_ids.Contains(weaponID))
             {
-                // DUPLICATE LOGIC
                 result.isDuplicate = true;
                 result.convertedAmount = item.duplicateConversionAmount;
-                
-                if (item.duplicateConversionType == CurrencyType.Gold) profile.user_profile.gold += result.convertedAmount;
-                else profile.user_profile.orbs += result.convertedAmount;
+                AddConversionCurrency(profile, item.duplicateConversionType, item.duplicateConversionAmount);
             }
             else
             {
-                // Unlock
                 profile.weapons.unlocked_weapon_ids.Add(weaponID);
             }
         }
-        // Character logic similar to Weapon...
+        // 4. CHARACTER (NEW LOGIC)
+        else if (item.type == RewardType.Character)
+        {
+            // Use the ID from CharacterData (e.g. "char_knight")
+            string charID = item.characterReference.characterID; 
+
+            // Check Save File for ownership
+            if (profile.characters.owned_character_ids.Contains(charID))
+            {
+                // DUPLICATE: Convert to currency
+                result.isDuplicate = true;
+                result.convertedAmount = item.duplicateConversionAmount;
+                AddConversionCurrency(profile, item.duplicateConversionType, item.duplicateConversionAmount);
+                
+                Debug.Log($"Duplicate Character: {charID}. Converted to {result.convertedAmount}");
+            }
+            else
+            {
+                // NEW: Unlock it
+                profile.characters.owned_character_ids.Add(charID);
+                Debug.Log($"Unlocked New Character: {charID}");
+            }
+        }
 
         return result;
+    }
+
+    // Helper to keep code clean
+    private void AddConversionCurrency(SaveFile_Profile profile, CurrencyType type, int amount)
+    {
+        if (type == CurrencyType.Gold) profile.user_profile.gold += amount;
+        else if (type == CurrencyType.Orb) profile.user_profile.orbs += amount;
     }
 }
