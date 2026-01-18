@@ -1,16 +1,39 @@
 using UnityEngine;
 
+
 public class MainMenu : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+{   
+    [SerializeField] private GameObject achievementPanel;
+    [SerializeField] private GameObject ChallengePanel;
+
+       void Start()
     {
         
     }
 
     public void OnStartGameButtonPressed()
     {
-        // Logic to start the game
         UnityEngine.SceneManagement.SceneManager.LoadScene("Demo"); // Load main game scene
+    }
+
+    public void OnAchievementButtonPressed()
+    {
+        achievementPanel.SetActive(true);
+        ChallengePanel.SetActive(false);
+    }
+
+    public void OnChallengeButtonPressed()
+    {
+        ChallengePanel.SetActive(true);
+        achievementPanel.SetActive(false);
+    }
+
+    public void OnExitAchievementPanel()
+    {
+        achievementPanel.SetActive(false);
+    }
+    public void OnExitChallengePanel()
+    {
+        ChallengePanel.SetActive(false);
     }
 }

@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq; // Needed for ToList()
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class AchievementManager : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class AchievementManager : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject); // add if statement later, idr exact condition
         if (Instance == null) Instance = this;
         
         // Listen to the Stats Manager
@@ -111,4 +114,29 @@ public class AchievementManager : MonoBehaviour
             }
         }
     }
+    #if UNITY_EDITOR
+    [ContextMenu("Load Achievements From Folder")]
+    private void LoadFromFolder()
+    {
+        allAchievements.Clear();
+        
+        // Searches the project for AchievementData assets
+        string[] guids = AssetDatabase.FindAssets("t:AchievementData", new[] { "Assets/Objects/Achievements" });
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            AchievementData asset = AssetDatabase.LoadAssetAtPath<AchievementData>(path);
+            if (asset != null)
+            {
+                allAchievements.Add(asset);
+            }
+        }
+        
+        Debug.Log($"Loaded {allAchievements.Count} achievements from Assets/Objects/Achievements");
+        
+        // Mark object as dirty to save the list
+        EditorUtility.SetDirty(this);
+    }
+#endif
 }

@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
         gameObject.SetActive(false); // Ensure pause menu is hidden at start
     }
 
+
     public void OnPauseButtonPressed()
     {
         // Logic to pause the game

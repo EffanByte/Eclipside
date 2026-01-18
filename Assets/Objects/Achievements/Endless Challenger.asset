@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28a88caa31b0f9142b806c03f446809c, type: 3}
   m_Name: Endless Challenger
   m_EditorClassIdentifier: Assembly-CSharp::AchievementData
-  id: kills_boss_10
-  title: Boss Slayer Ii
-  description: "Kill 10 Bosses.\t"
+  id: arena_wave_20
+  title: Endless Challenge
+  description: Reach Wave 20 in the Arena.
+  icon: {fileID: 0}
   type: 0
-  statKey: KILLS_BOSS
-  targetValue: 10
+  statKey: ARENA_WAVE_20
+  targetValue: 20
   rewardType: 5
-  rewardAmount: 500
+  rewardAmount: 600
   rewardItem: {fileID: 0}

@@ -14,6 +14,7 @@ public class AchievementData : ScriptableObject
     public string id; // Unique Key e.g., "ACH_KILL_100"
     public string title;
     [TextArea] public string description;
+    public Sprite icon;
 
     [Header("Logic")]
     public AchievementType type;

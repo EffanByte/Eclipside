@@ -16,7 +16,7 @@ public class StatisticsManager : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        
+        DontDestroyOnLoad(gameObject); // add if statement later for condition
         LoadStats();
     }
 
@@ -77,5 +77,12 @@ public class StatisticsManager : MonoBehaviour
 
         // 3. Save
         SaveManager.Save(FILE_NAME, data);
+    }
+
+    public int GetStat(string key)
+    {
+        if (stats.ContainsKey(key))
+            return stats[key];
+        return 0;
     }
 }
