@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4646780902981196395}
   m_Layer: 0
   m_Name: Shop_Area
-  m_TagString: Wall
+  m_TagString: Shop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

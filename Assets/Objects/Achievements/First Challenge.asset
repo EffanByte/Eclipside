@@ -15,8 +15,9 @@ MonoBehaviour:
   id: Kills_Miniboss_1
   title: First Challenge
   description: Defeat Your First Miniboss
+  icon: {fileID: 0}
   type: 0
-  statKey: KILLS_REGULAR
+  statKey: KILLS_MINIBOSS
   targetValue: 1
   rewardType: 4
   rewardAmount: 1000

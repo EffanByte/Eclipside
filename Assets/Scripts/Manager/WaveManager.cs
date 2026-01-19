@@ -82,10 +82,9 @@ public class WaveManager : MonoBehaviour
         if (enemiesAlive > 0)
         {
             enemiesAlive--;
-            Debug.Log($"[WaveManager] Enemy Defeated! Remaining: {enemiesAlive}");
+            StatisticsManager.Instance.IncrementStat("KILLS_REGULAR");
             if (enemiesAlive <= 0)
             {
-                Debug.Log("[WaveManager] Wave Completed!");
                 GameDirector.Instance.NotifyWaveFinished();
             }
         }

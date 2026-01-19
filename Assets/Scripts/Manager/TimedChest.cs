@@ -83,6 +83,7 @@ public class TimedChest : MonoBehaviour, IInteractable
             if (pedestal != null)
             {
                 pedestal.Setup(reward);
+                StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
             }
         }
 

@@ -119,8 +119,8 @@ public class ChallengeManager : MonoBehaviour
 
     public static  void ThePurge()
     {
-        if (GameDirector.Instance.zonePrefabs.Contains(GameObject.FindWithTag("Shop")))
-            GameDirector.Instance.zonePrefabs.Remove(GameObject.FindWithTag("Shop"));
+            Debug.Log("Removing Shop Zones for The Purge Challenge");
+            GameDirector.Instance.zonePrefabs.RemoveAt(0);
     }
 
     public static void EndlessGreed()
