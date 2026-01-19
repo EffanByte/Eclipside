@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(BoxCollider2D))] // Ensure it has a trigger
 public class TimedChest : MonoBehaviour, IInteractable
@@ -46,7 +45,7 @@ public class TimedChest : MonoBehaviour, IInteractable
 
         if (player.keys <= keyCount) 
         return;
-        PlayerController.Instance.AddCurrency(CurrencyType.Key, keyCount.Value);
+        PlayerController.Instance.AddCurrency(CurrencyType.Key, -1);
 
         OpenChest(player);
         return;

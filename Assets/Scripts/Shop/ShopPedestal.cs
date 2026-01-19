@@ -113,11 +113,6 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     {
         if (isSoldOut) return;
         // Safety Check
-        if (GameDirector.Instance != null && GameDirector.Instance.IsWaveActive)
-        {
-            Debug.Log("Cannot shop during combat!");
-            return;
-        }
         if (ShopManager.Instance.TryBuyItem(slotIndex))
         {
             SetSoldOut();

@@ -57,6 +57,7 @@ public class StatisticsManager : MonoBehaviour
 
         // Gameplay
         stats["ARENA_WAVE"] = data.stats.gameplay.highest_arena_wave;
+        stats["PERFECT_WAVES"] = data.stats.gameplay.perfect_waves;
     }
 
     private void SaveStats()
@@ -74,7 +75,7 @@ public class StatisticsManager : MonoBehaviour
         
         if (stats.ContainsKey("CHESTS_OPENED")) data.stats.economy.chests_opened = stats["CHESTS_OPENED"];
         if (stats.ContainsKey("GOLD_SPENT")) data.stats.economy.gold_spent_in_shops = stats["GOLD_SPENT"];
-
+        if (stats.ContainsKey("PERFECT_WAVES")) data.stats.gameplay.perfect_waves = stats["PERFECT_WAVES"];
         // 3. Save
         SaveManager.Save(FILE_NAME, data);
     }

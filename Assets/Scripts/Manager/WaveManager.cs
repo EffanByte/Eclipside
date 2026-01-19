@@ -41,8 +41,9 @@ public class WaveManager : MonoBehaviour
         Debug.Log($"[WaveManager] Wave {waveNumber} Started! Enemies: {count}");
 
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
+
         if (!tookDamageThisWave)
-            StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
+            StatisticsManager.Instance.IncrementStat("PERFECT_WAVES");
     }
 
     private IEnumerator SpawnRoutine(int count, float difficulty)
@@ -81,10 +82,10 @@ public class WaveManager : MonoBehaviour
         if (enemiesAlive > 0)
         {
             enemiesAlive--;
-
+            Debug.Log($"[WaveManager] Enemy Defeated! Remaining: {enemiesAlive}");
             if (enemiesAlive <= 0)
             {
-                // Wave Complete! Tell Director.
+                Debug.Log("[WaveManager] Wave Completed!");
                 GameDirector.Instance.NotifyWaveFinished();
             }
         }

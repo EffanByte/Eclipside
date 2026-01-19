@@ -175,6 +175,7 @@ public class GameplayStats
     public int arena_entries;
     public int highest_arena_wave;
     public int synergy_kills;
+    public int perfect_waves;
 }
 
 [Serializable]

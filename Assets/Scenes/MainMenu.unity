@@ -633,7 +633,6 @@ GameObject:
   - component: {fileID: 96434457}
   - component: {fileID: 96434459}
   - component: {fileID: 96434458}
-  - component: {fileID: 96434460}
   m_Layer: 5
   m_Name: AchievementPanel
   m_TagString: Untagged
@@ -700,20 +699,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96434456}
   m_CullTransparentMesh: 1
---- !u!114 &96434460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 96434456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ac7d8061739094e891c98b65ecd3fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChallengeUI
-  togglePrefab: {fileID: 0}
-  container: {fileID: 0}
 --- !u!1 &105432506
 GameObject:
   m_ObjectHideFlags: 0
@@ -2725,50 +2710,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659682887}
   m_CullTransparentMesh: 1
---- !u!1 &677101243
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 677101245}
-  - component: {fileID: 677101244}
-  m_Layer: 0
-  m_Name: ChallengeLogic
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &677101244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677101243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59ea16e3b79dad64da03a9c33a1e44e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Challenges
---- !u!4 &677101245
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677101243}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 957.7287, y: 790.56384, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &691762844
 GameObject:
   m_ObjectHideFlags: 0
@@ -6624,4 +6565,3 @@ SceneRoots:
   - {fileID: 105432511}
   - {fileID: 902877432}
   - {fileID: 1416655864}
-  - {fileID: 677101245}

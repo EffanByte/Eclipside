@@ -140,7 +140,9 @@ public class GameDirector : MonoBehaviour
         {
             playerTransform = PlayerController.Instance.transform;
             Vector2 offset = Random.insideUnitCircle * chestSpawnRadius;
-            Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
+            GameObject chest = Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
+            TimedChest chestScript = chest.GetComponent<TimedChest>();
+            chestScript.Setup(1); 
         }
     }
 

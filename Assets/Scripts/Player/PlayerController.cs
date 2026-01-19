@@ -444,20 +444,10 @@ public class PlayerController : MonoBehaviour
         }
         onCurrencyUpdate?.Invoke();
     }
+    
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Chest"))
-        {
-            if (keys > 0)
-            {
-                keys--;
-                Debug.Log("Chest Opened.");
-                Destroy(collision.gameObject);
-                // Trigger your Loot Drop logic here later
-            }
-            else Debug.Log("Need keys!");
-        }
     }
 
      public void AddExperience(float amount)
