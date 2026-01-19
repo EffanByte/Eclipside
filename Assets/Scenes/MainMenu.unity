@@ -633,6 +633,7 @@ GameObject:
   - component: {fileID: 96434457}
   - component: {fileID: 96434459}
   - component: {fileID: 96434458}
+  - component: {fileID: 96434460}
   m_Layer: 5
   m_Name: AchievementPanel
   m_TagString: Untagged
@@ -699,6 +700,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96434456}
   m_CullTransparentMesh: 1
+--- !u!114 &96434460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96434456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ac7d8061739094e891c98b65ecd3fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChallengeUI
+  togglePrefab: {fileID: 0}
+  container: {fileID: 0}
 --- !u!1 &105432506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,7 +1420,6 @@ GameObject:
   - component: {fileID: 285662426}
   - component: {fileID: 285662428}
   - component: {fileID: 285662427}
-  - component: {fileID: 285662429}
   m_Layer: 5
   m_Name: ChallengePanel
   m_TagString: Untagged
@@ -1472,18 +1486,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285662425}
   m_CullTransparentMesh: 1
---- !u!114 &285662429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 285662425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d91e792b5f13fc940a95f2f078ae9dc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChallengeSelection
 --- !u!1 &310336986
 GameObject:
   m_ObjectHideFlags: 0
