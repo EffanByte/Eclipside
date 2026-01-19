@@ -18,12 +18,12 @@ public class ChallengeToggle : MonoBehaviour
         if(label != null) label.text = challengeType.ToString();
 
         // 1. Load previous state (optional)
-        toggle.isOn = ChallengeSelection.Instance.activeChallenges.Contains(challengeType);
+        toggle.isOn = ChallengeManager.Instance.activeChallenges.Contains(challengeType);
 
         // 2. Listen for clicks
         toggle.onValueChanged.AddListener((isOn) => 
         {
-            ChallengeSelection.Instance.SetChallengeState(challengeType, isOn);
+            ChallengeManager.Instance.ToggleChallenge(challengeType, isOn);
         });
     }
 }
