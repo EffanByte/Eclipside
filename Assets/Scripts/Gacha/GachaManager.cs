@@ -41,13 +41,18 @@ public class GachaManager : MonoBehaviour
 
     public List<PullResult> PerformPull(MeteoriteBanner banner, bool isTenPull)
     {
-        // 1. Load Save Data
-        var profile = SaveManager.Load<SaveFile_Profile>("Save_Profile");
-        int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
+       int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
 
-        // 2. Charge Player
-        if (banner.currencyType == CurrencyType.Gold) profile.user_profile.gold -= cost;
-        else profile.user_profile.orbs -= cost;
+        // --- THE FIX ---
+        // Attempt to charge. If it fails, stop immediately.
+        // This handles loading, checking balance, deducting, and saving internally.
+        if (!CurrencyManager.TrySpendCurrency(banner.currencyType, cost))
+        {
+            Debug.LogError("Pull Failed: Insufficient Currency");
+            return null; 
+        }
+
+        var profile = SaveManager.Load<SaveFile_Profile>("Save_Profile");
 
         // 3. Calculate Results
         List<PullResult> results = new List<PullResult>();
@@ -76,7 +81,7 @@ public class GachaManager : MonoBehaviour
 
             // Pick Item
             GachaRewardEntry item = PickItemFromPool(banner, selectedRarity);
-            
+            Debug.Log($"Pulled: {item.idName} ({selectedRarity})");
             // Process Item (Add to inventory / Handle Duplicate)
             PullResult result = ProcessReward(item, profile);
             results.Add(result);
@@ -157,10 +162,13 @@ public class GachaManager : MonoBehaviour
         PullResult result = new PullResult { reward = item, isDuplicate = false, convertedAmount = 0 };
 
         // 1. CURRENCY
-        if (item.type == RewardType.Currency)
+        if (item.type == RewardType.Gold)
         {
-            if (item.idName.Contains("Gold")) profile.user_profile.gold += item.amount;
-            else if (item.idName.Contains("Orb")) profile.user_profile.orbs += item.amount;
+            CurrencyManager.AddCurrency(CurrencyType.Gold, item.amount);
+        }
+                if (item.type == RewardType.Orb)
+        {
+            CurrencyManager.AddCurrency(CurrencyType.Orb, item.amount);
         }
         // 2. CONSUMABLE
         else if (item.type == RewardType.Consumable)
@@ -178,6 +186,7 @@ public class GachaManager : MonoBehaviour
             {
                 result.isDuplicate = true;
                 result.convertedAmount = item.duplicateConversionAmount;
+                Debug.Log($"Duplicate Weapon: {weaponID}. Converted to {result.convertedAmount}");
                 AddConversionCurrency(profile, item.duplicateConversionType, item.duplicateConversionAmount);
             }
             else
@@ -215,7 +224,7 @@ public class GachaManager : MonoBehaviour
     // Helper to keep code clean
     private void AddConversionCurrency(SaveFile_Profile profile, CurrencyType type, int amount)
     {
-        if (type == CurrencyType.Gold) profile.user_profile.gold += amount;
-        else if (type == CurrencyType.Orb) profile.user_profile.orbs += amount;
+        if (type == CurrencyType.Gold) CurrencyManager.AddCurrency(CurrencyType.Gold, amount);
+        else if (type == CurrencyType.Orb) CurrencyManager.AddCurrency(CurrencyType.Orb, amount);
     }
 }

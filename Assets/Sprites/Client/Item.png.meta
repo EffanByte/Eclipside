@@ -4864,28 +4864,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_162
-      rect:
-        serializedVersion: 2
-        x: 12
-        y: 898
-        width: 322
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b7beca4b9690f5cf0800000000000000
-      internalID: -261479903756752005
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: The Roguelike Remastered 1-6-10 Alpha_163
       rect:
         serializedVersion: 2
@@ -5348,16 +5326,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_184
+      name: Meteorite Pedestal
       rect:
         serializedVersion: 2
         x: 364
-        y: 738
-        width: 66
-        height: 96
+        y: 800
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 0, z: 32, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -5519,28 +5497,6 @@ TextureImporter:
       bones: []
       spriteID: 33764de41207cff60800000000000000
       internalID: 8069447920699860787
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_192
-      rect:
-        serializedVersion: 2
-        x: 364
-        y: 640
-        width: 98
-        height: 98
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d297aa4138f12b250800000000000000
-      internalID: 5958859904812480813
       vertices: []
       indices: 
       edges: []
@@ -12261,7 +12217,7 @@ TextureImporter:
         serializedVersion: 2
         x: 269
         y: 993
-        width: 32
+        width: 31
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -12365,6 +12321,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Portal Pedestal
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 675
+        width: 33
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd106a2ef6d35974b8cfb26222a9ea4f
+      internalID: 717333725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lava
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 994
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cde88046189e0d4780334b3c833b37c
+      internalID: 624604947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dusty Meteorite
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 930
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39971fe7e96392b4884d63035f07b01e
+      internalID: 1534332108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GachaTile
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 1057
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edbfaa37f96365a4c8129a8bad43d9a1
+      internalID: -1813722384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -12386,6 +12430,8 @@ TextureImporter:
       Cursed Roots: -1470626955654299389
       Demo Grass: -2535949457075985131
       Dull Sword: 4816236785699132433
+      Dusty Meteorite: 1534332108
+      GachaTile: -1813722384
       Glass Orb: -1372165304353773876
       Half Heart: 8652019896354499425
       Healing Pool: 470842967897012258
@@ -12394,7 +12440,10 @@ TextureImporter:
       Item: -9191427274821700472
       Item_0: 722583148
       Large Potion: -2630476455808661796
+      Lava: 624604947
+      Meteorite Pedestal: 861426214864616172
       Open Chest: 3867480421349359556
+      Portal Pedestal: 717333725
       Quick Berr: 5963437217261167676
       Quick Berry: 4160961982350503567
       Rusty Dagger: 6657205154130263698
@@ -12494,7 +12543,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_181: 8375927486368216798
       The Roguelike Remastered 1-6-10 Alpha_182: 1950261527514466133
       The Roguelike Remastered 1-6-10 Alpha_183: -8340794039893684431
-      The Roguelike Remastered 1-6-10 Alpha_184: 861426214864616172
       The Roguelike Remastered 1-6-10 Alpha_185: 2060739890088772701
       The Roguelike Remastered 1-6-10 Alpha_186: 1272308800223458816
       The Roguelike Remastered 1-6-10 Alpha_187: 7466012256368260233
