@@ -32,7 +32,7 @@ MonoBehaviour:
   - idName: 300 Gold
     type: 4
     rarity: 0
-    amount: 1
+    amount: 300
     itemReference: {fileID: 0}
     characterReference: {fileID: 0}
     duplicateConversionAmount: 0

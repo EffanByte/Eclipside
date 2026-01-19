@@ -7,39 +7,31 @@ public static class CurrencyManager
     // ---------------------------------------------------------
     // ADD CURRENCY (Rewards, Purchases)
     // ---------------------------------------------------------
-    public static void AddCurrency(CurrencyType type, int amount)
+public static void AddCurrency(CurrencyType type, int amount)
     {
-        // 1. Load Data
-        var profile = SaveManager.Load<SaveFile_Profile>(PROFILE_FILE);
+        // 1. USE CACHED PROFILE
+        var profile = SaveManager.Profile; 
 
         // 2. Modify
         switch (type)
         {
             case CurrencyType.Gold:
                 profile.user_profile.gold += amount;
-                Debug.Log($"[Economy] Added {amount} Gold. Total: {profile.user_profile.gold}");
                 break;
-
             case CurrencyType.Orb:
                 profile.user_profile.orbs += amount;
-                Debug.Log($"[Economy] Added {amount} Orbs. Total: {profile.user_profile.orbs}");
                 break;
-                
         }
 
-        // 3. Save Immediately
-        SaveManager.Save(PROFILE_FILE, profile);
-        Debug.Log("[Economy] Profile saved after currency addition.");
+        // 3. Save via Cache helper
+        SaveManager.SaveProfile();
+        Debug.Log($"[Economy] Added {amount} {type}. Total: {(type == CurrencyType.Gold ? profile.user_profile.gold : profile.user_profile.orbs)}");
     }
 
-    // ---------------------------------------------------------
-    // CHARGE CURRENCY (Spending)
-    // Returns TRUE if transaction succeeded, FALSE if insufficient funds
-    // ---------------------------------------------------------
     public static bool TrySpendCurrency(CurrencyType type, int cost)
     {
-        // 1. Load Data
-        var profile = SaveManager.Load<SaveFile_Profile>(PROFILE_FILE);
+        // 1. USE CACHED PROFILE
+        var profile = SaveManager.Profile;
         bool transactionSuccess = false;
 
         // 2. Check & Deduct
@@ -50,7 +42,6 @@ public static class CurrencyManager
                 {
                     profile.user_profile.gold -= cost;
                     transactionSuccess = true;
-                    Debug.Log($"[Economy] Spent {cost} Gold. Remaining: {profile.user_profile.gold}");
                 }
                 break;
 
@@ -59,15 +50,15 @@ public static class CurrencyManager
                 {
                     profile.user_profile.orbs -= cost;
                     transactionSuccess = true;
-                    Debug.Log($"[Economy] Spent {cost} Orbs. Remaining: {profile.user_profile.orbs}");
                 }
                 break;
         }
 
-        // 3. Save ONLY if data changed
+        // 3. Save
         if (transactionSuccess)
         {
-            SaveManager.Save(PROFILE_FILE, profile);
+            SaveManager.SaveProfile();
+            Debug.Log($"[Economy] Spent {cost} {type}. Remaining: {(type == CurrencyType.Gold ? profile.user_profile.gold : profile.user_profile.orbs)}");
         }
         else
         {
@@ -76,13 +67,12 @@ public static class CurrencyManager
 
         return transactionSuccess;
     }
-
     // ---------------------------------------------------------
     // HELPER: CHECK BALANCE (Without spending)
     // ---------------------------------------------------------
     public static int GetBalance(CurrencyType type)
     {
-        var profile = SaveManager.Load<SaveFile_Profile>(PROFILE_FILE);
+        var profile = SaveManager.Profile;
         switch (type)
         {
             case CurrencyType.Gold: return profile.user_profile.gold;

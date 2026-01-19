@@ -252,15 +252,43 @@ public struct Vector2Serializable
     public static implicit operator Vector2Serializable(Vector2 v) => new Vector2Serializable(v.x, v.y);
 }
 public static class SaveManager
-{   
+{
     private static string BasePath => Application.persistentDataPath;
 
+    // --- NEW: THE CACHE ---
+    private static SaveFile_Profile _cachedProfile;
+
+    // Accessor: Always returns the live object in memory
+    public static SaveFile_Profile Profile
+    {
+        get
+        {
+            if (_cachedProfile == null)
+            {
+                // Load from disk if we haven't yet
+                _cachedProfile = Load<SaveFile_Profile>("Save_Profile");
+            }
+            return _cachedProfile;
+        }
+    }
+
+    // Call this to write the cache to disk
+    public static void SaveProfile()
+    {
+        if (_cachedProfile != null)
+        {
+            Save("Save_Profile", _cachedProfile);
+        }
+    }
+
+    // --- Existing Methods (Keep these) ---
     public static void Save<T>(string filename, T data)
     {
         string path = Path.Combine(BasePath, filename + ".json");
-        string json = JsonUtility.ToJson(data, true); // Pretty Print for readability
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(path, json);
-        Debug.Log($"Saved {filename}");
+        
+        // Debug.Log($"Saved {filename}"); // Comment out to reduce spam
     }
 
     public static T Load<T>(string filename) where T : new()
@@ -271,12 +299,12 @@ public static class SaveManager
             string json = File.ReadAllText(path);
             return JsonUtility.FromJson<T>(json);
         }
-        return new T(); // Return clean new object if file missing
+        return new T();
     }
-
-    public static void Delete(string filename)
+    
+    // Helper to force reload if needed (e.g. after wiping data)
+    public static void RefreshCache()
     {
-        string path = Path.Combine(BasePath, filename + ".json");
-        if(File.Exists(path)) File.Delete(path);
+        _cachedProfile = null;
     }
 }

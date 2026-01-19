@@ -30,7 +30,7 @@ public class GachaManager : MonoBehaviour
 
     public bool CanAfford(MeteoriteBanner banner, bool isTenPull)
     {
-        var profile = SaveManager.Load<SaveFile_Profile>("Save_Profile");
+        var profile = SaveManager.Profile; 
         int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
         
         if (banner.currencyType == CurrencyType.Gold) return profile.user_profile.gold >= cost;
@@ -52,7 +52,7 @@ public class GachaManager : MonoBehaviour
             return null; 
         }
 
-        var profile = SaveManager.Load<SaveFile_Profile>("Save_Profile");
+        var profile = SaveManager.Profile; 
 
         // 3. Calculate Results
         List<PullResult> results = new List<PullResult>();
@@ -88,7 +88,7 @@ public class GachaManager : MonoBehaviour
         }
 
         // 4. Save Data
-        SaveManager.Save("Save_Profile", profile);
+        SaveManager.SaveProfile();
 
         // 5. Return for Animation
         return results;
