@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-
+using TMPro;
 public class GachaManager : MonoBehaviour
 {
     public static GachaManager Instance { get; private set; }
@@ -9,6 +8,7 @@ public class GachaManager : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] private int pityThreshold = 50; // 50 pulls
     [SerializeField] private int epicSoftPity = 10;  // 10 pulls
+    [SerializeField] private TextMeshPro debugOutput;
 
     // Internal results structure
     public struct PullResult
@@ -82,6 +82,7 @@ public class GachaManager : MonoBehaviour
             // Pick Item
             GachaRewardEntry item = PickItemFromPool(banner, selectedRarity);
             Debug.Log($"Pulled: {item.idName} ({selectedRarity})");
+            debugOutput.text = $"\nPulled: {item.idName} ({selectedRarity})";
             // Process Item (Add to inventory / Handle Duplicate)
             PullResult result = ProcessReward(item, profile);
             results.Add(result);
