@@ -2,6 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+    public enum ChallengeType
+    {
+        FragileCrystal,
+        ThePurge,
+        EndlessGreed,
+        TheGladiator,
+        BloodForPower,
+        Crossfire,
+        TotalConfusion,
+        RainOfFire, // Mentioned in your JSON but missing in code
+        TheUnlucky,
+        LastBreath
+    }
+
 public class ChallengeManager : MonoBehaviour
 {
     public static ChallengeManager Instance { get; private set; }
@@ -10,7 +25,7 @@ public class ChallengeManager : MonoBehaviour
     public HashSet<ChallengeType> activeChallenges = new HashSet<ChallengeType>();
 
     // Global Flags for specific logic checks
-    public bool IsGladiatorActive { get; private set; } = false;
+    public static bool theGladiator = false;
 
     private void Awake()
     {
@@ -43,7 +58,7 @@ public class ChallengeManager : MonoBehaviour
     public void ApplyActiveChallenges()
     {
         // Reset Flags
-        IsGladiatorActive = false;
+        theGladiator = false;
 
         Debug.Log($"Applying {activeChallenges.Count} Challenges...");
 
@@ -58,79 +73,98 @@ public class ChallengeManager : MonoBehaviour
         switch (type)
         {
             case ChallengeType.FragileCrystal:
-                // HP / 2
-                float currentMax = PlayerController.Instance.GetMaxHealth();
-                PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, -(currentMax / 2));
+                FragileCrystal();
                 break;
 
             case ChallengeType.ThePurge:
-                // Remove Shop from generation list
-                // Note: We use RemoveAll with a predicate to find the shop prefab by name or component
-                if (GameDirector.Instance != null)
-                {
-                    GameDirector.Instance.zonePrefabs.RemoveAll(x => x.name.Contains("Shop") || x.GetComponent<ShopZone>() != null);
-                }
+                ThePurge();
                 break;
 
             case ChallengeType.EndlessGreed:
-                // Add wave count
-                // Assuming GameDirector has a SetMaxWaves method, or modify variable directly
-                // GameDirector.Instance.IncreaseMaxWaves(1);
-                // TimedChest.GlobalKeyCost = 0; // Custom logic
+                EndlessGreed();
                 break;
 
             case ChallengeType.TheGladiator:
-                IsGladiatorActive = true; 
-                // Logic needs to be checked in WaveManager (e.g. "If Gladiator, spawn harder enemies")
+                TheGladiator();
                 break;
 
             case ChallengeType.BloodForPower:
-                PlayerController.Instance.OnLevelUp += BloodForPower_Callback;
+                BloodForPower();
                 break;
 
             case ChallengeType.TotalConfusion:
-                StartCoroutine(TotalConfusionRoutine());
+                TotalConfusion();
                 break;
 
             case ChallengeType.TheUnlucky:
-                // Assuming you made the LockLuck function
-                PlayerController.Instance.ToggleLuck(false); // Force false
-                // PlayerController.Instance.LockLuck(); // Force Lock
+                TheUnlucky();
                 break;
 
             case ChallengeType.LastBreath:
-                // Set HP to very low (e.g., 10%) but high max? Or just low max?
-                // Your code said "ModifyMaxHealth(10)", assuming that sets it to 10.
-                PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, 10f); // Example logic
+                LastBreath();
                 break;
 
             case ChallengeType.Crossfire:
-                // Logic implemented in PlayerController projectile code checking ChallengeManager.Instance.IsChallengeActive(Crossfire)
+                Crossfire();
                 break;
         }
     }
 
-    // --- LOGIC HELPERS ---
-
-    private void BloodForPower_Callback()
+    public static  void FragileCrystal()
     {
-        // -1 Max HP on Level Up
-        PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, -1);
-        Debug.Log("Blood For Power: Lost 1 Max HP on Level Up.");
+        Debug.Log(PlayerController.Instance.GetMaxHealth());
+        PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, PlayerController.Instance.GetMaxHealth()/2);
+        Debug.Log(PlayerController.Instance.GetMaxHealth());    
     }
 
-    private IEnumerator TotalConfusionRoutine()
+    public static  void ThePurge()
     {
-        // Loop forever during the run
-        while (PlayerController.Instance != null)
-        {
-            float waitTime = Random.Range(20f, 60f);
-            yield return new WaitForSeconds(waitTime);
+        if (GameDirector.Instance.zonePrefabs.Contains(GameObject.FindWithTag("Shop")))
+            GameDirector.Instance.zonePrefabs.Remove(GameObject.FindWithTag("Shop"));
+    }
 
-            // Apply Confusion via StatusManager
-            // (Assumes PlayerController has access to StatusManager)
-            PlayerController.Instance.GetComponent<StatusManager>().TryAddStatus(StatusType.Confusion);
-            Debug.Log("Total Confusion Challenge: Triggered Confusion!");
-        }
+    public static void EndlessGreed()
+    {
+        TimedChest.SetGloalKeyCount(0);
+        GameDirector.Instance.SetMaxWaveCount(GameDirector.Instance.GetMaxWaveCount() + 1);
+    }
+    public void TheGladiator()
+    {
+        theGladiator = true;
+    }
+
+    public void BloodForPower()
+    {
+        PlayerController.Instance.OnLevelUp += BFPModify;
+    }
+
+    private void BFPModify()
+    {
+        PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, -1);
+    }
+
+    public void TotalConfusion()
+    {
+        StartCoroutine(ConfusionRoutine());
+    }
+
+    private IEnumerator ConfusionRoutine()
+    {
+        if (PlayerController.Instance != null)
+            PlayerController.Instance.TryAddStatus(StatusType.Confusion);
+        yield return new WaitForSeconds(Random.Range(20,60));
+    }
+
+    public void TheUnlucky()
+    {
+        PlayerController.Instance.LockLuck();   
+    }
+    public void LastBreath()
+    {
+        PlayerController.Instance.ModifyPlayerStat(StatType.MaxHealth, 10);
+    }
+    public void Crossfire()
+    {
+        // complete later when do projectile logic for player
     }
 }

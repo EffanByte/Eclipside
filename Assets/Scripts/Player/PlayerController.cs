@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
     // FIX: New Method to handle spawning the weapon prefab
     public void EquipWeapon(WeaponData newWeapon)
     {
-        if (Challenges.theGladiator && newWeapon is MagicWeapon)
+        if (ChallengeManager.theGladiator && newWeapon is MagicWeapon)
         {
             Debug.Log("Can't equip weapon due to gladiator");
         }
