@@ -12,8 +12,12 @@ public class GachaPortal : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             DontDestroyOnLoad(PlayerController.Instance.gameObject);
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "GachaScene")
             UnityEngine.SceneManagement.SceneManager.LoadScene("GachaScene");
+            else
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Demo");
         }
     }
 }
