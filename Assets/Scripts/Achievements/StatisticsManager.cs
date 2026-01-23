@@ -8,7 +8,7 @@ public class StatisticsManager : MonoBehaviour
 
     // Runtime storage (Fast lookup for achievements)
     private Dictionary<string, int> stats = new Dictionary<string, int>();
-
+    
     public event Action<string, int> OnStatUpdated;
     private const string FILE_NAME = "Save_Stats";
 
