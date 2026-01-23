@@ -36,4 +36,10 @@ public class MainMenu : MonoBehaviour
     {
         ChallengePanel.SetActive(false);
     }
+
+    public void OnGachaButtonPressed()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Demo"); // Load gacha scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GachaScene"); // Load gacha scene
+    }
 }

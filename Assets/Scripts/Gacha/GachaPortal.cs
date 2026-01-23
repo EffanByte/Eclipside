@@ -17,7 +17,7 @@ public class GachaPortal : MonoBehaviour
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "GachaScene")
             UnityEngine.SceneManagement.SceneManager.LoadScene("GachaScene");
             else
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Demo");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         }
     }
 }

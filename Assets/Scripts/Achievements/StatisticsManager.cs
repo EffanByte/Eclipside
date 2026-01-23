@@ -14,9 +14,8 @@ public class StatisticsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-        DontDestroyOnLoad(gameObject); // add if statement later for condition
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
         LoadStats();
     }
 

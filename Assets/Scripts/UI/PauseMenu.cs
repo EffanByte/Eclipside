@@ -28,4 +28,10 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f; // Ensure game time is normal
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu"); // Load main menu scene
     }
+    public void OnRetryButtonPressed()
+    {
+        // Logic to retry the current level
+        Time.timeScale = 1f; // Ensure game time is normal
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); // Reload current scene
+    }
 }

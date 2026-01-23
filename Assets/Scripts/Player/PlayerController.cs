@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 public enum StatType 
     { 
         AttackSpeed, 
@@ -84,6 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        gameObject.SetActive(true); // Ensure player is active on Awake
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -97,7 +99,7 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerControls();
         anim = GetComponent<Animator>();
         healthComp = GetComponent<PlayerHealth>();
-        healthComp.OnPlayerDeath += PlayerKilled;
+        PlayerHealth.OnPlayerDeath += PlayerKilled;
         statusMgr = GetComponent<StatusManager>();
         statusMgr.Initialize(rb, this, StatusDamage, GetComponent<SpriteRenderer>());
         baseMovementSpeed = movementSpeed;
@@ -126,8 +128,16 @@ public class PlayerController : MonoBehaviour
         onCurrencyUpdate.Invoke();
     }
 
+    public void ResetPlayer()
+{
+    gameObject.SetActive(true);
+    transform.position = new Vector2(0,0); // or your logic
+    healthComp.Heal(healthComp.GetMaxHealth());
+    isDead = false;
+
+    // reset velocity, animations, etc.
+}
     private void OnEnable() => controls.Enable();
-    private void OnDisable() => controls.Disable();
 
     private void Update()
     {

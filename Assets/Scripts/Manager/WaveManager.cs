@@ -32,18 +32,20 @@ public class WaveManager : MonoBehaviour
     // Called by GameDirector
     public void TriggerWave(int waveNumber, float difficultyMultiplier)
     {
-        // 1. Notify Director that combat started
-        GameDirector.Instance.NotifyWaveStarted();
+        if (GameDirector.Instance != null)
+            GameDirector.Instance.NotifyWaveStarted();
 
-        // 2. Calculate Count
         int count = Mathf.CeilToInt(3 * difficultyMultiplier);
-        
         Debug.Log($"[WaveManager] Wave {waveNumber} Started! Enemies: {count}");
 
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
 
-        if (!tookDamageThisWave)
+        // SAFE CHECK
+        if (!tookDamageThisWave && StatisticsManager.Instance != null)
             StatisticsManager.Instance.IncrementStat("PERFECT_WAVES");
+            
+        // Reset flag for the new wave!
+        tookDamageThisWave = false; 
     }
 
     private IEnumerator SpawnRoutine(int count, float difficulty)

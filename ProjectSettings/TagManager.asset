@@ -10,6 +10,7 @@ TagManager:
   - Chest
   - Wall
   - Shop
+  - DeathMenu
   layers:
   - Default
   - TransparentFX

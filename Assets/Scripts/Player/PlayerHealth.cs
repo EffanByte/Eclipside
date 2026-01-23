@@ -9,18 +9,19 @@ public class PlayerHealth : MonoBehaviour
     
     [Header("Health Stats")]
     [SerializeField] private float maxHealth = 40f; // 10 Hearts (10 units each)
-    
-    private float currentHealth;
+    [SerializeField] public DeathMenu deathMenu;    
+    public float currentHealth;
     private float temporaryHealth = 0f; // NEW: Golden/Blue Hearts
 
     // Events
     public event Action<float> OnMaxHealthChanged; 
     public event Action<float> OnHealthChanged;  
     public event Action<float> OnTempHealthChanged; // NEW: UI needs to know about temp hearts
-    public event Action OnPlayerDeath;           
+    public static event Action OnPlayerDeath;           
 
     private void Start()
     {
+        deathMenu = FindFirstObjectByType<DeathMenu>(FindObjectsInactive.Include);
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         OnMaxHealthChanged?.Invoke(maxHealth);
@@ -85,9 +86,9 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Player Died!");
+        deathMenu = FindFirstObjectByType<DeathMenu>(FindObjectsInactive.Include);
+        deathMenu.OnPauseButtonPressed();
         OnPlayerDeath?.Invoke();
-        gameObject.SetActive(false); 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // ----------------------------------------------------

@@ -52,6 +52,7 @@ public class GameDirector : MonoBehaviour
             ChallengeManager.Instance.ApplyActiveChallenges();
         }
         SpawnZones();
+        SpawnChests();
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
         StartCoroutine(GameLoopRoutine());
     }
@@ -112,7 +113,6 @@ public class GameDirector : MonoBehaviour
         IsWaveActive = false;
         OnCombatStateChanged?.Invoke(false);
         
-        SpawnWaveReward();
 
         // Check Victory Condition
         if (CurrentWave >= maxWaveCount)
@@ -134,15 +134,18 @@ public class GameDirector : MonoBehaviour
         }
     }
 
-    private void SpawnWaveReward()
+    private void SpawnChests(int count = 3)
     {
         if (timedChestPrefab)
+        for (int i = 0; i < count; i++)
         {
             playerTransform = PlayerController.Instance.transform;
             Vector2 offset = Random.insideUnitCircle * chestSpawnRadius;
             GameObject chest = Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
             TimedChest chestScript = chest.GetComponent<TimedChest>();
             chestScript.Setup(1); 
+            Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle * chestSpawnRadius;
+            Instantiate(timedChestPrefab, spawnPos + new Vector2(Random.Range(-8,9), Random.Range(-8,6)), Quaternion.identity);
         }
     }
 
