@@ -41,4 +41,13 @@ public class InventoryUI : MonoBehaviour
             tempColor.a = 0.0f;
         sprite3.color = tempColor;
     }
+
+    private void OnDestroy()
+    {
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnInventoryUpdated -= UpdateInventoryUI;
+        }
+    }
+    
 }

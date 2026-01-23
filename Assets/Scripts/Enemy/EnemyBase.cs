@@ -149,7 +149,6 @@ public abstract class EnemyBase : MonoBehaviour
     public virtual void ReceiveDamage(DamageInfo dmg)
     {
         if (currentState == EnemyState.Dead) return;
-
         // 1. Apply Damage (Fragile Multiplier from Manager)
         float finalDamage = dmg.amount * statusMgr.DamageTakenMultiplier;
         currentHealth -= finalDamage;

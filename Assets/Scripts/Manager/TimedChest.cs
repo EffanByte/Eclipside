@@ -70,8 +70,6 @@ public class TimedChest : MonoBehaviour, IInteractable
             reward = consumablePool[Random.Range(0, consumablePool.Count)];
         else if (keyItem != null)
             reward = keyItem;
-        Debug.Log(reward.icon);
-        Debug.Log(reward.name);
         // 2. Spawn Visual Loot
         if (reward != null && lootPedestalPrefab != null)
         {

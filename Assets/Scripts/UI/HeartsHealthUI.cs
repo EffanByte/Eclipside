@@ -18,26 +18,34 @@ public class HeartsHealthUI : MonoBehaviour
     
     [SerializeField] private Transform heartsParent;
 
-    // We keep two separate lists to manage them independently
     private readonly List<Image> redHearts = new();
     private readonly List<Image> tempHearts = new();
 
+    // 1. Initialization moved to Start to wait for PlayerController Awake
+    private void Start()
+    {
+        if (PlayerController.Instance != null)
+        {
+            playerHealth = PlayerController.Instance.GetComponent<PlayerHealth>();
+            SubscribeEvents();
+            
+            // Force Initial Draw
+            // We assume GetMaxHealth() exists, or we wait for the first event
+            if (playerHealth != null)
+            {
+                // InitRedHearts requires float now based on your code
+                InitRedHearts(playerHealth.GetMaxHealth()); 
+                UpdateRedHearts(playerHealth.GetCurrentHealth());
+            }
+        }
+    }
+
     private void OnEnable()
     {
-        // Find Player
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player == null) return;
-
-        playerHealth = player.GetComponent<PlayerHealth>();
-
+        // Only re-subscribe if we already initialized (e.g., UI was hidden then shown)
         if (playerHealth != null)
         {
-            // Subscribe to events
-            playerHealth.OnMaxHealthChanged += InitRedHearts;
-            playerHealth.OnHealthChanged += UpdateRedHearts;
-            
-            // NEW: Subscribe to temp health updates
-            playerHealth.OnTempHealthChanged += UpdateTempHearts;
+            SubscribeEvents();
         }
     }
 
@@ -45,10 +53,25 @@ public class HeartsHealthUI : MonoBehaviour
     {
         if (playerHealth != null)
         {
-            playerHealth.OnMaxHealthChanged -= InitRedHearts;
-            playerHealth.OnHealthChanged -= UpdateRedHearts;
-            playerHealth.OnTempHealthChanged -= UpdateTempHearts;
+            UnsubscribeEvents();
         }
+    }
+
+    private void SubscribeEvents()
+    {
+        // Safety check to avoid double subscription
+        UnsubscribeEvents();
+
+        playerHealth.OnMaxHealthChanged += InitRedHearts;
+        playerHealth.OnHealthChanged += UpdateRedHearts;
+        playerHealth.OnTempHealthChanged += UpdateTempHearts;
+    }
+
+    private void UnsubscribeEvents()
+    {
+        playerHealth.OnMaxHealthChanged -= InitRedHearts;
+        playerHealth.OnHealthChanged -= UpdateRedHearts;
+        playerHealth.OnTempHealthChanged -= UpdateTempHearts;
     }
 
     // ---------------------------------------------------------
@@ -57,36 +80,22 @@ public class HeartsHealthUI : MonoBehaviour
 
     private void InitRedHearts(float maxHealth)
     {
-        // 1. Clear ONLY the red hearts from the UI
-        foreach (Image heart in redHearts)
-        {
-            if(heart != null) Destroy(heart.gameObject);
-        }
+        foreach (Image heart in redHearts) if(heart != null) Destroy(heart.gameObject);
         redHearts.Clear();
 
-        // 2. Clear Temp hearts too (to ensure order stays correct: Red then Gold)
-        // We will rebuild temp hearts immediately after via the event or manual call
-        foreach (Image heart in tempHearts)
-        {
-            if (heart != null) Destroy(heart.gameObject);
-        }
+        foreach (Image heart in tempHearts) if (heart != null) Destroy(heart.gameObject);
         tempHearts.Clear();
 
-        // 3. Create Red Hearts
         int heartCount = Mathf.CeilToInt(maxHealth / HEALTH_PER_HEART);
 
         for (int i = 0; i < heartCount; i++)
         {
             Image heart = Instantiate(redHeartPrefab, heartsParent);
             heart.type = Image.Type.Filled;
-            heart.fillMethod = Image.FillMethod.Horizontal; // Ensure fill works left-to-right
+            heart.fillMethod = Image.FillMethod.Horizontal; 
             heart.fillAmount = 1f;
             redHearts.Add(heart);
         }
-        
-        // Force refresh temp hearts if we had any
-        // (This assumes PlayerHealth stores the value and we can access it, 
-        //  otherwise we wait for the next update event)
     }
 
     private void UpdateRedHearts(float currentHealth)
@@ -95,7 +104,6 @@ public class HeartsHealthUI : MonoBehaviour
         {
             float heartHealthStart = i * HEALTH_PER_HEART;
             float heartFill = (currentHealth - heartHealthStart) / HEALTH_PER_HEART;
-
             redHearts[i].fillAmount = Mathf.Clamp01(heartFill);
         }
     }
@@ -106,11 +114,8 @@ public class HeartsHealthUI : MonoBehaviour
 
     private void UpdateTempHearts(float currentTempHealth)
     {
-        // 1. Calculate how many hearts we NEED
         int neededCount = Mathf.CeilToInt(currentTempHealth / HEALTH_PER_HEART);
 
-        // 2. Adjust the list size to match needed count
-        // If we have too few, add more
         while (tempHearts.Count < neededCount)
         {
             Image heart = Instantiate(tempHeartPrefab, heartsParent);
@@ -119,21 +124,17 @@ public class HeartsHealthUI : MonoBehaviour
             tempHearts.Add(heart);
         }
 
-        // If we have too many, remove them
         while (tempHearts.Count > neededCount)
         {
-            // Remove from the end
             Image heartToRemove = tempHearts[tempHearts.Count - 1];
             tempHearts.RemoveAt(tempHearts.Count - 1);
             Destroy(heartToRemove.gameObject);
         }
 
-        // 3. Update Fill Amounts
         for (int i = 0; i < tempHearts.Count; i++)
         {
             float heartHealthStart = i * HEALTH_PER_HEART;
             float heartFill = (currentTempHealth - heartHealthStart) / HEALTH_PER_HEART;
-
             tempHearts[i].fillAmount = Mathf.Clamp01(heartFill);
         }
     }

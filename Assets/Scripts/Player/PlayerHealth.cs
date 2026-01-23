@@ -99,6 +99,8 @@ public class PlayerHealth : MonoBehaviour
     {
         return maxHealth;
     }
+    public float GetCurrentHealth() => currentHealth;
+    
     public void SetMaxHealth(float max)
     {
         maxHealth = max;

@@ -27,10 +27,11 @@ public class LootPedestal : MonoBehaviour, IInteractable
         {
             player.EquipWeapon(w);
         }
-        else if (content is CurrencyItem c) 
-        {
-            player.AddCurrency(c.currencyType, c.amount);
-        }
+        // not using currency in chests
+        // else if (content is CurrencyItem c) 
+        // {
+        //     player.AddCurrency(c.currencyType, c.amount);
+        // }
         else if (content is ConsumableItem con)
         {
             PlayerController.Instance.GetComponent<InventoryManager>().AddItem(con);
