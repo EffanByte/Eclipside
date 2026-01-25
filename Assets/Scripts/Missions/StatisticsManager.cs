@@ -9,7 +9,7 @@ public class StatisticsManager : MonoBehaviour
     // Runtime storage (Fast lookup for achievements)
     private Dictionary<string, int> stats = new Dictionary<string, int>();
     
-    public event Action<string, int> OnStatUpdated;
+    public event Action<string, int, int> OnStatChanged; 
     private const string FILE_NAME = "Save_Stats";
 
     private void Awake()
@@ -22,13 +22,12 @@ public class StatisticsManager : MonoBehaviour
     public void IncrementStat(string key, int amount = 1)
     {
         if (!stats.ContainsKey(key)) stats[key] = 0;
+        
         stats[key] += amount;
         
-        OnStatUpdated?.Invoke(key, stats[key]);
+        // Fire ONE event containing ALL info
+        OnStatChanged?.Invoke(key, stats[key], amount);
         
-        // Optional: Save on every update? 
-        // Better: Save only on Level Complete or specific milestones to avoid lag.
-        // For now, having auto save to ensure progress isn't lost.
         SaveStats(); 
     }
 

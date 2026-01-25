@@ -44,10 +44,32 @@ public class MonthlyPass
 [Serializable]
 public class DailyTracker
 {
-    public string last_reset_date;      // "YYYY-MM-DD"
+    public string last_daily_reset_date;  // "YYYY-MM-DD"
+    public string last_weekly_reset_date; // "YYYY-MM-DD"
+    
+    // Limits
+    public bool daily_reroll_used;
+    public bool daily_bonus_claimed;
+    public bool weekly_bonus_claimed;
+
+    // The missions currently assigned to the player
+    public List<ActiveMissionEntry> active_daily_missions = new List<ActiveMissionEntry>();
+    public List<ActiveMissionEntry> active_weekly_missions = new List<ActiveMissionEntry>();
+    
+    // Legacy fields (Keep if you still need them)
     public int ads_watched_count;
     public int arena_ads_watched;
     public bool daily_login_claimed;
+}
+
+[Serializable]
+public class ActiveMissionEntry
+{
+    public string mission_id;
+    public int current_progress;
+    public int target_value;
+    public bool is_completed;
+    public bool is_claimed;
 }
 
 [Serializable]

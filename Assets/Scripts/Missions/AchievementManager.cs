@@ -22,12 +22,12 @@ public class AchievementManager : MonoBehaviour
         if (Instance == null) Instance = this;
         
         // Listen to the Stats Manager
-        StatisticsManager.Instance.OnStatUpdated += CheckProgress;
+        StatisticsManager.Instance.OnStatChanged += CheckProgress;
         
         LoadProgress();
     }
 
-    private void CheckProgress(string key, int currentValue)
+    private void CheckProgress(string key, int currentValue, int delta)
     {
         foreach (var ach in allAchievements)
         {

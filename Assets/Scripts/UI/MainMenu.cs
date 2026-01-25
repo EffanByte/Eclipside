@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
 {   
     [SerializeField] private GameObject achievementPanel;
     [SerializeField] private GameObject ChallengePanel;
+    [SerializeField] private GameObject missionPanel;
 
        void Start()
     {
@@ -41,5 +42,13 @@ public class MainMenu : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Demo"); // Load gacha scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("GachaScene"); // Load gacha scene
+    }
+    public void OnMissionButtonPressed()
+    {
+        missionPanel.SetActive(true);
+    }
+    public void onExitMissionPanel()
+    {
+        missionPanel.SetActive(false);
     }
 }
