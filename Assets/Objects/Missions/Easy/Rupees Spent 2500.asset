@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35bea0645346b714494813c0460fe42a, type: 3}
-  m_Name: Rupees Spent 251
+  m_Name: Rupees Spent 2500
   m_EditorClassIdentifier: Assembly-CSharp::MissionData
-  id: arena_wave_20
+  id: rupee_spent_2500
   title: 
-  description: Reach Wave 20 In The Arena
+  description: Spent 2500 Rupees Total In the Shop.
   difficulty: 3
-  statKey: ARENA_WAVE
-  targetValue: 20
+  statKey: RUPEE_SPENT
+  targetValue: 2500
   rewardType: 0
   rewardAmount: 600

@@ -1606,6 +1606,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 316000939}
+  - component: {fileID: 316000940}
   m_Layer: 5
   m_Name: DailyContainer
   m_TagString: Untagged
@@ -1627,11 +1628,37 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2004616168}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 40, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &316000940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316000938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 50
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 125
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &385383461
 GameObject:
   m_ObjectHideFlags: 0
@@ -6138,10 +6165,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MissionManager
   easyPool:
+  - {fileID: 11400000, guid: 5b461ca4d0a56324d9dfdd444b597fc6, type: 2}
   - {fileID: 11400000, guid: 259573ff95834c74b81a9859209c8c59, type: 2}
-  mediumPool: []
-  hardPool: []
-  weeklyPool: []
+  - {fileID: 11400000, guid: c86cb69b2536840499b8e82817c83ca2, type: 2}
+  - {fileID: 11400000, guid: 6d6f8470a73cc0c45a107bceed0f1d9f, type: 2}
+  - {fileID: 11400000, guid: f22b25f669d445a47a96cabc5b7885bd, type: 2}
+  mediumPool:
+  - {fileID: 11400000, guid: 4d28903d850da94418be26e87625cc19, type: 2}
+  - {fileID: 11400000, guid: 60408bcd7fc5d1e408d000024848cdc4, type: 2}
+  - {fileID: 11400000, guid: f67417e35f8ce184ea40baef5f83ad37, type: 2}
+  - {fileID: 11400000, guid: cbdd5839692d9c0418ba572e8fb4c3d5, type: 2}
+  hardPool:
+  - {fileID: 11400000, guid: 859386e8c9f86134fb7dfb438689d00d, type: 2}
+  - {fileID: 11400000, guid: cbce787c8a32698489eb322cb57f6bd2, type: 2}
+  - {fileID: 11400000, guid: 06195fc18129e934eb458e16eca82848, type: 2}
+  weeklyPool:
+  - {fileID: 11400000, guid: 7e463bd2934e7d14989961ac813ddc31, type: 2}
+  - {fileID: 11400000, guid: 618c2adb912231c49a2e56fd6919b434, type: 2}
+  - {fileID: 11400000, guid: c7074a81419ca9e49a29464677a2c501, type: 2}
+  - {fileID: 11400000, guid: c3a9eaf89a511c341a72a41090a0afc4, type: 2}
   dailyBonusOrbs: 15
   weeklyBonusOrbs: 75
 --- !u!1 &1438868399

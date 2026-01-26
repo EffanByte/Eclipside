@@ -59,7 +59,7 @@ public class MissionManager : MonoBehaviour
         // --- DAILY RESET ---
         Debug.Log("Trying daily reset");
         // commenting out if to test normally
-        //if (tracker.last_daily_reset_date != todayStr)
+        if (tracker.last_daily_reset_date != todayStr)
         {
             Debug.Log("Performing Daily Mission Reset...");
             GenerateDailyMissions(tracker);
@@ -78,7 +78,7 @@ public class MissionManager : MonoBehaviour
         DateTime lastMonday = now.AddDays(-1 * diff).Date;
         string weekStr = lastMonday.ToString("yyyy-MM-dd");
 
-        if (tracker.last_weekly_reset_date != weekStr)
+         if (tracker.last_weekly_reset_date != weekStr)
         {
             Debug.Log("Performing Weekly Mission Reset...");
             GenerateWeeklyMissions(tracker);
