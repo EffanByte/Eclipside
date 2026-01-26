@@ -37,7 +37,15 @@ MonoBehaviour:
     characterReference: {fileID: 0}
     duplicateConversionAmount: 0
     duplicateConversionType: 0
-  rarePool: []
+  rarePool:
+  - idName: R_Hex_Scepter
+    type: 2
+    rarity: 0
+    amount: 1
+    itemReference: {fileID: 11400000, guid: 6640c2d5799e990488f8812efe168100, type: 2}
+    characterReference: {fileID: 0}
+    duplicateConversionAmount: 50
+    duplicateConversionType: 4
   epicPool:
   - idName: E_Lunaria
     type: 3
@@ -46,6 +54,22 @@ MonoBehaviour:
     itemReference: {fileID: 0}
     characterReference: {fileID: 11400000, guid: 3a0cc425d539ef44781850a6a31fa0b4, type: 2}
     duplicateConversionAmount: 100
+    duplicateConversionType: 4
+  - idName: E_Frostbinder_Tome
+    type: 2
+    rarity: 2
+    amount: 1
+    itemReference: {fileID: 11400000, guid: 77c17dc5546b1f94abd51b89f6179a3a, type: 2}
+    characterReference: {fileID: 0}
+    duplicateConversionAmount: 150
+    duplicateConversionType: 4
+  - idName: E_Aurora_Prism
+    type: 2
+    rarity: 2
+    amount: 1
+    itemReference: {fileID: 11400000, guid: 5e62ab3c88fe8d5459caea6cb63d9bb1, type: 2}
+    characterReference: {fileID: 0}
+    duplicateConversionAmount: 500
     duplicateConversionType: 4
   mythicPool:
   - idName: M_Aylith

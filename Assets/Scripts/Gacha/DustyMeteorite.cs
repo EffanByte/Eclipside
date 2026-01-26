@@ -1,22 +1,12 @@
 using UnityEngine;
 
-public class DustyMeteorite : MonoBehaviour, IInteractable
+public class MeteoriteInteract : MonoBehaviour, IInteractable
 {
-    [SerializeField] private MeteoriteBanner dustyBanner;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField] private MeteoriteBanner banner;
 
     public void Interact(PlayerController player)
     {
-        GachaManager.Instance.PerformPull(dustyBanner, false);
+        GachaManager.Instance.PerformPull(banner, false);
     }
 
     public string GetInteractionPrompt()

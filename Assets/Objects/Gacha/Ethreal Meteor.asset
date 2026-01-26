@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5651567725d568b4d88597113ad2681a, type: 3}
-  m_Name: Runic Meteor
+  m_Name: Ethreal Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: 
   currencyType: 4
@@ -38,45 +38,45 @@ MonoBehaviour:
     duplicateConversionAmount: 0
     duplicateConversionType: 0
   rarePool:
-  - idName: R_War_Axe
+  - idName: R_Predator_Dagger
     type: 2
-    rarity: 1
+    rarity: 0
     amount: 1
-    itemReference: {fileID: 11400000, guid: 3bde1b072965eb744b9afa5827409e64, type: 2}
+    itemReference: {fileID: 11400000, guid: 18febfd18fc5a644bb789e5388d7f5cf, type: 2}
     characterReference: {fileID: 0}
     duplicateConversionAmount: 50
     duplicateConversionType: 4
   epicPool:
-  - idName: E_Titan_Maul
+  - idName: E_Shadow_Claws
     type: 2
     rarity: 2
     amount: 1
-    itemReference: {fileID: 11400000, guid: dcb820eb664bd6c41a20bc93524c9e5a, type: 2}
+    itemReference: {fileID: 11400000, guid: 780e66f18d00d23469a8fd47488f8dbd, type: 2}
     characterReference: {fileID: 0}
     duplicateConversionAmount: 150
     duplicateConversionType: 4
-  - idName: E_Kaelric
-    type: 2
+  - idName: E_Calyra
+    type: 3
     rarity: 2
     amount: 1
     itemReference: {fileID: 0}
-    characterReference: {fileID: 11400000, guid: 2273a7d0b9c8260409c389b080b7d0cd, type: 2}
+    characterReference: {fileID: 11400000, guid: 1029777c975a4be4b9fcf08c836f3af8, type: 2}
     duplicateConversionAmount: 150
     duplicateConversionType: 4
   mythicPool:
-  - idName: M_Maelira
+  - idName: M_Veyloria
     type: 3
     rarity: 3
     amount: 1
     itemReference: {fileID: 0}
-    characterReference: {fileID: 11400000, guid: 5f57a3a3a9681514298d20a2b72ea9c4, type: 2}
+    characterReference: {fileID: 11400000, guid: e12a2f60431151c4f94478291ffe7253, type: 2}
     duplicateConversionAmount: 500
     duplicateConversionType: 4
-  - idName: M_Bloodforged_Colossus
-    type: 3
+  - idName: M_Chrono_daggers
+    type: 2
     rarity: 3
     amount: 1
-    itemReference: {fileID: 11400000, guid: 96249554a5e294b4b977e4043359859e, type: 2}
-    characterReference: {fileID: 0}
+    itemReference: {fileID: 11400000, guid: f2de8472197974f4e9615a7ab9308006, type: 2}
+    characterReference: {fileID: 11400000, guid: e442e0de8e6ed86469e229bfe9998c2e, type: 2}
     duplicateConversionAmount: 500
     duplicateConversionType: 4
