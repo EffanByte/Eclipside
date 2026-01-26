@@ -139,10 +139,40 @@ public class MissionManager : MonoBehaviour
     // ---------------------------------------------------------
     // 3. PROGRESS TRACKING
     // ---------------------------------------------------------
-    private void OnStatUpdated(string statKey, int newValue, int delta)
+    // ---------------------------------------------------------
+    // 3. PROGRESS TRACKING (Fixed)
+    // ---------------------------------------------------------
+    private void OnStatUpdated(string statKey, int totalValue, int amountAdded)
     {
-        UpdateMissionList(SaveManager.Profile.daily_tracker.active_daily_missions, statKey, delta);
-        UpdateMissionList(SaveManager.Profile.daily_tracker.active_weekly_missions, statKey, delta);
+        // 1. Get the lists
+        var tracker = SaveManager.Profile.daily_tracker;
+        List<ActiveMissionEntry> activeDaily = tracker.active_daily_missions;
+        List<ActiveMissionEntry> activeWeekly = tracker.active_weekly_missions;
+
+        // 2. Update Standard Increments (e.g. Kill 10 Enemies)
+        // We pass the amountAdded (Delta) because Missions track progress per session
+        UpdateMissionList(activeDaily, statKey, amountAdded);
+        UpdateMissionList(activeWeekly, statKey, amountAdded);
+
+        // 3. Handle Special Conditional Logic ("Without Dying")
+        // Case A: "Complete Run Without Dying"
+        if (statKey == "RUNS_COMPLETED")
+        {
+            if (!StatisticsManager.Instance.HasDiedThisRun())
+            {
+                // Trigger the special mission ID (e.g. DAILY_H_NODEATH) linked to "RUN_NO_DEATH" key
+                UpdateMissionList(activeDaily, "RUN_NO_DEATH", 1);
+            }
+        }
+
+        // Case B: "Defeat Miniboss Without Dying"
+        if (statKey == "KILLS_MINIBOSS")
+        {
+            if (!StatisticsManager.Instance.HasDiedThisRun())
+            {
+                UpdateMissionList(activeDaily, "MINIBOSS_NO_DEATH", 1);
+            }
+        }
     }
 
     private void UpdateMissionList(List<ActiveMissionEntry> missions, string key, int amountToAdd)

@@ -31,6 +31,7 @@ public class UserProfile
     public int orbs;
     public int arena_tickets;
     public bool is_starter_pack_purchased;
+    public int rupee;
 }
 
 [Serializable]
@@ -170,6 +171,7 @@ public class LifetimeStats
     public int total_runs_completed;
     public int consecutive_days_played;
     public int total_days_played;
+    public int total_deaths;
     
     // Nested Stat Groups
     public KillStats enemies_killed = new KillStats();
@@ -189,7 +191,8 @@ public class KillStats
 public class EconomyStats
 {
     public int chests_opened;
-    public int gold_spent_in_shops;
+    public int rupee_spent_in_shops;
+    public int items_purchased;
 }
 
 [Serializable]
@@ -198,7 +201,10 @@ public class GameplayStats
     public int arena_entries;
     public int highest_arena_wave;
     public int synergy_kills;
+    public int status_kills;
     public int perfect_waves;
+    public int portals_opened;
+    public int run_time; 
 }
 
 [Serializable]

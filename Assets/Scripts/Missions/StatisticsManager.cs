@@ -11,6 +11,8 @@ public class StatisticsManager : MonoBehaviour
     
     public event Action<string, int, int> OnStatChanged; 
     private const string FILE_NAME = "Save_Stats";
+    private bool hasDiedThisRun = false;
+    private bool tookDamageThisRun = false; // For "Flawless" achievements
 
     private void Awake()
     {
@@ -42,20 +44,25 @@ public class StatisticsManager : MonoBehaviour
         
         stats["TOTAL_RUNS"] = data.stats.total_runs_started;
         stats["RUNS_COMPLETED"] = data.stats.total_runs_completed;
+        stats["TOTAL_DEATHS"] = data.stats.total_deaths;
         
         // Combat
         stats["KILLS_REGULAR"] = data.stats.enemies_killed.regular;
         stats["KILLS_BOSS"] = data.stats.enemies_killed.bosses;
         stats["KILLS_MINIBOSS"] = data.stats.enemies_killed.mini_bosses;
         stats["KILLS_SYNERGY"] = data.stats.gameplay.synergy_kills;
+        stats["KILLS_STATUS"] = data.stats.gameplay.status_kills;
 
         // Economy
         stats["CHESTS_OPENED"] = data.stats.economy.chests_opened;
-        stats["GOLD_SPENT"] = data.stats.economy.gold_spent_in_shops;
+        stats["RUPEE_SPENT"] = data.stats.economy.rupee_spent_in_shops;
+        stats["ITEMS_PURCHASED"] = data.stats.economy.items_purchased;
 
         // Gameplay
         stats["ARENA_WAVE"] = data.stats.gameplay.highest_arena_wave;
         stats["PERFECT_WAVES"] = data.stats.gameplay.perfect_waves;
+        stats["PORTALS_OPENED"] = data.stats.gameplay.portals_opened;
+        stats["RUN_TIME"] = data.stats.gameplay.run_time;
     }
 
     private void SaveStats()
@@ -72,12 +79,19 @@ public class StatisticsManager : MonoBehaviour
         if (stats.ContainsKey("KILLS_MINIBOSS")) data.stats.enemies_killed.mini_bosses = stats["KILLS_MINIBOSS"];
         
         if (stats.ContainsKey("CHESTS_OPENED")) data.stats.economy.chests_opened = stats["CHESTS_OPENED"];
-        if (stats.ContainsKey("GOLD_SPENT")) data.stats.economy.gold_spent_in_shops = stats["GOLD_SPENT"];
+        if (stats.ContainsKey("RUPEE_SPENT")) data.stats.economy.rupee_spent_in_shops = stats["RUPEE_SPENT"];
         if (stats.ContainsKey("PERFECT_WAVES")) data.stats.gameplay.perfect_waves = stats["PERFECT_WAVES"];
         // 3. Save
         SaveManager.Save(FILE_NAME, data);
     }
 
+        public void ResetRunSession()
+    {
+        hasDiedThisRun = false;
+        tookDamageThisRun = false;
+    }
+
+    public bool HasDiedThisRun() => hasDiedThisRun; 
     public int GetStat(string key)
     {
         if (stats.ContainsKey(key))
