@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class MissionMenuUI : MonoBehaviour
 {
-    [SerializeField] private GameObject dailyContainer;
-    [SerializeField] private GameObject weeklyContainer;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private Transform listParent; // Vertical Layout Group
 

@@ -66,6 +66,7 @@ public class DailyTracker
 public class ActiveMissionEntry
 {
     public string mission_id;
+    public string description;
     public int current_progress;
     public int target_value;
     public bool is_completed;

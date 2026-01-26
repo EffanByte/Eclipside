@@ -57,7 +57,9 @@ public class MissionManager : MonoBehaviour
         string todayStr = now.ToString("yyyy-MM-dd");
 
         // --- DAILY RESET ---
-        if (tracker.last_daily_reset_date != todayStr)
+        Debug.Log("Trying daily reset");
+        // commenting out if to test normally
+        //if (tracker.last_daily_reset_date != todayStr)
         {
             Debug.Log("Performing Daily Mission Reset...");
             GenerateDailyMissions(tracker);
@@ -66,7 +68,10 @@ public class MissionManager : MonoBehaviour
             tracker.daily_bonus_claimed = false;
             SaveManager.SaveProfile();
         }
-
+        foreach (ActiveMissionEntry entry in tracker.active_daily_missions)
+        {
+            Debug.Log($"Daily Mission: {entry.description}, Progress: {entry.current_progress}/{entry.target_value}, Completed: {entry.is_completed}, Claimed: {entry.is_claimed}");
+        }
         // --- WEEKLY RESET (Monday) ---
         // Calculate the date of the most recent Monday
         int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
@@ -122,6 +127,7 @@ public class MissionManager : MonoBehaviour
         ActiveMissionEntry entry = new ActiveMissionEntry
         {
             mission_id = data.id,
+            description = data.description,
             target_value = data.targetValue,
             current_progress = 0,
             is_completed = false,
@@ -275,7 +281,7 @@ public class MissionManager : MonoBehaviour
             return missionDatabase[id];
         return null;
     }
-    
+
 
     private bool IsServerTimeSynced()
     {

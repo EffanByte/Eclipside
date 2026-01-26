@@ -5,10 +5,10 @@ using TMPro;
 public class MissionSlotUI : MonoBehaviour
 {
     [Header("Visuals")]
-    [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI progressText;
     [SerializeField] private Image rewardIcon;
     [SerializeField] private TextMeshProUGUI rewardAmountText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
     
     [Header("Controls")]
     [SerializeField] private Button claimButton;
@@ -22,9 +22,8 @@ public class MissionSlotUI : MonoBehaviour
         currentEntry = entry;
 
         // Text
-        titleText.text = staticData.title;
         progressText.text = $"{entry.current_progress} / {entry.target_value}";
-        
+        descriptionText.text = entry.description;
         // Progress Bar
         float pct = (float)entry.current_progress / entry.target_value;
         progressBar.value = pct;
