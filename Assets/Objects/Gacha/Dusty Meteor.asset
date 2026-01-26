@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5651567725d568b4d88597113ad2681a, type: 3}
-  m_Name: DM
+  m_Name: Dusty Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: Dusty Meteorite
   currencyType: 3
@@ -54,27 +54,19 @@ MonoBehaviour:
     duplicateConversionAmount: 0
     duplicateConversionType: 0
   rarePool:
-  - idName: 
-    type: 1
+  - idName: R_Twin_Fang_Daggers
+    type: 2
     rarity: 1
     amount: 1
-    itemReference: {fileID: 0}
+    itemReference: {fileID: 11400000, guid: 7d20fb1723c53be48b59198fd9158245, type: 2}
     characterReference: {fileID: 0}
-    duplicateConversionAmount: 0
-    duplicateConversionType: 0
+    duplicateConversionAmount: 300
+    duplicateConversionType: 3
   - idName: 600 Gold
     type: 4
     rarity: 1
     amount: 600
     itemReference: {fileID: 0}
-    characterReference: {fileID: 0}
-    duplicateConversionAmount: 0
-    duplicateConversionType: 0
-  - idName: Twin Fang Daggers
-    type: 4
-    rarity: 1
-    amount: 600
-    itemReference: {fileID: 11400000, guid: 7d20fb1723c53be48b59198fd9158245, type: 2}
     characterReference: {fileID: 0}
     duplicateConversionAmount: 0
     duplicateConversionType: 0
@@ -87,12 +79,12 @@ MonoBehaviour:
     characterReference: {fileID: 0}
     duplicateConversionAmount: 0
     duplicateConversionType: 0
-  - idName: 
-    type: 0
-    rarity: 0
-    amount: 0
+  - idName: E_Vampiric_Dagger
+    type: 2
+    rarity: 2
+    amount: 1
     itemReference: {fileID: 0}
     characterReference: {fileID: 0}
-    duplicateConversionAmount: 0
-    duplicateConversionType: 0
+    duplicateConversionAmount: 500
+    duplicateConversionType: 3
   mythicPool: []

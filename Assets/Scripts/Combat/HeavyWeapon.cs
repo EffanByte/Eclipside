@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-
-[CreateAssetMenu(fileName = "New Light Melee", menuName = "Eclipside/Weapons/1. Light Melee")]
-public class LightMeleeWeapon : WeaponData
+[CreateAssetMenu(fileName = "New Heavy Weapon", menuName = "Eclipside/Weapons/3. Heavy Melee")]
+public class HeavyMelee : WeaponData
 {
     public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
