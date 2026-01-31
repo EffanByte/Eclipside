@@ -12,7 +12,7 @@ public class TimedChest : MonoBehaviour, IInteractable
 
     [Header("Reward Spawning")]
     [SerializeField] private GameObject lootPedestalPrefab; // The prefab with LootPedestal script
-    private int? keyCount;
+    private int? keyCount = 1;
     private static int globalKeyCount;
 
 
@@ -42,13 +42,12 @@ public class TimedChest : MonoBehaviour, IInteractable
     public void Interact(PlayerController player)
     {
         if (isOpened) return;
-
-        if (player.keys <= keyCount) 
-        return;
+        Debug.Log(keyCount);
+        if (player.keys > 0)
+        {
         PlayerController.Instance.AddCurrency(CurrencyType.Key, -1);
-
         OpenChest(player);
-        return;
+        }
     }
 
     public string GetInteractionPrompt()
@@ -105,6 +104,7 @@ public class TimedChest : MonoBehaviour, IInteractable
     private void SetKeyCount(int count)
     {
         keyCount = count;
+        Debug.Log("Key count set to " + keyCount);
     }
     public static void SetGloalKeyCount(int count)
     {

@@ -118,7 +118,7 @@ private void RollNewItems()
     
         if (player.rupees >= cost)
         {
-            player.rupees -= cost;
+            PlayerController.Instance.AddCurrency(CurrencyType.Rupee, -cost);
             currentRefreshCount++;
             RollNewItems();
             return true;

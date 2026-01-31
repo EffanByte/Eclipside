@@ -10,6 +10,11 @@ public class UpdateCurrency : MonoBehaviour
         PlayerController.Instance.onCurrencyUpdate += UpdateUI;
     }
 
+    void Start()
+    {
+        UpdateUI();
+    }
+
     private void UpdateUI()
     {
         rupeeText.text = "x" + PlayerController.Instance.rupees.ToString();

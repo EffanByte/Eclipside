@@ -142,7 +142,7 @@ public class GameDirector : MonoBehaviour
             Vector2 offset = Random.insideUnitCircle * chestSpawnRadius;
             GameObject chest = Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
             TimedChest chestScript = chest.GetComponent<TimedChest>();
-            chestScript.Setup(1); 
+            chestScript.Setup(1); // not working for some reason
             Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle * chestSpawnRadius;
             Instantiate(timedChestPrefab, spawnPos + new Vector2(Random.Range(-8,9), Random.Range(-8,6)), Quaternion.identity);
         }
