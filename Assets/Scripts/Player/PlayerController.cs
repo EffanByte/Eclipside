@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("--- Combat Setup ---")]
     public WeaponData currentWeapon; 
-    public Transform weaponHolder;   
+    public Transform weaponObject;
     private WeaponHitbox currentWeaponHitBox; 
     private StatusManager statusMgr;
     private PlayerHealth healthComp;
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
     fsm.AddState("Attack", new State(
         onEnter: (state) => 
         {
-            anim.CrossFade("Attack", 1); // 1 = Attack Layer index
+            anim.CrossFade("Attack", 0.1f, -1, 0f);
             StartCoroutine(AttackRoutine());
         },
         onLogic: (state) => 
@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
 
         // Tick the State Machine
-        fsm.OnLogic();
+            fsm.OnLogic();
         Debug.Log(fsm.ActiveStateName);
     }
 
@@ -350,14 +350,14 @@ public class PlayerController : MonoBehaviour
         }
         currentWeapon = newWeapon;
 
-        if (weaponHolder.childCount > 0)
+        if (weaponObject.childCount > 0)
         {
-            foreach (Transform child in weaponHolder) Destroy(child.gameObject);
+            foreach (Transform child in weaponObject) Destroy(child.gameObject);
         }
 
         if (currentWeapon != null && currentWeapon.weaponPrefab != null)
         {
-            GameObject spawnedWeapon = Instantiate(currentWeapon.weaponPrefab, weaponHolder);
+            GameObject spawnedWeapon = Instantiate(currentWeapon.weaponPrefab, weaponObject);
             currentWeaponHitBox = spawnedWeapon.GetComponent<WeaponHitbox>();
             
             if (currentWeapon.animatorOverride != null)

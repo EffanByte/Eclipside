@@ -18,7 +18,7 @@
             myCollider.isTrigger = true;
             playerController = GetComponentInParent<PlayerController>();
             // Set up a filter that checks everything (or specific layers if you prefer)
-            filter = new ContactFilter2D().NoFilter();
+            filter = ContactFilter2D.noFilter;
         }
 
         public void Start()

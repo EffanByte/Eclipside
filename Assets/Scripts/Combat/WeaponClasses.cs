@@ -7,8 +7,6 @@ public class LightMeleeWeapon : WeaponData
 {
     public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
-        if (player.anim != null) player.anim.SetTrigger("Attack");
-
         yield return new WaitForSeconds(hitDuration);
 
         if (activeHitbox != null)
