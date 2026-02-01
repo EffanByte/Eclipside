@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
-    [SerializeField] private float walkSpeedMultiplier = 0.5f; // 50% speed when walking
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float luck = 0;
@@ -149,8 +148,7 @@ public class PlayerController : MonoBehaviour
         fsm.AddState("Idle", new State(
             onEnter: (state) =>
             {
-              anim.SetBool("isRunning", false);
-                anim.SetBool("isWalking", false);  
+                anim.CrossFade("Idle", 0.2f);  
             },
             onLogic: (state) => 
             {
@@ -158,26 +156,24 @@ public class PlayerController : MonoBehaviour
             }
         ));
 
-        // 2. LOCOMOTION STATE (Hierarchical)
+
         // This handles both Walking and Running
         StateMachine locomotionFsm = new StateMachine();
         // Sub-State: RUN (Default)
         locomotionFsm.AddState("Run", new State(
             onEnter: (state) =>
             {
-                anim.SetBool("isRunning", true);
+                anim.CrossFade("Running", 0.3f);
             },
             onLogic: (state) => MoveLogic(1.0f) // Full Speed
         ));
 
         // Sub-State: WALK
         locomotionFsm.AddState("Walk", new State(
-            onEnter: (state) => 
+            onEnter: (state) =>
             {
-                anim.SetBool("isRunning", false);
-                anim.SetBool("isWalking", true);
-            },
-            onLogic: (state) => MoveLogic(walkSpeedMultiplier) // Reduced Speed
+                anim.CrossFade("Walking", 0.3f);
+            }
         ));
 
         // Transitions between Walk/Run inside Locomotion
@@ -199,18 +195,22 @@ public class PlayerController : MonoBehaviour
             }
         ));
 
-        // 4. ATTACK STATE
-        fsm.AddState("Attack", new State(
-            onEnter: (state) => 
-            {
-                // Animation is triggered inside AttackRoutine via WeaponData
-                StartCoroutine(AttackRoutine());
-            },
-            onLogic: (state) => 
-            {
-                rb.linearVelocity = Vector2.zero; // Stop movement
-            }
-        ));
+// 3. ATTACK STATE
+    fsm.AddState("Attack", new State(
+        onEnter: (state) => 
+        {
+            anim.CrossFade("Attack", 1); // 1 = Attack Layer index
+            StartCoroutine(AttackRoutine());
+        },
+        onLogic: (state) => 
+        {
+            // Keep moving! 
+            // The Base Layer will handle switching "Run" <-> "Idle" visuals based on speed
+            // The Attack Layer will override the arms.
+            float penalty = 0.8f;
+            MoveLogic(penalty); 
+        }
+    ));
 
         // --- MAIN TRANSITIONS ---
 
@@ -310,10 +310,7 @@ public class PlayerController : MonoBehaviour
         isAttacking = false; // Unlocks State -> FSM transitions to Idle
     }
 
-    private void PlayAnimation(string name)
-    {
-        if(anim != null) anim.Play(name);
-    }
+
 
     // ---------------------------------------------------------
     // HELPERS & PUBLIC API
@@ -454,6 +451,7 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(BuffRoutine(type, amount, duration));
     }
+    
 
     private IEnumerator BuffRoutine(StatType type, float amount, float duration)
     {
