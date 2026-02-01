@@ -1,38 +1,32 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using Unity.VisualScripting;
+using UnityHFSM; // Requires UnityHFSM package
+
 public enum StatType 
-    { 
-        AttackSpeed, 
-        BaseDamage, 
-        MagicDamage,
-        HeavyDamage,
-        MaxHealth,
-        CritChance,
-        CritDamage,
-        Luck,
-        Defense,
-        Speed,
-        projectileSpeed
-    }
+{ 
+    AttackSpeed, BaseDamage, MagicDamage, HeavyDamage, MaxHealth,
+    CritChance, CritDamage, Luck, Defense, Speed, projectileSpeed
+}
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InventoryManager))] 
-
 public class PlayerController : MonoBehaviour
 {
+    // --- STATE MACHINE ---
+    private StateMachine fsm;
+
     [Header("--- Stats (Page 1) ---")]
     [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float walkSpeedMultiplier = 0.5f; // 50% speed when walking
     [SerializeField] private float dashForce = 10f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float luck = 0;
     public float playerAttackSpeedMultiplier = 1f; 
 
-    
     [Header("Interaction")]
     [SerializeField] private float interactionRadius = 1.5f;
-    [SerializeField] private LayerMask interactionLayer; // Set this to "Interactable" layer
+    [SerializeField] private LayerMask interactionLayer;
     
     [Header("--- Progression ---")]
     public int currentLevel = 1;
@@ -42,9 +36,9 @@ public class PlayerController : MonoBehaviour
     public int keys = 0;
 
     [Header("--- Combat Setup ---")]
-    public WeaponData currentWeapon; // The data file (Stats)
-    public Transform weaponHolder;   // The empty child object where sword spawns
-    private WeaponHitbox currentWeaponHitBox; // The hitbox script on the spawned weapon
+    public WeaponData currentWeapon; 
+    public Transform weaponHolder;   
+    private WeaponHitbox currentWeaponHitBox; 
     private StatusManager statusMgr;
     private PlayerHealth healthComp;
 
@@ -57,10 +51,14 @@ public class PlayerController : MonoBehaviour
     private SpecialMeterFill specialMeterFill;
     private Rigidbody2D rb;
     private Vector2 rawInputMovement;
-    private bool isDashing;
-    private bool canAttack = true;
+    
+    // State Flags for FSM
+    private bool isDashing = false;         // Locked in dash
+    private bool isAttacking = false;       // Locked in attack animation
+    private bool dashRequested = false;     // Input buffer
+    private bool isAttackPressed = false;   // Input hold
+    private bool isWalking = false;         // Locomotion Toggle
     private bool isDead = false;
-    private bool isAttackPressed = false; 
 
     // --- Buff State ---
     private float baseMovementSpeed; 
@@ -71,21 +69,21 @@ public class PlayerController : MonoBehaviour
     private PlayerControls controls; 
     private InventoryManager inventory; 
 
-
+    // --- Events ---
     public event Action onCurrencyUpdate;
-    public event Action OnLevelUp; // Trigger UI
-    public event Action<float, float> OnExpChanged; // Update XP Bar UI (Current, Max)
+    public event Action OnLevelUp; 
+    public event Action<float, float> OnExpChanged; 
     public event Action OnPlayerDeath;
 
     private float lastAttackTime = -999f; 
     
-    [HideInInspector] public Animator anim; 
+    public Animator anim; 
 
     public static PlayerController Instance {get; private set;}
 
     private void Awake()
     {
-        gameObject.SetActive(true); // Ensure player is active on Awake
+        gameObject.SetActive(true); 
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -94,92 +92,277 @@ public class PlayerController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        
         rb = GetComponent<Rigidbody2D>();
         inventory = GetComponent<InventoryManager>();
         controls = new PlayerControls();
-        anim = GetComponent<Animator>();
         healthComp = GetComponent<PlayerHealth>();
         PlayerHealth.OnPlayerDeath += PlayerKilled;
+        
         statusMgr = GetComponent<StatusManager>();
-        statusMgr.Initialize(rb, this, StatusDamage, GetComponent<SpriteRenderer>());
+        // Ensure StatusManager calls StatusDamage when it triggers DOTs
+        statusMgr.Initialize(rb, this, StatusDamage, GetComponentInChildren<SpriteRenderer>());
+        
         baseMovementSpeed = movementSpeed;
 
-        // Input Bindings
+        // --- INPUT BINDINGS ---
         controls.Player.Move.performed += ctx => rawInputMovement = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => rawInputMovement = Vector2.zero;
+        
+        // Attack (Hold to Auto-Attack logic)
         controls.Player.Fire.started += ctx => isAttackPressed = true;
         controls.Player.Fire.canceled += ctx => isAttackPressed = false;
-        controls.Player.Dash.performed += ctx => AttemptDash();
+        
+        // Dash (Buffer the input)
+        controls.Player.Dash.performed += ctx => dashRequested = true;
+        
         controls.Player.Special.performed += ctx => AttemptSpecial();
         controls.Player.Interact.performed += ctx => AttemptInteract(); 
 
-        // Items (0, 1, 2 are the array indexes)
+        // Items
         controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
         controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1); 
         controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2); 
-
     }
 
-    // FIX: added Start to spawn the weapon visual
     private void Start()
     {
         specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
         EquipWeapon(currentWeapon);
-        onCurrencyUpdate.Invoke();
+        onCurrencyUpdate?.Invoke();
+
+        // Initialize HFSM
+        InitializeStateMachine();
     }
 
-    public void ResetPlayer()
-{
-    gameObject.SetActive(true);
-    transform.position = new Vector2(0,0); // or your logic
-    healthComp.Heal(healthComp.GetMaxHealth());
-    isDead = false;
-
-    // reset velocity, animations, etc.
-}
     private void OnEnable() => controls.Enable();
+    private void OnDisable() => controls.Disable();
+
+    // ---------------------------------------------------------
+    // STATE MACHINE SETUP
+    // ---------------------------------------------------------
+    private void InitializeStateMachine()
+    {
+        fsm = new StateMachine();
+
+        // 1. IDLE STATE
+        fsm.AddState("Idle", new State(
+            onEnter: (state) =>
+            {
+              anim.SetBool("isRunning", false);
+                anim.SetBool("isWalking", false);  
+            },
+            onLogic: (state) => 
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
+        ));
+
+        // 2. LOCOMOTION STATE (Hierarchical)
+        // This handles both Walking and Running
+        StateMachine locomotionFsm = new StateMachine();
+        // Sub-State: RUN (Default)
+        locomotionFsm.AddState("Run", new State(
+            onEnter: (state) =>
+            {
+                anim.SetBool("isRunning", true);
+            },
+            onLogic: (state) => MoveLogic(1.0f) // Full Speed
+        ));
+
+        // Sub-State: WALK
+        locomotionFsm.AddState("Walk", new State(
+            onEnter: (state) => 
+            {
+                anim.SetBool("isRunning", false);
+                anim.SetBool("isWalking", true);
+            },
+            onLogic: (state) => MoveLogic(walkSpeedMultiplier) // Reduced Speed
+        ));
+
+        // Transitions between Walk/Run inside Locomotion
+        locomotionFsm.AddTransition("Run", "Walk", t => isWalking);
+        locomotionFsm.AddTransition("Walk", "Run", t => !isWalking);
+
+        // Add the Sub-Machine to Main Machine
+        locomotionFsm.SetStartState("Run");
+        fsm.AddState("Locomotion", locomotionFsm);
+
+
+        // 3. DASH STATE
+        fsm.AddState("Dash", new State(
+            onEnter: (state) => 
+            {
+                dashRequested = false; // Consume Input
+               // anim.SetTrigger("Dash");
+                StartCoroutine(DashRoutine());
+            }
+        ));
+
+        // 4. ATTACK STATE
+        fsm.AddState("Attack", new State(
+            onEnter: (state) => 
+            {
+                // Animation is triggered inside AttackRoutine via WeaponData
+                StartCoroutine(AttackRoutine());
+            },
+            onLogic: (state) => 
+            {
+                rb.linearVelocity = Vector2.zero; // Stop movement
+            }
+        ));
+
+        // --- MAIN TRANSITIONS ---
+
+        // Idle <-> Locomotion
+        fsm.AddTransition("Idle", "Locomotion", t => rawInputMovement != Vector2.zero);
+        fsm.AddTransition("Locomotion", "Idle", t => rawInputMovement == Vector2.zero);
+
+        // Any -> Dash (Priority)
+        fsm.AddTransitionFromAny("Dash", t => 
+            dashRequested && !isDashing && !statusMgr.IsFrozen
+        );
+
+        // Any -> Attack
+        fsm.AddTransitionFromAny("Attack", t => 
+            isAttackPressed && CanAttackCheck() && !isDashing && !statusMgr.IsFrozen
+        );
+
+        // Exit Dash (When routine finishes)
+        fsm.AddTransition("Dash", "Idle", t => !isDashing);
+
+        // Exit Attack (When animation/coroutine finishes)
+        fsm.AddTransition("Attack", "Idle", t => !isAttacking);
+
+        // Start the FSM
+        fsm.Init();
+    }
 
     private void Update()
     {
         if (isDead) return;
 
-        if (isAttackPressed && canAttack)
-        {
-            PerformBasicAttack();
-        }
+        // Tick the State Machine
+        fsm.OnLogic();
+        Debug.Log(fsm.ActiveStateName);
     }
 
-    
-    private void FixedUpdate()
+    // ---------------------------------------------------------
+    // ACTION ROUTINES (Called by FSM)
+    // ---------------------------------------------------------
+
+    // 1. MOVEMENT LOGIC
+    private void MoveLogic(float speedMultiplier)
     {
-        if (isDead) return;
-        Move();
+        if (statusMgr.IsFrozen) 
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        Vector2 finalInput = rawInputMovement;
+        if (statusMgr.IsConfused) finalInput *= -1; 
+        
+        // Calculate speed based on Stats AND State (Walk vs Run)
+        float currentSpeed = movementSpeed * speedMultiplier;
+
+        // FLIP LOGIC
+        if (rawInputMovement.x > 0) transform.localScale = new Vector3(0.42f, 0.42f, 1);
+        else if (rawInputMovement.x < 0) transform.localScale = new Vector3(-0.42f, 0.42f, 1);
+    
+        rb.linearVelocity = finalInput * currentSpeed;
     }
 
-    // FIX: New Method to handle spawning the weapon prefab
+    // 2. DASH LOGIC
+    private IEnumerator DashRoutine()
+    {
+        isDashing = true; // Locks State
+        
+        Vector2 dashDir = rawInputMovement == Vector2.zero ? Vector2.right : rawInputMovement.normalized;
+        rb.linearVelocity = dashDir * dashForce;
+        
+        yield return new WaitForSeconds(dashDuration);
+        
+        rb.linearVelocity = Vector2.zero; 
+        isDashing = false; // Unlocks State -> FSM transitions to Idle
+    }
+
+    // 3. ATTACK LOGIC
+    private bool CanAttackCheck()
+    {
+        if (currentWeapon == null) return false;
+        float actualCooldown = currentWeapon.Cooldown / playerAttackSpeedMultiplier;
+        return Time.time >= lastAttackTime + actualCooldown;
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        isAttacking = true; // Locks State
+        lastAttackTime = Time.time;
+
+        // Execute Weapon Logic (Visuals + Hitbox)
+        // WeaponData.OnAttack returns an IEnumerator that waits for hitDuration
+        yield return StartCoroutine(currentWeapon.OnAttack(this, currentWeaponHitBox));
+
+        // Charge Special
+        OnDealtDamage(5f); 
+
+        isAttacking = false; // Unlocks State -> FSM transitions to Idle
+    }
+
+    private void PlayAnimation(string name)
+    {
+        if(anim != null) anim.Play(name);
+    }
+
+    // ---------------------------------------------------------
+    // HELPERS & PUBLIC API
+    // ---------------------------------------------------------
+
+    // Call this to toggle Walk mode
+    public void SetWalking(bool walking)
+    {
+        isWalking = walking;
+    }
+
+    public void ResetPlayer()
+    {
+        gameObject.SetActive(true);
+        transform.position = Vector2.zero;
+        healthComp.Heal(healthComp.GetMaxHealth());
+        isDead = false;
+        
+        // Reset Logic State
+        isDashing = false;
+        isAttacking = false;
+        fsm?.RequestStateChange("Idle");
+    }
+
+    public Vector2 GetLastMovementDirection()
+    {
+        if (rawInputMovement != Vector2.zero) return rawInputMovement;
+        return transform.localScale.x < 0 ? Vector2.right : Vector2.left; 
+    }
+
     public void EquipWeapon(WeaponData newWeapon)
     {
         if (ChallengeManager.theGladiator && newWeapon is MagicWeapon)
         {
             Debug.Log("Can't equip weapon due to gladiator");
+            return;
         }
         currentWeapon = newWeapon;
 
-        // 1. Clear old weapon
         if (weaponHolder.childCount > 0)
         {
             foreach (Transform child in weaponHolder) Destroy(child.gameObject);
         }
 
-        // 2. Spawn new weapon
         if (currentWeapon != null && currentWeapon.weaponPrefab != null)
         {
             GameObject spawnedWeapon = Instantiate(currentWeapon.weaponPrefab, weaponHolder);
-            
-            // 3. Get the hitbox script so we can turn it on/off later
             currentWeaponHitBox = spawnedWeapon.GetComponent<WeaponHitbox>();
             
-            // 4. Update Animator if needed
             if (currentWeapon.animatorOverride != null)
             {
                 anim.runtimeAnimatorController = currentWeapon.animatorOverride;
@@ -187,167 +370,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ReceiveDamage(DamageInfo dmg)
-    {
-        // 1. Controller Logic: Check I-Frames / Dodging
-        if (isDashing) return;
-
-        // 2. Status Logic: Check Fragile / Protection Buffs
-        // The Controller asks the StatusManager for the multiplier
-        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
-
-        // 3. Status Application: Check for new effects (Burn/Poison)
-        if (dmg.element != DamageElement.True)
-        {
-            StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
-            TryAddStatus(effect);
-        }
-        statusMgr.FlashSpriteRoutine(dmg.element);
-        // 4. Pass the FINAL result to Health
-        healthComp.ReceiveDamage(finalAmount, dmg.element);
-        FindFirstObjectByType<WaveManager>().TookDamageThisWave();
-    }
-
-    public void StatusDamage(DamageInfo dmg)
-    {
-        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
-    
-        statusMgr.FlashSpriteRoutine(dmg.element);
-        // 4. Pass the FINAL result to Health
-        healthComp.ReceiveDamage(finalAmount, dmg.element);
-    }
-
-    public void ApplyBuff(StatType type, float amount, float duration)
-    {
-        StartCoroutine(BuffRoutine(type, amount, duration));
-    }
-
-    private IEnumerator BuffRoutine(StatType type, float amount, float duration)
-    {
-        // Apply Buff
-        switch (type)
-        {
-            case StatType.Defense:
-                statusMgr.ChangeDamageMultiplier(-amount);
-                break;
-            case StatType.BaseDamage:
-                currentWeapon.damage += currentWeapon.damage * amount; // its in %age
-                break;
-            case StatType.Speed:
-                movementSpeed += baseMovementSpeed * amount;
-                break;
-            case StatType.AttackSpeed:
-                playerAttackSpeedMultiplier += amount;
-                break;
-        }
-
-        // Wait for duration
-        yield return new WaitForSeconds(duration);
-
-        // Revert Buff
-        switch (type)
-        {
-            case StatType.Defense:
-                statusMgr.ChangeDamageMultiplier(amount);
-                break;
-            case StatType.BaseDamage:
-                currentWeapon.damage -= currentWeapon.damage * amount; // its in %age 
-                // fix this later cos rn it reduces from buffed value
-                break;
-            case StatType.Speed:
-                movementSpeed -= baseMovementSpeed * amount;
-                break;
-            case StatType.AttackSpeed:
-                playerAttackSpeedMultiplier -= amount;
-                break;
-        }
-    }
-    #region 1. Movement & Controls
-    
-    private void Move()
-    {
-        if (isDashing) return;
-
-        Vector2 finalInput = rawInputMovement;
-        if (statusMgr.IsConfused) finalInput *= -1; 
-        float finalSpeed = movementSpeed;
-        if (statusMgr.IsFrozen) finalSpeed *= 0.6f;
-
-        // FLIP LOGIC (Using your specific scale values)
-        if (rawInputMovement.x > 0)
-        {
-            // Face Right
-            transform.localScale = new Vector3(-0.42f, 0.42f, 1);
-        }
-        else if (rawInputMovement.x < 0)
-        {
-            // Face Left
-            transform.localScale = new Vector3(0.42f, 0.42f, 1);
-        }
-    
-        rb.linearVelocity = finalInput * finalSpeed;
-    }
-
-    // FIX: Added helper for Magic Weapons to know where to aim
-    public Vector2 GetLastMovementDirection()
-    {
-        if (rawInputMovement != Vector2.zero) return rawInputMovement;
-        // Check localScale to see if we are facing left or right
-        return transform.localScale.x < 0 ? Vector2.right : Vector2.left; 
-        // Note: Based on your Flip Logic above: -0.42 is Right, +0.42 is Left.
-        // Adjusted return values to match your specific Flip Logic.
-    }
-
-    public void AttemptDash()
-    {
-        if (!isDashing && !isDead && !statusMgr.IsFrozen)
-        {
-            StartCoroutine(DashRoutine());
-        }
-    }
-    private IEnumerator DashRoutine()
-    {
-        isDashing = true;
-        Vector2 dashDir = rawInputMovement == Vector2.zero ? Vector2.right : rawInputMovement.normalized;
-        rb.linearVelocity = dashDir * dashForce;
-        yield return new WaitForSeconds(dashDuration);
-        isDashing = false;
-        rb.linearVelocity = Vector2.zero; 
-    }
-    #endregion
-
-    #region 2. Combat & Abilities
-
-    private void PerformBasicAttack()
-    {
-        // Calculate Cooldown
-        float actualCooldown = currentWeapon.Cooldown / playerAttackSpeedMultiplier;
-
-        if (Time.time >= lastAttackTime + actualCooldown)
-        {
-            if (currentWeapon == null)
-            {
-                Debug.Log("No Weapon Equipped!");
-                return;
-            }
-            lastAttackTime = Time.time;
-
-            // FIX: Use StartCoroutine because OnAttack is now an IEnumerator (Timeline)
-            // We pass the hitbox instance we grabbed in EquipWeapon
-            StartCoroutine(currentWeapon.OnAttack(this, currentWeaponHitBox));
-        
-            // Special Meter Fill 
-            OnDealtDamage(5f); // Hard-coded fix later 
-        }
-    }
-
-    // Need to change this later to not depend directly on damage amount
-
+    // --- Special Ability ---
     public void OnDealtDamage(float damageAmount)
     {
         if (!isSpecialReady)
         {
-            specialMeterFill.SetValue(currentSpecialCharge);
+            if (specialMeterFill) specialMeterFill.SetValue(currentSpecialCharge);
             currentSpecialCharge += damageAmount;
             if (currentSpecialCharge >= specialChargeMax)
             {
@@ -358,15 +386,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void AttemptSpecial()
+    {
+        if (isSpecialReady && !isDead) ActivateSpecialAbility();
+    }
+
+    private void ActivateSpecialAbility()
+    {
+        Debug.Log("SPECIAL ABILITY UNLEASHED!");
+        currentSpecialCharge = 0;
+        isSpecialReady = false;
+    }
+
+    // --- Interaction ---
     private void AttemptInteract()
     {
-        // 1. Find all interactables nearby
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactionLayer);
-        
-        IInteractable closestInteractable = null;
+        IInteractable closest = null;
         float closestDist = Mathf.Infinity;
 
-        // 2. Find the closest one
         foreach (var hit in hits)
         {
             IInteractable interactable = hit.GetComponent<IInteractable>();
@@ -376,117 +414,89 @@ public class PlayerController : MonoBehaviour
                 if (dist < closestDist)
                 {
                     closestDist = dist;
-                    closestInteractable = interactable;
+                    closest = interactable;
                 }
             }
         }
 
-        // 3. Perform Interaction
-        if (closestInteractable != null)
+        if (closest != null) closest.Interact(this);
+    }
+
+    // --- Damage & Status ---
+    public void ReceiveDamage(DamageInfo dmg)
+    {
+        if (isDashing) return; // i-frames
+
+        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
+
+        if (dmg.element != DamageElement.True)
         {
-            closestInteractable.Interact(this);
+            StatusType effect = statusMgr.GetStatusFromElement(dmg.element);
+            TryAddStatus(effect);
         }
+        
+        statusMgr.FlashSpriteRoutine(dmg.element);
+        healthComp.ReceiveDamage(finalAmount, dmg.element);
+        
+        WaveManager waveMgr = FindFirstObjectByType<WaveManager>();
+        if(waveMgr) waveMgr.TookDamageThisWave();
     }
-    private void AttemptSpecial()
+
+    public void StatusDamage(DamageInfo dmg)
     {
-        if (isSpecialReady && !isDead)
-        {
-            ActivateSpecialAbility();
-        }
-        else
-        {
-            Debug.Log("Special not ready yet.");
-        }
+        float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
+        statusMgr.FlashSpriteRoutine(dmg.element);
+        healthComp.ReceiveDamage(finalAmount, dmg.element);
     }
 
-    private void ActivateSpecialAbility()
+    // --- Buffs / Stats ---
+    public void ApplyBuff(StatType type, float amount, float duration)
     {
-        Debug.Log("SPECIAL ABILITY UNLEASHED!");
-        currentSpecialCharge = 0;
-        isSpecialReady = false;
-    }
-    #endregion
-
-    #region 3. Health & Status Effects
-
-
-    public void Heal(float amount)
-    {
-        healthComp.Heal(amount);
-    }
-   
-    public void AddTemporaryHearts(float amount)
-    {
-        healthComp.AddTemporaryHearts(amount);
-    }
-    #endregion
-
-    #region 4. Interactions & NEW API
-
-    public void ModifySpeed(float percentageAmount)
-    {
-        movementSpeed += baseMovementSpeed * percentageAmount;
+        StartCoroutine(BuffRoutine(type, amount, duration));
     }
 
-    public void ModifyPlayerStat(StatType statType, float value)
-    {
-        if (statType == StatType.MaxHealth)
-           healthComp.SetMaxHealth(value);
-        if (statType == StatType.AttackSpeed)
-            playerAttackSpeedMultiplier += value;
-    }
-    public void ToggleLuck(bool state)
-    {
-        hasLuck = state;
-        Debug.Log($"Luck set to: {state}");
-    }
-
-    public void AddCurrency(CurrencyType type, int amount)
+    private IEnumerator BuffRoutine(StatType type, float amount, float duration)
     {
         switch (type)
         {
-            case CurrencyType.Rupee:
-                rupees += amount;
-                break;
-            case CurrencyType.Key:
-                keys += amount;
-                break;
+            case StatType.Defense: statusMgr.ChangeDamageMultiplier(-amount); break;
+            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage += currentWeapon.damage * amount; break;
+            case StatType.Speed: movementSpeed += baseMovementSpeed * amount; break;
+            case StatType.AttackSpeed: playerAttackSpeedMultiplier += amount; break;
         }
-        onCurrencyUpdate?.Invoke();
-    }
-    
 
-    private void OnTriggerEnter2D(Collider2D collision)
+        yield return new WaitForSeconds(duration);
+
+        switch (type)
+        {
+            case StatType.Defense: statusMgr.ChangeDamageMultiplier(amount); break;
+            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage -= currentWeapon.damage * amount; break;
+            case StatType.Speed: movementSpeed -= baseMovementSpeed * amount; break;
+            case StatType.AttackSpeed: playerAttackSpeedMultiplier -= amount; break;
+        }
+    }
+
+    public void ModifySpeed(float percentageAmount) => movementSpeed += baseMovementSpeed * percentageAmount;
+
+    public void ModifyPlayerStat(StatType statType, float value)
     {
+        if (statType == StatType.MaxHealth) healthComp.SetMaxHealth(value);
+        if (statType == StatType.AttackSpeed) playerAttackSpeedMultiplier += value;
     }
 
-     public void AddExperience(float amount)
+    public void AddExperience(float amount)
     {
         currentExp += amount;
-        
-        // Notify UI (XP Bar)
         OnExpChanged?.Invoke(currentExp, expToNextLevel);
-
-        if (currentExp >= expToNextLevel)
-        {
-            LevelUp();
-        }
+        if (currentExp >= expToNextLevel) LevelUp();
     }
 
-     private void LevelUp()
+    private void LevelUp()
     {
         currentLevel++;
         currentExp -= expToNextLevel;
-        
-        // Increase requirement (e.g., +20% per level)
         expToNextLevel *= 1.2f;
-
-        // Trigger Event (Pauses game via UI)
-        Debug.Log($"Leveled Up to {currentLevel}!");
         OnLevelUp?.Invoke();
-        
-        // If we had enough XP for multiple levels, handling carry-over:
-        // Update UI again just in case
         OnExpChanged?.Invoke(currentExp, expToNextLevel);
     }
 
@@ -494,67 +504,33 @@ public class PlayerController : MonoBehaviour
     {
         switch (stat)
         {
-            case StatType.BaseDamage:
-                // Increase base modifier by 10%
-                // You might need a separate 'permanentDamageMultiplier' variable 
-                // so it stacks with item buffs cleanly
-                if (currentWeapon != null) currentWeapon.damage *= 1.1f; 
-                break;
-
-            case StatType.MagicDamage:
-                // magicDamageMultiplier += 0.1f;
-                break;
-
-            case StatType.MaxHealth:
-                // +1 Heart (10 units)
-                healthComp.ModifyMaxHealth(10); // Method you added previously
-                healthComp.Heal(1f); // level up heals the new heart
-                break;
-
-            case StatType.Speed:
-                baseMovementSpeed *= 1.05f;
-                movementSpeed = baseMovementSpeed; // Refresh current
-                break;
-
-            case StatType.AttackSpeed:
-                playerAttackSpeedMultiplier += 0.05f;
-                break;
+            case StatType.BaseDamage: if (currentWeapon != null) currentWeapon.damage *= 1.1f; break;
+            case StatType.MaxHealth: healthComp.ModifyMaxHealth(1); healthComp.Heal(1f); break; // +1 Heart
+            case StatType.Speed: baseMovementSpeed *= 1.05f; movementSpeed = baseMovementSpeed; break;
+            case StatType.AttackSpeed: playerAttackSpeedMultiplier += 0.05f; break;
         }
-        
-        Debug.Log($"Applied Upgrade: {stat}");
     }
 
-    public float GetMaxHealth()
-    {
-        return healthComp.GetMaxHealth();
-    }
-
-    public void TryAddStatus(StatusType effect)
-    {
-        statusMgr.TryAddStatus(effect);
-    }
+    public void TryAddStatus(StatusType effect) => statusMgr.TryAddStatus(effect);
+    public float GetMaxHealth() => healthComp.GetMaxHealth();
+    public void Heal(float amount) => healthComp.Heal(amount);
+    public void AddTemporaryHearts(float amount) => healthComp.AddTemporaryHearts(amount);
     
-    public void LockLuck()
-    {
-        isLuckLocked = true;
-    }
+    public void ToggleLuck(bool state) { hasLuck = state; Debug.Log($"Luck: {state}"); }
+    public void LockLuck() => isLuckLocked = true;
     public void SetLuck(int value)
     {
-        if (isLuckLocked)
-        {
-            Debug.Log("Luck is Locked");
-        }
-        else
-        {
-            hasLuck = true;
-            luck = value;
-        }
+        if (!isLuckLocked) { hasLuck = true; luck = value; }
     }
 
-    public void PlayerKilled()
+    public void AddCurrency(CurrencyType type, int amount)
     {
-        OnPlayerDeath.Invoke();
+        switch (type) {
+            case CurrencyType.Rupee: rupees += amount; break;
+            case CurrencyType.Key: keys += amount; break;
+        }
+        onCurrencyUpdate?.Invoke();
     }
-    #endregion
-    
+
+    public void PlayerKilled() => OnPlayerDeath?.Invoke();
 }

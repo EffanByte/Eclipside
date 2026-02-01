@@ -9,6 +9,13 @@
       },
       "hash": "46bf30ea95250b6814d273203e91bfd113465b48"
     },
+    "com.inspiaaa.unityhfsm": {
+      "version": "https://github.com/Inspiaaa/UnityHFSM.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "270e954ed07b882b5feb154110492789829e8c31"
+    },
     "com.unity.2d.animation": {
       "version": "13.0.2",
       "depth": 1,
