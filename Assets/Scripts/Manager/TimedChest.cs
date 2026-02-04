@@ -7,7 +7,7 @@ public class TimedChest : MonoBehaviour, IInteractable
 {
     [Header("Loot Configuration")]
     [SerializeField] private List<WeaponData> weaponPool;
-    [SerializeField] private List<ItemData> consumablePool;
+    [SerializeField] private List<ItemData> consumablePool; // nneed to chhange this to retrieve for consumable DB automatically
     [SerializeField] private ItemData keyItem; // Reference to your Key "CurrencyItem"
 
     [Header("Reward Spawning")]

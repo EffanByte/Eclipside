@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(WaveManager))]
@@ -14,8 +13,6 @@ public class GameDirector : MonoBehaviour
     [SerializeField] private int maxWaveCount = 10;
 
     [Header("Generation & Rewards")]
-    public List<GameObject> zonePrefabs;
-    [SerializeField] private Transform zoneSpawnPointContainer;
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
 
@@ -50,7 +47,7 @@ public class GameDirector : MonoBehaviour
         {
             ChallengeManager.Instance.ApplyActiveChallenges();
         }
-        SpawnZones();
+        ZoneSpawner.SpawnZones();
         SpawnChests();
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
         StartCoroutine(GameLoopRoutine());
@@ -111,7 +108,7 @@ public class GameDirector : MonoBehaviour
     {
         IsWaveActive = false;
         OnCombatStateChanged?.Invoke(false);
-        
+        OnWaveAdvanced?.Invoke(CurrentWave);
 
         // Check Victory Condition
         if (CurrentWave >= maxWaveCount)
@@ -119,17 +116,6 @@ public class GameDirector : MonoBehaviour
             Debug.Log("LEVEL COMPLETE!");
             OnLevelCompleted?.Invoke();
             StopAllCoroutines(); 
-        }
-    }
-
-
-    private void SpawnZones()
-    {
-        if (zoneSpawnPointContainer == null) return;
-        foreach (Transform spot in zoneSpawnPointContainer)
-        {
-            if(zonePrefabs.Count > 0)
-                Instantiate(zonePrefabs[Random.Range(0, zonePrefabs.Count)], spot.position, Quaternion.identity);
         }
     }
 

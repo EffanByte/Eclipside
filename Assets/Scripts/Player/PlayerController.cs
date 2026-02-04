@@ -451,6 +451,17 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(BuffRoutine(type, amount, duration));
     }
+
+    public void ApplyPermanentBuff(StatType type, float amount)
+    {
+        switch (type)
+        {
+            case StatType.Defense: statusMgr.ChangeDamageMultiplier(-amount); break;
+            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage += currentWeapon.damage * amount; break;
+            case StatType.Speed: movementSpeed += baseMovementSpeed * amount; break;
+            case StatType.AttackSpeed: playerAttackSpeedMultiplier += amount; break;
+        }   
+    }
     
 
     private IEnumerator BuffRoutine(StatType type, float amount, float duration)
@@ -516,6 +527,13 @@ public class PlayerController : MonoBehaviour
     
     public void ToggleLuck(bool state) { hasLuck = state; Debug.Log($"Luck: {state}"); }
     public void LockLuck() => isLuckLocked = true;
+
+    public float GetBaseDamage()
+    {
+        if (currentWeapon != null) return currentWeapon.damage;
+        Debug.Log("No weapon equipped, returning unarmed base damage.");
+        return 1f; // Unarmed base damage
+    }
     public void SetLuck(int value)
     {
         if (!isLuckLocked) { hasLuck = true; luck = value; }
