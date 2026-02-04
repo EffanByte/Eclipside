@@ -114,4 +114,10 @@ public class GameDatabase : ScriptableObject
         }
         return subset[Random.Range(0, subset.Count)];
     }
+        public ItemData GetRandomItem(ItemRarity rarity)
+    {
+         var subset = allWeapons.Cast<ItemData>().Where(w => w.rarity == rarity).ToList();
+        subset.AddRange(allConsumables.Where(c => c.rarity == rarity));
+        return subset[Random.Range(0, subset.Count)];
+    }
 }

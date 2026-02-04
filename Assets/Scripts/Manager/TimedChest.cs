@@ -12,7 +12,7 @@ public class TimedChest : MonoBehaviour, IInteractable
 
     [Header("Reward Spawning")]
     [SerializeField] private GameObject lootPedestalPrefab; // The prefab with LootPedestal script
-    private int? keyCount = 1;
+    private int keyCount = 1;
     private static int globalKeyCount;
 
 
@@ -33,7 +33,7 @@ public class TimedChest : MonoBehaviour, IInteractable
     {
         // Start the countdown immediately upon spawning
         StartCoroutine(DespawnRoutine());
-        if (keyCount != null)
+        if (keyCount == 0)
         {
             keyCount = globalKeyCount;
         }
@@ -43,9 +43,9 @@ public class TimedChest : MonoBehaviour, IInteractable
     {
         if (isOpened) return;
         Debug.Log(keyCount);
-        if (PlayerController.Instance.DeductCurrency(CurrencyType.Key, 1))
+        if (PlayerController.Instance.DeductCurrency(CurrencyType.Key, keyCount))
         {
-            OpenChest(player);
+            OpenChest();
         }
     }
 
@@ -54,11 +54,10 @@ public class TimedChest : MonoBehaviour, IInteractable
         return isOpened ? "" : "Open Chest";
     }
 
-     private void OpenChest(PlayerController player)
+    public void OpenChest()
     {
         isOpened = true;
         
-        // 1. Determine Loot (Same Logic as before)
         float roll = Random.value;
         ItemData reward = null;
 
