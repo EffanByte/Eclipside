@@ -43,10 +43,9 @@ public class TimedChest : MonoBehaviour, IInteractable
     {
         if (isOpened) return;
         Debug.Log(keyCount);
-        if (player.keys > 0)
+        if (PlayerController.Instance.DeductCurrency(CurrencyType.Key, 1))
         {
-        PlayerController.Instance.AddCurrency(CurrencyType.Key, -1);
-        OpenChest(player);
+            OpenChest(player);
         }
     }
 

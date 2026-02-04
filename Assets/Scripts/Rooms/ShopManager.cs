@@ -114,11 +114,9 @@ private void RollNewItems()
         }
 
         int cost = GetRefreshCost();
-        PlayerController player = PlayerController.Instance;
     
-        if (player.rupees >= cost)
+        if (PlayerController.Instance.DeductCurrency(CurrencyType.Rupee, cost))
         {
-            PlayerController.Instance.AddCurrency(CurrencyType.Rupee, -cost);
             currentRefreshCount++;
             RollNewItems();
             return true;
@@ -167,24 +165,21 @@ private void RollNewItems()
         if (item == null) return false;
 
         int price = GetItemPrice(item);
-        PlayerController player = PlayerController.Instance;
 
-        if (player.rupees >= price)
+        if (PlayerController.Instance.DeductCurrency(CurrencyType.Rupee, price))
         {
-            // 1. Deduct Money
-            PlayerController.Instance.AddCurrency(CurrencyType.Rupee, -price);
-            
+
             // NOTE: Ideally, Key and XP are just ConsumableItems with "EffectAddKey" or "EffectAddXP"
             // But if you handle them specially:
             if (item is CurrencyItem currencyItem) 
             {
                 Debug.Log("Bought key");
-                player.AddCurrency(currencyItem.currencyType, currencyItem.amount);
+                PlayerController.Instance.AddCurrency(currencyItem.currencyType, currencyItem.amount);
             }
             else
             {
                 // Try add to inventory
-                player.GetComponent<InventoryManager>().AddItem(item);
+                PlayerController.Instance.GetComponent<InventoryManager>().AddItem(item);
             }
 
             // 3. Finalize Transaction

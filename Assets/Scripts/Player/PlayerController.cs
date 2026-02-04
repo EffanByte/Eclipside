@@ -548,5 +548,38 @@ public class PlayerController : MonoBehaviour
         onCurrencyUpdate?.Invoke();
     }
 
+    public bool DeductCurrency(CurrencyType type, int amount)
+    {
+        switch (type) {
+            case CurrencyType.Rupee:
+                if (rupees - amount >= 0)
+                {
+                    rupees -= amount;
+                    Debug.Log("Money deducted by" + amount);
+                    onCurrencyUpdate?.Invoke();
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Not enough Rupees!");
+                    return false;
+                }
+            case CurrencyType.Key:
+                if (keys - amount >= 0)
+                {
+                    keys -= amount;
+                    Debug.Log("Keys deducted by" + amount);
+                    onCurrencyUpdate?.Invoke();
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Not enough Keys!");
+                    return false;
+                }
+            default:
+                return false;
+        }
+    }
     public void PlayerKilled() => OnPlayerDeath?.Invoke();
 }

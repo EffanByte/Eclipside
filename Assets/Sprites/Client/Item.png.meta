@@ -5062,7 +5062,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_173
+      name: Sanctuary of Fortune
       rect:
         serializedVersion: 2
         x: 368
@@ -5153,7 +5153,7 @@ TextureImporter:
       name: The Roguelike Remastered 1-6-10 Alpha_177
       rect:
         serializedVersion: 2
-        x: 492
+        x: 491
         y: 834
         width: 34
         height: 32
@@ -5524,7 +5524,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wishing Well
+      name: Well
       rect:
         serializedVersion: 2
         x: 84
@@ -5546,7 +5546,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_196
+      name: Wishing Well
       rect:
         serializedVersion: 2
         x: 108
@@ -12396,7 +12396,7 @@ TextureImporter:
         width: 29
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12405,6 +12405,28 @@ TextureImporter:
       bones: []
       spriteID: 95019eef7967ee04f9ffc69ae38fb08b
       internalID: -1619488561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_1
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 802
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88780a90fabd49a4ebbb77ebfc8fe576
+      internalID: 1324159534
       vertices: []
       indices: 
       edges: []
@@ -12441,6 +12463,7 @@ TextureImporter:
       Herbal Tea: 2966215664097128579
       Item: -9191427274821700472
       Item_0: 722583148
+      Item_1: 1324159534
       Large Potion: -2630476455808661796
       Lava: 624604947
       Meteorite Fragment: -4662783380376193228
@@ -12450,6 +12473,7 @@ TextureImporter:
       Quick Berr: 5963437217261167676
       Quick Berry: 4160961982350503567
       Rusty Dagger: 6657205154130263698
+      Sanctuary of Fortune: -537899897414733324
       Shielded Charm: 5303591145849499398
       Small Potion: 4568424741632283291
       Temp Heart: -7854153158142843513
@@ -12534,7 +12558,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_170: 3350971271008194279
       The Roguelike Remastered 1-6-10 Alpha_171: -8677734973304357548
       The Roguelike Remastered 1-6-10 Alpha_172: -3293223616740767072
-      The Roguelike Remastered 1-6-10 Alpha_173: -537899897414733324
       The Roguelike Remastered 1-6-10 Alpha_174: 2231188798189905342
       The Roguelike Remastered 1-6-10 Alpha_175: 5220700398419001413
       The Roguelike Remastered 1-6-10 Alpha_176: -2179196391313431228
@@ -12557,7 +12580,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_192: 5958859904812480813
       The Roguelike Remastered 1-6-10 Alpha_193: 5230046564649569763
       The Roguelike Remastered 1-6-10 Alpha_194: 8050972750218409997
-      The Roguelike Remastered 1-6-10 Alpha_196: 2062398358419877689
       The Roguelike Remastered 1-6-10 Alpha_198: 2074027349399704545
       The Roguelike Remastered 1-6-10 Alpha_199: -7747964517508538923
       The Roguelike Remastered 1-6-10 Alpha_2: -165175803755959475
@@ -12929,8 +12951,9 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_98: -8212567455220813035
       The Roguelike Remastered 1-6-10 Alpha_99: -328499133345843389
       WebShot: -1086452397
+      Well: -9201845394148624483
       Wheel of Fate: 5537794171648992334
-      Wishing Well: -9201845394148624483
+      Wishing Well: 2062398358419877689
       b: 1698198584
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
