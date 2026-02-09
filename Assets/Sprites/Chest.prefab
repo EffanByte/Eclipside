@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8227724429845345141, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  m_Sprite: {fileID: -1425281147272944058, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -160,5 +160,5 @@ MonoBehaviour:
   keyItem: {fileID: 11400000, guid: 930bc78d3a2bb844591eaf29a4f6554d, type: 2}
   lootPedestalPrefab: {fileID: 3320015894038490225, guid: 4d88f7b615a17de4c9c1d223d0db5a17, type: 3}
   disappearTime: 20
-  openVisual: {fileID: 3867480421349359556, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
-  closedVisual: {fileID: 8227724429845345141, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  openVisual: {fileID: -58637066391808477, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  closedVisual: {fileID: -1425281147272944058, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}

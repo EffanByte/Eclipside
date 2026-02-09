@@ -29,7 +29,7 @@ public class GameDirector : MonoBehaviour
     public int CurrentWave { get; private set; } = 1;
     
     private float currentTimerValue; 
-    private float currentDifficulty = 1.0f;
+    public float currentDifficulty = 1.0f;
     
     private WaveManager waveManager;
     private Transform playerTransform;

@@ -54,17 +54,17 @@ public class WaveManager : MonoBehaviour
         {
             if (GameDirector.Instance.IsPaused) yield break;
 
-            SpawnEnemy(difficulty);
+            SpawnEnemy(difficulty, spawnDistance);
             yield return new WaitForSeconds(spawnStagger);
         }
     }
 
-    private void SpawnEnemy(float difficulty)
+    public void SpawnEnemy(float difficulty, float distance = 10f)
     {
         if (playerTransform == null || enemyPrefabs.Count == 0) return;
 
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Vector3 spawnPos = playerTransform.position + (Vector3)(randomDir * spawnDistance);
+        Vector3 spawnPos = playerTransform.position + (Vector3)(randomDir * distance);
 
         GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
         GameObject enemyObj = Instantiate(prefab, spawnPos, Quaternion.identity);
