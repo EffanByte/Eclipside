@@ -9440,10 +9440,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_373
+      name: Wheel of Fate
       rect:
         serializedVersion: 2
-        x: 494
+        x: 493
         y: 258
         width: 30
         height: 30
@@ -9462,11 +9462,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wheel of Fate
+      name: k
       rect:
         serializedVersion: 2
         x: 526
-        y: 258
+        y: 259
         width: 22
         height: 30
       alignment: 0
@@ -12418,7 +12418,7 @@ TextureImporter:
         width: 26
         height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12770,7 +12770,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_370: 6093759705851903119
       The Roguelike Remastered 1-6-10 Alpha_371: 269360557909897195
       The Roguelike Remastered 1-6-10 Alpha_372: -5626320564328737954
-      The Roguelike Remastered 1-6-10 Alpha_373: 783904309890862772
       The Roguelike Remastered 1-6-10 Alpha_377: -8685915463626723603
       The Roguelike Remastered 1-6-10 Alpha_378: -3032103139145270696
       The Roguelike Remastered 1-6-10 Alpha_379: 3825018928867498252
@@ -12952,9 +12951,10 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_99: -328499133345843389
       WebShot: -1086452397
       Well: -9201845394148624483
-      Wheel of Fate: 5537794171648992334
+      Wheel of Fate: 783904309890862772
       Wishing Well: 2062398358419877689
       b: 1698198584
+      k: 5537794171648992334
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
