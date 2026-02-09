@@ -244,7 +244,6 @@ public class PlayerController : MonoBehaviour
 
         // Tick the State Machine
             fsm.OnLogic();
-        Debug.Log(fsm.ActiveStateName);
     }
 
     // ---------------------------------------------------------
