@@ -7,7 +7,7 @@ public class WaveManager : MonoBehaviour
     [Header("Spawn Configuration")]
     [SerializeField] private List<GameObject> enemyPrefabs; 
     [SerializeField] private float spawnDistance = 12f;
-    [SerializeField] private float spawnStagger = 0.5f;
+    public float spawnStagger = 0.5f;
 
     private Transform playerTransform;
     private int enemiesAlive = 0; // Tracks active enemies
