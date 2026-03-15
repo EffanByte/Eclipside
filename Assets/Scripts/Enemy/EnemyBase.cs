@@ -341,7 +341,6 @@ protected virtual void Update()
         StartCoroutine(AttackCooldownRoutine());
         
         isAttackRoutineRunning = false;
-        ChangeState(EnemyState.Chasing);
     }
 
     // Virtual hooks for easy overriding in Ranged vs Melee enemies
@@ -354,8 +353,10 @@ protected virtual void Update()
         if (hit != null) PerformAttack(hit.gameObject);
     }
 
-    protected virtual IEnumerator AttackRecovery() { yield return null; }
-
+    protected virtual IEnumerator AttackRecovery()
+    {
+        ChangeState(EnemyState.Chasing); yield return null; 
+    }
 
     // Change from 'public virtual void' to 'public virtual bool'
     public virtual bool PerformAttack(GameObject target)

@@ -63,11 +63,6 @@ public class Aracnola : EnemyBase
             ChangeState(EnemyState.Attacking);
         }
     }
-
-    protected override IEnumerator AttackWindup()
-    {
-        yield return new WaitForSeconds(stats.attackWindup);
-    }
         protected override void ExecuteAttack()
     {
         if (playerTarget != null && webProjectilePrefab != null)

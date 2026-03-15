@@ -7482,7 +7482,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_284
+      name: Stag
       rect:
         serializedVersion: 2
         x: 12
@@ -12480,6 +12480,7 @@ TextureImporter:
       Shielded Charm: 5303591145849499398
       Shiny Chest: 8227724429845345141
       Small Potion: 4568424741632283291
+      Stag: 7726041002274115625
       Temp Heart: -7854153158142843513
       The Roguelike Remastered 1-6-10 Alpha_1: -6951518270194642895
       The Roguelike Remastered 1-6-10 Alpha_10: -6873789366587834118
@@ -12673,7 +12674,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_281: 647324252880587008
       The Roguelike Remastered 1-6-10 Alpha_282: 4949753876818202966
       The Roguelike Remastered 1-6-10 Alpha_283: 3201200832811214361
-      The Roguelike Remastered 1-6-10 Alpha_284: 7726041002274115625
       The Roguelike Remastered 1-6-10 Alpha_285: -4230594745747732154
       The Roguelike Remastered 1-6-10 Alpha_286: 3463280704480874276
       The Roguelike Remastered 1-6-10 Alpha_287: 907344531991231161

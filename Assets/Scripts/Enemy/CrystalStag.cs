@@ -1,19 +1,28 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using System;
 
 public class CrystalStag : EnemyBase
 {
     [Header("Stag Settings")]
     public bool isElite = false;
-    public float chargeSpeed = 8f;
+    
+    [Tooltip("Speed in world units. (e.g. 8 tiles/sec = 0.8f)")]
+    public float chargeSpeed = 2.4f; 
     public float stunOnCrash = 2.0f;
     
     private bool isCharging = false;
     private Vector2 chargeDirection;
+    private Vector2 initialPosition;
 
     protected override void Start()
     {
         if (isElite) ApplyEliteStats();
+        
+        // Ensure knockback is set in stats so PerformAttack handles it automatically
+        stats.knockbackForce = isElite ? 3.0f : 2.5f; 
+        
         base.Start();
     }
 
@@ -21,8 +30,8 @@ public class CrystalStag : EnemyBase
     {
         stats.maxHealth = 60f;
         stats.damage = 20f; // 2 Hearts charge
-        chargeSpeed = 9.5f;
-        stats.moveSpeed = 3.5f;
+        chargeSpeed = 0.95f; // 9.5 tiles/sec
+        stats.moveSpeed = 3.5f; 
         stats.attackCooldown = 4.5f;
         stunOnCrash = 1.5f;
     }
@@ -33,43 +42,78 @@ public class CrystalStag : EnemyBase
 
         float dist = Vector2.Distance(transform.position, playerTarget.position);
 
-        // "Will not charge if closer than 5 or farther than 14"
-        if (dist >= 5f && dist <= 14f && isAttackReady && !isCharging)
+
+        if (dist >= 0.3*5 && dist <= 0.3*14 && isAttackReady && !isCharging)
         {
-            // Raycast to check Line of Sight (Optional, but in GDD)
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, (playerTarget.position - transform.position).normalized, dist, LayerMask.GetMask("Environment"));
-            if (hit.collider == null)
+            // Raycast to check Line of Sight
+            Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToPlayer, dist, LayerMask.GetMask("Environment"));
+            
+            if (hit.collider == null) // No walls in the way
             {
                 ChangeState(EnemyState.Attacking);
                 return;
             }
         }
-
-        base.LogicChasing(); // Normal patrol movement
     }
 
-    protected override IEnumerator AttackSequence()
+    // ---------------------------------------------------------
+    // THE NEW ATTACK PIPELINE
+    // ---------------------------------------------------------
+
+    protected override IEnumerator AttackWindup()
     {
-        isAttackRoutineRunning = true;
-        rb.linearVelocity = Vector2.zero; 
-
-        // 1. Lock-On (Windup)
+        Debug.Log("Stag Windup!");
+        
+        // 1. Lock-On
         chargeDirection = (playerTarget.position - transform.position).normalized;
-        // Flip to face player
-        spriteRenderer.flipX = chargeDirection.x > 0;
+        
+        // Face player
+        if (movementType == MovementType.Flip)
+            spriteRenderer.flipX = chargeDirection.x > 0;
+        else if (movementType == MovementType.Rotate)
+        {
+            float angle = Mathf.Atan2(chargeDirection.y, chargeDirection.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+        yield return new WaitForSeconds(stats.attackWindup);
+    }
 
-        float windup = isElite ? 0.6f : 0.8f;
-        yield return new WaitForSeconds(windup);
-
-        // 2. Charge
+    protected override void ExecuteAttack()
+    {
+        initialPosition = transform.position;
+        // 2. Execute Charge
         isCharging = true;
         rb.linearVelocity = chargeDirection * chargeSpeed;
 
-        // Failsafe: Stop charge after X seconds if it doesn't hit anything
-        yield return new WaitForSeconds(14f / chargeSpeed); // Max distance 14 / speed
-        
-        if (isCharging) StopCharge(false);
+        StartCoroutine(ChargeTimeoutRoutine());
     }
+    protected override IEnumerator AttackRecovery()
+    {
+        ChangeState(EnemyState.Chasing); yield return null; 
+    }
+
+    private IEnumerator ChargeTimeoutRoutine()
+    {
+        float maxDistanceInWorld = 0.3f * 14f;
+        float timer = 0f;
+        // Loop runs while charging, but stops instantly if StopCharge() is called
+        while (isCharging && Math.Abs(Vector2.Distance(transform.position, initialPosition)) < maxDistanceInWorld)
+        {
+            timer += Time.deltaTime;
+            yield return null; 
+        }
+
+        // If we finished the timer and are STILL charging (didn't hit player or wall)
+        if (isCharging) 
+        {
+            StopCharge(crashedIntoWall: false);
+        }
+    }
+
+    // ---------------------------------------------------------
+    // COLLISION LOGIC
+    // ---------------------------------------------------------
 
     protected override void OnTriggerStay2D(Collider2D collision)
     {
@@ -77,24 +121,20 @@ public class CrystalStag : EnemyBase
 
         if (!isCharging) return;
 
+        // Hit the player while charging
         if (collision.CompareTag("Player"))
         {
             PerformAttack(collision.gameObject);
-            
-            // Push player back
-            PlayerController pc = collision.GetComponent<PlayerController>();
-            if (pc != null) pc.GetComponent<Rigidbody2D>().AddForce(chargeDirection * 5f, ForceMode2D.Impulse);
-            
-            StopCharge(false); // Hit player, no self-stun
+            StopCharge(crashedIntoWall: false); 
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // Hit a solid object on the Environment layer while charging
         if (isCharging && collision.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            // Hit a wall!
-            StopCharge(true);
+            StopCharge(crashedIntoWall: true); 
         }
     }
 
@@ -102,18 +142,16 @@ public class CrystalStag : EnemyBase
     {
         isCharging = false;
         rb.linearVelocity = Vector2.zero;
-        isAttackRoutineRunning = false;
 
         if (crashedIntoWall)
         {
-            Debug.Log("Stag Crashed! Stunned.");
-            ForceStun(stunOnCrash);
-            StartCoroutine(AttackCooldownRoutine()); // CD starts after crash
+            Debug.Log("Stag Crashed into environment! Stunned.");
+            ForceStun(stunOnCrash); 
         }
         else
         {
-            ChangeState(EnemyState.Chasing);
-            StartCoroutine(AttackCooldownRoutine());
+            Debug.Log("Stag finished charge.");
+
         }
     }
 }
