@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Aracnola : EnemyBase
 {
@@ -7,6 +8,10 @@ public class Aracnola : EnemyBase
     public bool isElite = false;
     public GameObject webProjectilePrefab;
     
+    // --- Web Management ---
+    private Queue<GameObject> activeWebs = new Queue<GameObject>();
+    private int maxWebs = 2;
+
     protected override void Start()
     {
         if (isElite) ApplyEliteStats();
@@ -17,8 +22,22 @@ public class Aracnola : EnemyBase
     {
         stats.maxHealth = 45f;
         stats.damage = 7.5f; // 0.75 hearts
-        stats.moveSpeed = 3.0f;
+        stats.moveSpeed = 3.0f; // Remember to multiply by 0.1 if using world speed
         stats.attackCooldown = 2.8f;
+        maxWebs = 3;
+    }
+
+    // Called by the projectile when it hits the ground
+    public void RegisterNewWeb(GameObject webPuddle)
+    {
+        // Enforce the hard limit of webs per Aracnola
+        if (activeWebs.Count >= maxWebs)
+        {
+            GameObject oldestWeb = activeWebs.Dequeue();
+            if (oldestWeb != null) Destroy(oldestWeb);
+        }
+        
+        activeWebs.Enqueue(webPuddle);
     }
 
     protected override void LogicChasing()
@@ -26,51 +45,46 @@ public class Aracnola : EnemyBase
         if (playerTarget == null || statusMgr.HasStatus(StatusType.Freeze)) return;
 
         float dist = Vector2.Distance(transform.position, playerTarget.position);
-
         Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
 
-        // Flee if too close, approach if too far
-        if (dist < 3f) 
-        {
-            MoveTowardsTarget(-dirToPlayer); // Run away
-        }
-        else if (dist > 8f) 
+        if (dist > 0.8f) 
         {
             MoveTowardsTarget(dirToPlayer); // Approach
         }
         else
         {
-            rb.linearVelocity = Vector2.zero; // Hold ground
+            rb.linearVelocity = Vector2.zero; // Hold ground at preferred range
         }
 
         spriteRenderer.flipX = dirToPlayer.x > 0;
 
-        // Attack if in range
-        if (dist <= 9f && isAttackReady && !isAttackRoutineRunning && dist >= 3f)
+        if (dist <= 3f && isAttackReady && !isAttackRoutineRunning && dist >= 0.3f)
         {
             ChangeState(EnemyState.Attacking);
         }
     }
 
-    protected override IEnumerator AttackSequence()
+    protected override IEnumerator AttackWindup()
     {
-        isAttackRoutineRunning = true;
-        rb.linearVelocity = Vector2.zero;
-
-        float windup = isElite ? 0.5f : 0.6f;
-        yield return new WaitForSeconds(windup);
-
+        yield return new WaitForSeconds(stats.attackWindup);
+    }
+        protected override void ExecuteAttack()
+    {
         if (playerTarget != null && webProjectilePrefab != null)
         {
             Vector2 aimDir = (playerTarget.position - transform.position).normalized;
-            GameObject web = Instantiate(webProjectilePrefab, transform.position, Quaternion.identity);
+            GameObject webProj = Instantiate(webProjectilePrefab, transform.position, Quaternion.identity);
             
-            // Add Elite Projectile speed logic here if player is slowed
-        }
+            SpiderWebProjectile webScript = webProj.GetComponent<SpiderWebProjectile>();
+            
+            // Assuming 'isWalking' is public in PlayerController
+            if (isElite && PlayerController.Instance.isWalking) 
+            {
+                stats.projectileSpeed *= 1.20f; 
+            }
 
-        StartCoroutine(AttackCooldownRoutine());
-        isAttackRoutineRunning = false;
-        ChangeState(EnemyState.Chasing);
+            webScript.Setup(this, aimDir, stats.projectileSpeed, stats.damage, isElite); 
+        }
     }
 
     // TWIST: Weakness to Fire
@@ -79,7 +93,7 @@ public class Aracnola : EnemyBase
         if (dmg.element == DamageElement.Fire)
         {
             dmg.amount *= 2f; // Takes double damage
-            StartCoroutine(statusMgr.FlashSpriteRoutine(DamageElement.Fire)); // Visual flair
+            // statusMgr.FlashSpriteRoutine(DamageElement.Fire);
         }
         base.ReceiveDamage(dmg);
     }

@@ -80,6 +80,7 @@ public class EnemyStats
     public float attackCooldown;
     public float knockbackForce; 
     public float projectileSpeed;
+    public float attackWindup;
     
     public DamageElement attackElement;
     public AttackStyle attackStyle;
@@ -261,8 +262,8 @@ protected virtual void Update()
 
         float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
 
-        // 1. Check Attack Range
-        if (distanceToPlayer <= stats.attackRange && isAttackReady)
+        // 1. Check Attack Range Fix 0.1f thing later
+        if (distanceToPlayer <= 0.1f && isAttackReady)
         {
             ChangeState(EnemyState.Attacking);
             return; 
@@ -344,15 +345,17 @@ protected virtual void Update()
     }
 
     // Virtual hooks for easy overriding in Ranged vs Melee enemies
-    protected virtual IEnumerator AttackWindup() { yield return new WaitForSeconds(0.2f); }
-    protected virtual IEnumerator AttackRecovery() { yield return null; }
-    
+    protected virtual IEnumerator AttackWindup() { yield return new WaitForSeconds(stats.attackWindup); }
+
     protected virtual void ExecuteAttack()
     {
         // Default Melee Behavior
         Collider2D hit = Physics2D.OverlapCircle(transform.position, stats.attackRange, LayerMask.GetMask("Player"));
         if (hit != null) PerformAttack(hit.gameObject);
     }
+
+    protected virtual IEnumerator AttackRecovery() { yield return null; }
+
 
     // Change from 'public virtual void' to 'public virtual bool'
     public virtual bool PerformAttack(GameObject target)
@@ -445,7 +448,6 @@ protected virtual void Update()
     public float GetCurrentHealth() => currentHealth;
     public float GetMaxHealth() => stats.maxHealth;
     
-    // ... [Keep your Contact Damage and Stun routines] ...
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         if (stats.dealsContactDamage && isContactReady && collision.CompareTag("Player") && !statusMgr.HasStatus(StatusType.Freeze))

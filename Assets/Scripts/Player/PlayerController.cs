@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     private bool isAttacking = false;       // Locked in attack animation
     private bool dashRequested = false;     // Input buffer
     private bool isAttackPressed = false;   // Input hold
-    private bool isWalking = false;         // Locomotion Toggle
+    public bool isWalking = false;         // Locomotion Toggle
     private bool isDead = false;
 
     // --- Buff State ---

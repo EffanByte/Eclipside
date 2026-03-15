@@ -6712,7 +6712,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_249
+      name: Web Puddle
       rect:
         serializedVersion: 2
         x: 78
@@ -12635,7 +12635,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_246: -9010481853478059886
       The Roguelike Remastered 1-6-10 Alpha_247: -1289249974508976856
       The Roguelike Remastered 1-6-10 Alpha_248: -7222545400421348324
-      The Roguelike Remastered 1-6-10 Alpha_249: -7677770435607880442
       The Roguelike Remastered 1-6-10 Alpha_25: 3294493889763613534
       The Roguelike Remastered 1-6-10 Alpha_250: -3382506536996896348
       The Roguelike Remastered 1-6-10 Alpha_251: -2028993594652372042
@@ -12949,6 +12948,7 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_97: -3680459472759999969
       The Roguelike Remastered 1-6-10 Alpha_98: -8212567455220813035
       The Roguelike Remastered 1-6-10 Alpha_99: -328499133345843389
+      Web Puddle: -7677770435607880442
       WebShot: -1086452397
       Well: -9201845394148624483
       Wheel of Fate: 783904309890862772

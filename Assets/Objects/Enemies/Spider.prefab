@@ -135,20 +135,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    maxHealth: 10
-    moveSpeed: 0.5
+    maxHealth: 30
+    moveSpeed: 0.25
     rupeeReward: 6
+    dealsContactDamage: 1
+    contactDamage: 5
+    contactCooldown: 1
     damage: 2
     attackCooldown: 5
     knockbackForce: 3
     projectileSpeed: 5
+    attackWindup: 0
     attackElement: 0
     attackStyle: 0
+    attackRange: 1.5
+    aggroRadius: 10
+    preferredRangeMin: 0
+    preferredRangeMax: 1.5
   currentState: 0
+  outgoingDamageMultiplier: 1
+  bonusStatusChance: 0
   isAttackReady: 1
-  webPrefab: {fileID: 5787050453614856421, guid: 4f234018a7030964eb888496782e48aa, type: 3}
-  webShootRange: 5
-  webCooldown: 4
+  isAttackRoutineRunning: 0
+  isElite: 0
+  webProjectilePrefab: {fileID: 5787050453614856421, guid: 4f234018a7030964eb888496782e48aa, type: 3}
 --- !u!61 &688719641214363060
 BoxCollider2D:
   m_ObjectHideFlags: 0
