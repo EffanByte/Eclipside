@@ -7,10 +7,10 @@ public class EffectStatBuff : ItemEffect
     public float duration;
     public float amount; // 0.15 for 15%
 
-    public override void Apply(PlayerController player)
+    public override void Apply(PlayerController player, string source)
     {
         // You'll need to add a "ApplyBuff" method to PlayerController
         // that handles coroutines for these stats
-        player.ApplyBuff(type, amount, duration);
+        player.ApplyBuff(source, type, amount, duration);
     }
 }   

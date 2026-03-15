@@ -8,7 +8,7 @@ public class EffectFortuneGamble : ItemEffect
     public int loseAmount = -1; // -1 Heart Container
     private EffectHeal HealthAdded = new EffectHeal { heartsAmount = 10f, isTemporary = false };
     private EffectHeal HealthRemoved = new EffectHeal { heartsAmount = -10f, isTemporary = false };
-    public override void Apply(PlayerController player)
+    public override void Apply(PlayerController player, string source = "Fortune Cookie")
     {
         bool win = Random.value <= winChance;
         if (win)

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityHFSM; // Requires UnityHFSM package
 
 public enum StatType 
@@ -63,6 +64,17 @@ public class PlayerController : MonoBehaviour
     private float baseMovementSpeed; 
     private bool hasLuck = false; 
     private bool isLuckLocked = false;
+
+    // A class to store exactly what a buff did, so we can cleanly reverse it
+    private class ActiveBuff
+    {
+        public StatType Type;
+        public float FlatAmountAdded; // Stores the exact math result to prevent percentage drift
+        public Coroutine TimerCoroutine;
+    }
+
+    private Dictionary<string, ActiveBuff> activeBuffs = new Dictionary<string, ActiveBuff>();  
+
 
     // --- References ---
     private PlayerControls controls; 
@@ -445,51 +457,143 @@ public class PlayerController : MonoBehaviour
         healthComp.ReceiveDamage(finalAmount, dmg.element);
     }
 
-    // --- Buffs / Stats ---
-    public void ApplyBuff(StatType type, float amount, float duration)
+    /// <summary>
+    /// Applies a temporary buff. Automatically removes it after duration.
+    /// </summary>
+    public void ApplyBuff(string buffKey, StatType type, float amount, float duration)
     {
-        StartCoroutine(BuffRoutine(type, amount, duration));
+        ApplyPermanentBuff(buffKey, type, amount);
+
+        // Start the timer to remove it later, and store the Coroutine
+        ActiveBuff buff = activeBuffs[buffKey];
+        buff.TimerCoroutine = StartCoroutine(BuffTimerRoutine(buffKey, duration));
     }
 
-    public void ApplyPermanentBuff(StatType type, float amount)
+    /// <summary>
+    /// Applies a permanent buff. Remains until manually removed.
+    /// </summary>
+    public void ApplyPermanentBuff(string buffKey, StatType type, float amount)
     {
-        switch (type)
+        // 1. If this key already exists, remove the old one first to prevent infinite stacking
+        if (activeBuffs.ContainsKey(buffKey))
         {
-            case StatType.Defense: statusMgr.ChangeDamageMultiplier(-amount); break;
-            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage += currentWeapon.damage * amount; break;
-            case StatType.Speed: movementSpeed += baseMovementSpeed * amount; break;
-            case StatType.AttackSpeed: playerAttackSpeedMultiplier += amount; break;
-        }   
-    }
-    
-
-    private IEnumerator BuffRoutine(StatType type, float amount, float duration)
-    {
-        switch (type)
-        {
-            case StatType.Defense: statusMgr.ChangeDamageMultiplier(-amount); break;
-            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage += currentWeapon.damage * amount; break;
-            case StatType.Speed: movementSpeed += baseMovementSpeed * amount; break;
-            case StatType.AttackSpeed: playerAttackSpeedMultiplier += amount; break;
+            RemoveBuff(buffKey);
         }
 
+        float flatChange = 0f;
+
+        // 2. Calculate exact flat change and apply it
+        switch (type)
+        {
+            case StatType.Defense:
+                flatChange = amount; // Assuming amount is flat (e.g. 0.15)
+                if (statusMgr != null) statusMgr.ChangeDamageMultiplier(-flatChange);
+                break;
+
+            case StatType.BaseDamage:
+                // Note: Modifying ScriptableObjects directly alters the asset!
+                // Best practice: Use a 'currentRunDamage' variable in PlayerController instead.
+                // Assuming you stick with this for now:
+                if (currentWeapon != null)
+                {
+                    flatChange = currentWeapon.damage * amount; 
+                    currentWeapon.damage += flatChange;
+                }
+                break;
+
+            case StatType.Speed:
+                flatChange = baseMovementSpeed * amount;
+                movementSpeed += flatChange;
+                break;
+
+            case StatType.AttackSpeed:
+                flatChange = amount; // Usually flat addition for multipliers
+                playerAttackSpeedMultiplier += flatChange;
+                break;
+
+            case StatType.MaxHealth:
+                flatChange = amount;
+                healthComp.SetMaxHealth(flatChange); // Assuming SetMaxHealth adds to current max
+                break;
+        }
+
+        // 3. Store the buff in the dictionary
+        activeBuffs.Add(buffKey, new ActiveBuff 
+        { 
+            Type = type, 
+            FlatAmountAdded = flatChange, 
+            TimerCoroutine = null 
+        });
+
+        Debug.Log($"[Buffs] Applied '{buffKey}' ({type}): +{flatChange}");
+    }
+
+    /// <summary>
+    /// Manually removes a buff by its Key.
+    /// </summary>
+    public void RemoveBuff(string buffKey)
+    {
+        if (!activeBuffs.TryGetValue(buffKey, out ActiveBuff buff))
+        {
+            return; // Buff doesn't exist
+        }
+
+        // 1. Stop the timer if it's a temporary buff
+        if (buff.TimerCoroutine != null)
+        {
+            StopCoroutine(buff.TimerCoroutine);
+        }
+
+        // 2. Revert the exact flat amount that was added
+        switch (buff.Type)
+        {
+            case StatType.Defense:
+                if (statusMgr != null) statusMgr.ChangeDamageMultiplier(buff.FlatAmountAdded); 
+                break;
+            case StatType.BaseDamage:
+                if (currentWeapon != null) currentWeapon.damage -= buff.FlatAmountAdded;
+                break;
+            case StatType.Speed:
+                movementSpeed -= buff.FlatAmountAdded;
+                break;
+            case StatType.AttackSpeed:
+                playerAttackSpeedMultiplier -= buff.FlatAmountAdded;
+                break;
+            case StatType.MaxHealth:
+                healthComp.SetMaxHealth(-buff.FlatAmountAdded);
+                break;
+        }
+
+        // 3. Remove from tracking
+        activeBuffs.Remove(buffKey);
+        Debug.Log($"[Buffs] Removed '{buffKey}'. Reversed: {buff.FlatAmountAdded}");
+    }
+
+    // ---------------------------------------------------------
+    // INTERNAL COROUTINES
+    // ---------------------------------------------------------
+
+    private IEnumerator BuffTimerRoutine(string buffKey, float duration)
+    {
         yield return new WaitForSeconds(duration);
-
-        switch (type)
-        {
-            case StatType.Defense: statusMgr.ChangeDamageMultiplier(amount); break;
-            case StatType.BaseDamage: if(currentWeapon) currentWeapon.damage -= currentWeapon.damage * amount; break;
-            case StatType.Speed: movementSpeed -= baseMovementSpeed * amount; break;
-            case StatType.AttackSpeed: playerAttackSpeedMultiplier -= amount; break;
-        }
+        
+        // Once time is up, use the central Remove method
+        RemoveBuff(buffKey);
     }
 
-    public void ModifySpeed(float percentageAmount) => movementSpeed += baseMovementSpeed * percentageAmount;
+    // ---------------------------------------------------------
+    // LEGACY HELPERS (Wrappers to keep old code working)
+    // ---------------------------------------------------------
+    
+    public void ModifySpeed(float percentageAmount)
+    {
+        // Generates a random key so it acts like an untracked permanent buff
+        ApplyPermanentBuff("SpeedMod_" + System.Guid.NewGuid().ToString(), StatType.Speed, percentageAmount);
+    }
 
     public void ModifyPlayerStat(StatType statType, float value)
     {
-        if (statType == StatType.MaxHealth) healthComp.SetMaxHealth(value);
-        if (statType == StatType.AttackSpeed) playerAttackSpeedMultiplier += value;
+        ApplyPermanentBuff("StatMod_" + System.Guid.NewGuid().ToString(), statType, value);
     }
 
     public void AddExperience(float amount)

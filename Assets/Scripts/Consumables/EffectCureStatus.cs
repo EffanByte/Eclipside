@@ -5,7 +5,7 @@ public class EffectCureStatus : ItemEffect
 {
     public StatusType statusToRemove; // Select Poison
 
-    public override void Apply(PlayerController player)
+    public override void Apply(PlayerController player, string source)
     {
    //     player.CureStatus(statusToRemove);
     }

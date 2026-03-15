@@ -1,24 +1,35 @@
 using UnityEngine;
 using System.Collections;
+using System;
+
 public class WheelofFate : EventObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool used = false;
+    private string uniqueWheelKey;
+
+    protected void Start()
+    {
+        // 1. Generate a unique key for this specific wheel instance
+        uniqueWheelKey = "WheelOfFate_" + Guid.NewGuid().ToString().Substring(0, 8);
+    }
 
     protected override void PerformEvent(PlayerController player)
     {
-        StartCoroutine(SpinRoutine(transform, 2f)); // Spin for 2 seconds
-        ApplyWheelEffect();
+        if (used) return; // Only allow one spin per wheel
+        used = true;
+
+        // 2. Start the spin. The effect is applied AT THE END of this coroutine.
+        StartCoroutine(SpinRoutine(transform, 2.5f)); 
     }
 
     private IEnumerator SpinRoutine(Transform targetTransform, float duration)
     {
-        // 1. Setup: Remember where we started
         Quaternion startRotation = targetTransform.rotation;
         
-        // 2. Define the Spin: 
-        // We want to rotate 360 degrees * 5 times (1800 degrees total)
-        // adding this to the start ensures we land back at the "Original Angle" visually.
-        Vector3 totalRotationAmount = new Vector3(0, 0, 360f * 5f); 
+        // Let's make it spin 5 times plus a random extra amount so it doesn't 
+        // always look like it lands on the exact same pixel.
+        float extraSpin = UnityEngine.Random.Range(0f, 360f);
+        Vector3 totalRotationAmount = new Vector3(0, 0, (360f * 5f) + extraSpin); 
         
         float elapsedTime = 0f;
 
@@ -26,27 +37,23 @@ public class WheelofFate : EventObject
         {
             elapsedTime += Time.deltaTime;
             
-            // 3. Calculate "t" (0.0 to 1.0)
             float t = elapsedTime / duration;
+            float easeOutT = 1f - Mathf.Pow(1f - t, 3); // Cubic Ease Out
 
-            // 4. Apply "Ease Out Cubic" math
-            // This makes 't' change quickly at first and slowly at the end.
-            // Formula: 1 - (1 - t)^3
-            float easeOutT = 1f - Mathf.Pow(1f - t, 3);
-
-            // 5. Apply the rotation based on the eased time
-            // LerpUnclamped allows us to go beyond 360 easily
             targetTransform.rotation = startRotation * Quaternion.Euler(totalRotationAmount * easeOutT);
 
-            yield return null; // Wait for next frame
+            yield return null;
         }
-        // 6. Finish: Snap exactly back to original rotation to fix any tiny float errors
-        targetTransform.rotation = startRotation;
+        
+        // Final snap
+        targetTransform.rotation = startRotation * Quaternion.Euler(new Vector3(0, 0, extraSpin));
+
+        // 3. NOW APPLY THE EFFECT (Suspense paid off!)
+        ApplyWheelEffect();
     }
 
-    public void ApplyWheelEffect()
+    private void ApplyWheelEffect()
     {
-        // 1. Define possible effects
         string[] effects = new string[]
         {
             "Buff",
@@ -55,28 +62,42 @@ public class WheelofFate : EventObject
             "Poison"
         };
 
-        // 2. Randomly select an effect
-        int randomIndex = Random.Range(0, effects.Length);
+        int randomIndex = UnityEngine.Random.Range(0, effects.Length);
         string selectedEffect = effects[randomIndex];
-        Debug.Log($"Wheel of Fate Result: {selectedEffect}");
+        Debug.Log($"[Wheel of Fate] Spin stopped! Result: {selectedEffect}");
 
-        // 3. Apply the effect to the player
         switch (selectedEffect)
         {
             case "Buff":
-                PlayerController.Instance.ApplyPermanentBuff((StatType)Random.Range(0, System.Enum.GetValues(typeof(StatType)).Length), Random.Range(5, 26)); // Example buff for 10 seconds
+                // Get a random stat (Excluding complex ones like projectileSpeed if they aren't handled well)
+                StatType buffStat = (StatType)UnityEngine.Random.Range(0, 5); 
+                
+                // Buff logic: Usually 10% to 50% (0.1f to 0.5f)
+                float buffAmount = UnityEngine.Random.Range(0.1f, 0.5f);
+                
+                // We use ApplyBuff (Temporary) so it doesn't break the game permanently.
+                // Duration: 30 seconds
+                PlayerController.Instance.ApplyBuff(uniqueWheelKey, buffStat, buffAmount, 30f);
                 break;
+
             case "Debuff":
-                PlayerController.Instance.ApplyPermanentBuff((StatType)Random.Range(0, System.Enum.GetValues(typeof(StatType)).Length), -Random.Range(5, 26)); // Example debuff for 10 seconds
+                StatType debuffStat = (StatType)UnityEngine.Random.Range(0, 5);
+                
+                // Debuff logic: -10% to -30% (-0.1f to -0.3f)
+                float debuffAmount = UnityEngine.Random.Range(0.1f, 0.3f);
+                
+                PlayerController.Instance.ApplyBuff(uniqueWheelKey, debuffStat, -debuffAmount, 30f);
                 break;
+
             case "Hearts":
-                PlayerController.Instance.AddTemporaryHearts(Random.Range(1, 4)); // Example: Add 1-3 temporary hearts
+                // 1 to 3 temporary hearts (10 to 30 HP)
+                int hearts = UnityEngine.Random.Range(1, 4);
+                PlayerController.Instance.AddTemporaryHearts(hearts * 10f);
                 break;
+
             case "Poison":
-                PlayerController.Instance.TryAddStatus(StatusType.Poison); // Example: Apply poison for 5-25 seconds
-                break;
-            case "Nothing Happens":
-                // No action needed
+                // Triggers the StatusManager Poison DoT
+                PlayerController.Instance.TryAddStatus(StatusType.Poison);
                 break;
         }
     }

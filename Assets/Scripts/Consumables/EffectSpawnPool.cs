@@ -16,7 +16,7 @@ public class EffectSpawnPool : ItemEffect
     [Tooltip("Applied once when entering (e.g., Attack Debuff)")]
     public List<ItemEffect> effectsOnEnter = new List<ItemEffect>();
 
-    public override void Apply(PlayerController player)
+    public override void Apply(PlayerController player, string source = "Pool")
     {
 
         // 1. Spawn the pool at player's feet
