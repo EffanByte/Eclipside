@@ -8,7 +8,7 @@ public class WebPuddle : MonoBehaviour
     private float lingeringSlow;
     private float lingeringDuration;
     private float lifeTime;
-
+    private float elapsedTime = 0f;
 
 
     public void Setup(bool isElite)
@@ -34,7 +34,18 @@ public class WebPuddle : MonoBehaviour
 
     private IEnumerator DespawnRoutine()
     {
-        yield return new WaitForSeconds(lifeTime);
+        while (elapsedTime < lifeTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        // If player is still standing on it when it vanishes, release them
+        if (PlayerController.Instance != null)
+        {
+            ReleasePlayer(PlayerController.Instance);
+        }
+        
         Destroy(gameObject);
     }
 
@@ -45,10 +56,21 @@ public class WebPuddle : MonoBehaviour
             if (PlayerController.Instance != null)
             {
                 // Directly modify speed (e.g. subtract 45%)
-                PlayerController.Instance.ApplyBuff(StatType.Speed, slowAmount, lifeTime); 
-                Destroy(gameObject); // Destroy immediately after applying the initial slow
+                PlayerController.Instance.ApplyBuff("Web", StatType.Speed, -slowAmount, lifeTime); 
             }
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && PlayerController.Instance != null)
+        {
+            
+        }
+    }
+
+    private void ReleasePlayer(PlayerController player)
+    {
+        player.RemoveBuff("Web");
+    }
 }
