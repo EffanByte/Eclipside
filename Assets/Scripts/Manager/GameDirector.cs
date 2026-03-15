@@ -145,7 +145,10 @@ public class GameDirector : MonoBehaviour
 
     private void CompleteRun()
     {
+        if (StatisticsManager.Instance != null)
         StatisticsManager.Instance.IncrementStat("RUNS_COMPLETED");
+        else
+        Debug.Log("Statistics Manager not initialized");
     }
     public float GetTimer() => currentTimerValue;
 }

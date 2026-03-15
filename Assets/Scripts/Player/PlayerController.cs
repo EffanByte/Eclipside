@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 rawInputMovement;
     
     // State Flags for FSM
-    private bool isDashing = false;         // Locked in dash
+    public bool isDashing = false;         // Locked in dash
     private bool isAttacking = false;       // Locked in attack animation
     private bool dashRequested = false;     // Input buffer
     private bool isAttackPressed = false;   // Input hold
@@ -580,5 +580,15 @@ public class PlayerController : MonoBehaviour
                 return false;
         }
     }
+
+    public void ApplyPureKnockback(Vector2 sourcePosition, float force)
+    {
+        if (isDashing) return; // i-frames ignore wind/push too
+        
+        Vector2 dir = ((Vector2)transform.position - sourcePosition).normalized;
+        rb.linearVelocity = Vector2.zero; // Reset momentum
+        rb.AddForce(dir * force, ForceMode2D.Impulse);
+    }
+    
     public void PlayerKilled() => OnPlayerDeath?.Invoke();
 }

@@ -3,113 +3,84 @@ using System.Collections;
 
 public class Aracnola : EnemyBase
 {
-    [Header("Aracnola Specifics")]
-    [SerializeField] private GameObject webPrefab;
-    [SerializeField] private float webShootRange = 5f;
-    [SerializeField] private float webCooldown = 4f;
-
-    private float lastWebTime;
-
-    void Awake()
-    {
-         movementType = MovementType.Rotate;
-    }
+    [Header("Aracnola Settings")]
+    public bool isElite = false;
+    public GameObject webProjectilePrefab;
+    
     protected override void Start()
     {
+        if (isElite) ApplyEliteStats();
         base.Start();
     }
 
-    // ----------------------------------------------------------------------
-    // STATE OVERRIDES
-    // ----------------------------------------------------------------------
-
-protected override void LogicChasing()
-{
-    if (playerTarget == null) return;
-
-    // Calculate direction ONCE
-    Vector2 direction = (playerTarget.position - transform.position).normalized;
-
-    // Pass direction to movement
-    MoveTowardsTarget(direction);
-
-        // Rotate to face player
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        
-        // Assumption: Sprite faces RIGHT. If sprite faces UP, use (angle - 90)
-        transform.rotation = Quaternion.AngleAxis(angle + 90 , Vector3.forward);
-                // 3. Special Ability: Shoot Web
-        float distToPlayer = Vector2.Distance(transform.position, playerTarget.position);
-        
-        if (distToPlayer <= webShootRange && Time.time > lastWebTime + webCooldown)
-        {
-            StartCoroutine(ShootWebRoutine());
-        }
-            
-}
-
-
-
-
-    // ----------------------------------------------------------------------
-    // ABILITIES
-    // ----------------------------------------------------------------------
-
-    private IEnumerator ShootWebRoutine()
+    private void ApplyEliteStats()
     {
-        lastWebTime = Time.time;
-        
-        // Optional: Pause movement briefly to shoot
-        float originalSpeed = stats.moveSpeed;
-        stats.moveSpeed = 0; 
-        
-        // Visual feedback (Color flash or specific anim trigger)
-        spriteRenderer.color = Color.cyan; 
-
-        yield return new WaitForSeconds(0.3f); // Wind up
-
-        if (webPrefab != null && playerTarget != null)
-        {
-            GameObject web = Instantiate(webPrefab, transform.position, Quaternion.identity);
-            SpiderWeb script = web.GetComponent<SpiderWeb>();
-            
-            // Calculate direction
-            Vector2 dir = (playerTarget.position - transform.position).normalized;
-            
-            if (script != null) script.Setup(dir, stats.projectileSpeed);
-        }
-
-        // Return to normal
-        spriteRenderer.color = Color.white;
-        stats.moveSpeed = originalSpeed;
+        stats.maxHealth = 45f;
+        stats.damage = 7.5f; // 0.75 hearts
+        stats.moveSpeed = 3.0f;
+        stats.attackCooldown = 2.8f;
     }
 
-    // ----------------------------------------------------------------------
-    // WEAKNESS IMPLEMENTATION
-    // ----------------------------------------------------------------------
+    protected override void LogicChasing()
+    {
+        if (playerTarget == null || statusMgr.HasStatus(StatusType.Freeze)) return;
 
+        float dist = Vector2.Distance(transform.position, playerTarget.position);
+
+        Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
+
+        // Flee if too close, approach if too far
+        if (dist < 3f) 
+        {
+            MoveTowardsTarget(-dirToPlayer); // Run away
+        }
+        else if (dist > 8f) 
+        {
+            MoveTowardsTarget(dirToPlayer); // Approach
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero; // Hold ground
+        }
+
+        spriteRenderer.flipX = dirToPlayer.x > 0;
+
+        // Attack if in range
+        if (dist <= 9f && isAttackReady && !isAttackRoutineRunning && dist >= 3f)
+        {
+            ChangeState(EnemyState.Attacking);
+        }
+    }
+
+    protected override IEnumerator AttackSequence()
+    {
+        isAttackRoutineRunning = true;
+        rb.linearVelocity = Vector2.zero;
+
+        float windup = isElite ? 0.5f : 0.6f;
+        yield return new WaitForSeconds(windup);
+
+        if (playerTarget != null && webProjectilePrefab != null)
+        {
+            Vector2 aimDir = (playerTarget.position - transform.position).normalized;
+            GameObject web = Instantiate(webProjectilePrefab, transform.position, Quaternion.identity);
+            
+            // Add Elite Projectile speed logic here if player is slowed
+        }
+
+        StartCoroutine(AttackCooldownRoutine());
+        isAttackRoutineRunning = false;
+        ChangeState(EnemyState.Chasing);
+    }
+
+    // TWIST: Weakness to Fire
     public override void ReceiveDamage(DamageInfo dmg)
     {
-        // "Weakness: Fire" - Spiders take double damage from fire
         if (dmg.element == DamageElement.Fire)
         {
-            dmg.amount *= 2f; 
-            
-            // Visual flair for critical weakness
-            StartCoroutine(BurnEffect());
-            
-            Debug.Log($"<color=red>Aracnola took Critical Fire Damage: {dmg.amount}</color>");
+            dmg.amount *= 2f; // Takes double damage
+            StartCoroutine(statusMgr.FlashSpriteRoutine(DamageElement.Fire)); // Visual flair
         }
-
-        // Pass the modified damage to the base class to handle HP reduction and Death
         base.ReceiveDamage(dmg);
-    }
-
-    private IEnumerator BurnEffect()
-    {
-        // Simple visual jitter to show panic
-        spriteRenderer.color = new Color(1f, 0.4f, 0f); // Orange/Burn color
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = Color.white;
     }
 }

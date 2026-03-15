@@ -84,6 +84,7 @@ public class WaveManager : MonoBehaviour
         if (enemiesAlive > 0)
         {
             enemiesAlive--;
+            if (StatisticsManager.Instance != null)
             StatisticsManager.Instance.IncrementStat("KILLS_REGULAR");
             if (enemiesAlive <= 0)
             {
