@@ -263,7 +263,7 @@ protected virtual void Update()
         float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
 
         // 1. Check Attack Range Fix 0.1f thing later
-        if (distanceToPlayer <= 0.1f && isAttackReady)
+        if (distanceToPlayer <= stats.attackRange && isAttackReady)
         {
             ChangeState(EnemyState.Attacking);
             return; 
@@ -281,14 +281,7 @@ protected virtual void Update()
     // NEW: Separated to allow Spiders/Fairies to back away if too close
     protected virtual Vector2 CalculateMovementDirection(float distanceToPlayer)
     {
-        Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
-
-        if (distanceToPlayer < stats.preferredRangeMin) 
-            return -dirToPlayer; // Back away
-        else if (distanceToPlayer > stats.preferredRangeMax) 
-            return dirToPlayer; // Approach
-        
-        return Vector2.zero; // Perfect distance, hold ground
+        return (playerTarget.position - transform.position).normalized;
     }
 
         protected virtual void MoveTowardsTarget(Vector2 direction)
