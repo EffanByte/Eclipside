@@ -4,7 +4,7 @@ using System;
 using TMPro;
 public enum EnemyState
 {
-    Idle, Chasing, Attacking, Stunned, Dead
+    Idle, Chasing, Follow, Attacking, Stunned, Dead
 }
 
 public enum DamageElement
@@ -149,15 +149,18 @@ public abstract class EnemyBase : MonoBehaviour
         ChangeState(EnemyState.Chasing);
     }
 
-protected virtual void Update()
+   protected virtual void Update()
     {
         if (currentState == EnemyState.Dead) return;
 
-        // Run the main state machine
         switch (currentState)
         {
             case EnemyState.Idle: LogicIdle(); break;
             case EnemyState.Chasing: LogicChasing(); break;
+            
+            // --- NEW STATE ADDED HERE ---
+            case EnemyState.Follow: LogicFollow(); break; 
+            
             case EnemyState.Attacking: 
                 if (!isAttackRoutineRunning) LogicAttacking(); 
                 break;
@@ -169,6 +172,7 @@ protected virtual void Update()
 
         if (transform.position.y < -30f) Die();
     }
+
 
      protected virtual void CustomUpdateLogic() { }
 
@@ -286,8 +290,6 @@ protected virtual void Update()
 
         protected virtual void MoveTowardsTarget(Vector2 direction)
     {
-        if (currentState != EnemyState.Chasing) return;
-        
         // Include any aura speed buffs in the calculation
         float finalSpeed = stats.moveSpeed * speedMultiplier;
         rb.linearVelocity = direction * finalSpeed;
@@ -304,6 +306,11 @@ protected virtual void Update()
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
+    }
+
+        protected virtual void LogicFollow()
+    {
+        LogicChasing();
     }
 
     // ---------------------------------------------------------
@@ -436,7 +443,8 @@ protected virtual void Update()
     // ---------------------------------------------------------
     // UTILS
     // ---------------------------------------------------------
-    protected void ChangeState(EnemyState newState) { currentState = newState; }
+    protected void ChangeState(EnemyState newState) { currentState = newState;
+    Debug.Log($"{name} changed to {newState} state."); }
     protected virtual void LogicIdle() { if (playerTarget != null) ChangeState(EnemyState.Chasing); }
     protected virtual void LogicStunned() { /* Do nothing */ }   
     public float GetCurrentHealth() => currentHealth;
