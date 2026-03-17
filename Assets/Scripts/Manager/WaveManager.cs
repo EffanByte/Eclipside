@@ -49,8 +49,6 @@ public class WaveManager : MonoBehaviour
         GameDirector.Instance.NotifyWaveStarted();
 
         int count = Mathf.CeilToInt(3 * difficultyMultiplier);
-        Debug.Log($"[WaveManager] Wave {CurrentWave} Started! Enemies: {count}");
-
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
     }
 

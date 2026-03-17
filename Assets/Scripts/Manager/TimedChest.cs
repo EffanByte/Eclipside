@@ -93,8 +93,6 @@ public class TimedChest : MonoBehaviour, IInteractable
 
         if (!isOpened)
         {
-            Debug.Log("Chest disappeared!");
-            // Optional: Poof particle effect
             Destroy(gameObject);
         }
     }
