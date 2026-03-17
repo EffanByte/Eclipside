@@ -102,7 +102,6 @@ public class TimedChest : MonoBehaviour, IInteractable
     private void SetKeyCount(int count)
     {
         keyCount = count;
-        Debug.Log("Key count set to " + keyCount);
     }
     public static void SetGloalKeyCount(int count)
     {

@@ -29,7 +29,7 @@ public class GoldenTrap : EventObject
             }
         for (int i = 0; i < Random.Range(5,10); i++)
         {
-            FindAnyObjectByType<WaveManager>().SpawnEnemy(GameDirector.Instance.currentDifficulty, 5f);
+            FindAnyObjectByType<WaveManager>().SpawnEnemyAroundPlayer(GameDirector.Instance.currentDifficultyVal, 5f);
         }
     }
 }

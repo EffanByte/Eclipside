@@ -1,22 +1,25 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
-
-[RequireComponent(typeof(WaveManager))]
 public class GameDirector : MonoBehaviour
 {
     public static GameDirector Instance { get; private set; }
+
+    [Header("Campaign Settings")]
+    [SerializeField] private List<BiomeData> campaignBiomes;
+    private int currentBiomeIndex = 0;
+
     [Header("Progression Settings")]
     [SerializeField] private float timeBetweenWaves = 30f;
     [SerializeField] private float difficultyScaling = 0.1f; 
-    [SerializeField] private int maxWaveCount = 10;
+    [SerializeField] private int maxWaveCount = 10; // Will be overridden by BiomeData
 
     [Header("Generation & Rewards")]
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
-
-    public int CurrentDifficulty {get; private set;}
+    
     // Events
     public event Action<bool> OnCombatStateChanged; 
     public event Action<int> OnWaveAdvanced; 
@@ -29,7 +32,7 @@ public class GameDirector : MonoBehaviour
     public int CurrentWave { get; private set; } = 1;
     
     private float currentTimerValue; 
-    public float currentDifficulty = 1.0f;
+    public float currentDifficultyVal = 1.0f;
     
     private WaveManager waveManager;
     private Transform playerTransform;
@@ -37,8 +40,7 @@ public class GameDirector : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        waveManager = GetComponent<WaveManager>();
+        waveManager = gameObject.AddComponent<WaveManager>();
     }
 
     private void Start()
@@ -47,9 +49,50 @@ public class GameDirector : MonoBehaviour
         {
             ChallengeManager.Instance.ApplyActiveChallenges();
         }
-        ZoneSpawner.SpawnZones();
-        SpawnChests();
+
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
+        
+        // Start the first Biome
+        if (campaignBiomes != null && campaignBiomes.Count > 0)
+        {
+            LoadBiome(0);
+        }
+        else
+        {
+            Debug.LogError("No Biomes assigned to GameDirector!");
+        }
+    }
+
+    // ---------------------------------------------------------
+    // BIOME LOGIC
+    // ---------------------------------------------------------
+    private void LoadBiome(int index)
+    {
+        if (index >= campaignBiomes.Count)
+        {
+            Debug.Log("YOU WON THE GAME! All Biomes Cleared.");
+            CompleteRun();
+            return;
+        }
+
+        currentBiomeIndex = index;
+        BiomeData currentBiome = campaignBiomes[index];
+
+        Debug.Log($"=== ENTERING BIOME: {currentBiome.biomeName} ===");
+
+        // Setup wave limits based on the biome
+        maxWaveCount = currentBiome.wavesToClear;
+        CurrentWave = 1; // Reset wave counter for new biome
+
+        // Tell WaveManager what enemies to use
+        waveManager.InitializeBiome(currentBiome);
+
+        // Tell ZoneSpawner what environmental objects to use
+        // Note: You need to update ZoneSpawner to accept this parameter
+        ZoneSpawner.SpawnZones();
+        
+        SpawnChests();
+
         StartCoroutine(GameLoopRoutine());
     }
 
@@ -58,12 +101,10 @@ public class GameDirector : MonoBehaviour
     // ---------------------------------------------------------
     private IEnumerator GameLoopRoutine()
     {
-        // 1. Kickoff
         TriggerCurrentWave();
 
         while (CurrentWave <= maxWaveCount)
         {
-            // 2. Timer Logic
             currentTimerValue = timeBetweenWaves;
             
             while (currentTimerValue > 0)
@@ -74,23 +115,22 @@ public class GameDirector : MonoBehaviour
                 yield return null;
             }
 
-            // 3. Time's Up -> Next Wave
             AdvanceWave();
         }
     }
 
     private void TriggerCurrentWave()
     {
-        waveManager.TriggerWave(CurrentWave, currentDifficulty);
+        waveManager.TriggerNextWave(currentDifficultyVal);
         OnWaveAdvanced?.Invoke(CurrentWave);
     }
 
     private void AdvanceWave()
     {
-        if (CurrentWave >= maxWaveCount) return; // Wait for final clear
+        if (CurrentWave >= maxWaveCount) return; 
 
         CurrentWave++;
-        currentDifficulty += difficultyScaling;
+        currentDifficultyVal += difficultyScaling;
         TriggerCurrentWave();
     }
 
@@ -110,45 +150,44 @@ public class GameDirector : MonoBehaviour
         OnCombatStateChanged?.Invoke(false);
         OnWaveAdvanced?.Invoke(CurrentWave);
 
-        // Check Victory Condition
+        // Check Biome Victory Condition
         if (CurrentWave >= maxWaveCount)
         {
-            Debug.Log("LEVEL COMPLETE!");
+            Debug.Log($"BIOME {campaignBiomes[currentBiomeIndex].biomeName} COMPLETE!");
             OnLevelCompleted?.Invoke();
             StopAllCoroutines(); 
+            
+            // Advance to next Biome
+            LoadBiome(currentBiomeIndex + 1);
         }
     }
 
     private void SpawnChests(int count = 3)
     {
-        if (timedChestPrefab)
+        if (timedChestPrefab == null) return;
+        
+        playerTransform = PlayerController.Instance.transform;
+
         for (int i = 0; i < count; i++)
         {
-            playerTransform = PlayerController.Instance.transform;
             Vector2 offset = Random.insideUnitCircle * chestSpawnRadius;
             GameObject chest = Instantiate(timedChestPrefab, playerTransform.position + (Vector3)offset, Quaternion.identity);
+            
             TimedChest chestScript = chest.GetComponent<TimedChest>();
-            chestScript.Setup(1); // not working for some reason
-            Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle * chestSpawnRadius;
-            Instantiate(timedChestPrefab, spawnPos + new Vector2(Random.Range(-8,9), Random.Range(-8,6)), Quaternion.identity);
+            if (chestScript != null) chestScript.Setup(1); 
         }
     }
 
-    public void SetMaxWaveCount(int count)
-    {
-        maxWaveCount = count;
-    }
-    public int GetMaxWaveCount()
-    {
-        return maxWaveCount;
-    }
+    public void SetMaxWaveCount(int count) { maxWaveCount = count; }
+    public int GetMaxWaveCount() { return maxWaveCount; }
 
     private void CompleteRun()
     {
         if (StatisticsManager.Instance != null)
-        StatisticsManager.Instance.IncrementStat("RUNS_COMPLETED");
+            StatisticsManager.Instance.IncrementStat("RUNS_COMPLETED");
         else
-        Debug.Log("Statistics Manager not initialized");
+            Debug.Log("Statistics Manager not initialized");
     }
+
     public float GetTimer() => currentTimerValue;
 }
