@@ -12431,6 +12431,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Toxic Cloud
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 930
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e9c83119602a7f4abcf1d5b65b50606
+      internalID: 149742698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -12948,6 +12970,7 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_97: -3680459472759999969
       The Roguelike Remastered 1-6-10 Alpha_98: -8212567455220813035
       The Roguelike Remastered 1-6-10 Alpha_99: -328499133345843389
+      Toxic Cloud: 149742698
       Web Puddle: -7677770435607880442
       WebShot: -1086452397
       Well: -9201845394148624483

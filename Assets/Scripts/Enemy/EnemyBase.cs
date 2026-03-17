@@ -151,7 +151,7 @@ public abstract class EnemyBase : MonoBehaviour
 
    protected virtual void Update()
     {
-        if (currentState == EnemyState.Dead) return;
+        if (currentState == EnemyState.Dead) Die();
 
         switch (currentState)
         {
@@ -181,7 +181,7 @@ public abstract class EnemyBase : MonoBehaviour
     // ---------------------------------------------------------
     public virtual void ReceiveDamage(DamageInfo dmg)
     {
-        if (currentState == EnemyState.Dead || isInvulnerable) return;
+        if (isInvulnerable) return;
 
         // 1. Calculate Status Multipliers
         float finalDamage = dmg.amount * statusMgr.DamageTakenMultiplier;
@@ -237,8 +237,6 @@ public abstract class EnemyBase : MonoBehaviour
 
     public void ForceStun(float duration)
 {
-    if (currentState == EnemyState.Dead) return;
-    
     // Stop any running attacks
     StopAllCoroutines(); 
     isAttackRoutineRunning = false;
@@ -248,7 +246,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     public virtual void StatusDamage(DamageInfo dmg)
     {
-        if (currentState == EnemyState.Dead || isInvulnerable) return;
+        if (isInvulnerable) return;
 
         float finalDamage = dmg.amount * statusMgr.DamageTakenMultiplier;
         currentHealth -= finalDamage;
@@ -330,7 +328,7 @@ public abstract class EnemyBase : MonoBehaviour
         yield return StartCoroutine(AttackWindup());
 
         // 2. Execution (Melee, Ranged, Dash)
-        if (currentState != EnemyState.Dead && !statusMgr.HasStatus(StatusType.Freeze))
+        if (!statusMgr.HasStatus(StatusType.Freeze))
         {
             ExecuteAttack();
         }
@@ -401,7 +399,6 @@ public abstract class EnemyBase : MonoBehaviour
     // ---------------------------------------------------------
     protected void Die()
     {
-        if (currentState == EnemyState.Dead) return;
         currentState = EnemyState.Dead;
         
         rb.linearVelocity = Vector2.zero;

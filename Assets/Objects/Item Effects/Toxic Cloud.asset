@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9131de5d097f164597f309e318207a8, type: 3}
+  m_Name: Toxic Cloud
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnPool
+  poolPrefab: {fileID: 2191501764816973389, guid: 46a7b10c3ab8b2645bb4e0e7965a789e, type: 3}
+  duration: 3
+  tickRate: 0.1
+  effectsPerSecond:
+  - {fileID: 11400000, guid: e90cda05017922b4fa9484a2705d373d, type: 2}
+  effectsOnEnter: []
