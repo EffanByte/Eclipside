@@ -280,7 +280,6 @@ public abstract class EnemyBase : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
 
-        // 1. Check Attack Range Fix 0.1f thing later
         if (distanceToPlayer <= stats.attackRange && isAttackReady)
         {
             ChangeState(EnemyState.Attacking);
