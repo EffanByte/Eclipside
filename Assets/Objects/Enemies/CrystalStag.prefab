@@ -208,7 +208,7 @@ MonoBehaviour:
     attackElement: 3
     attackStyle: 1
     attackRange: 1.5
-    aggroRadius: 12
+    aggroRadius: 4
     preferredRangeMin: 0
     preferredRangeMax: 1.5
   currentState: 0
@@ -217,5 +217,5 @@ MonoBehaviour:
   isAttackReady: 1
   isAttackRoutineRunning: 0
   isElite: 0
-  chargeSpeed: 8
+  chargeSpeed: 4
   stunOnCrash: 2

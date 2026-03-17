@@ -130,6 +130,23 @@ public abstract class EnemyBase : MonoBehaviour
     public static event Action<EnemyBase> OnEnemyKilled;
     protected Collider2D mainCollider;      
 
+    // --- WANDER STATE TRACKING ---
+    protected float idleTimer = 0f;
+    protected bool isWandering = false;
+    protected Vector2 wanderDirection;
+    
+    [Header("Wander Settings")]
+    [Tooltip("How long the enemy stands still before picking a new direction.")]
+    private float idleWaitTimeMin = 1.0f;
+    private float idleWaitTimeMax = 3.0f;
+    
+    [Tooltip("How long the enemy walks in a chosen direction.")]
+    private float wanderTimeMin = 1.0f;
+    private float wanderTimeMax = 2.0f;
+    
+    [Tooltip("Speed multiplier while wandering (usually slower than chasing).")]
+    private float wanderSpeedMultiplier = 0.5f;
+
     protected virtual void Start()
     {   
         mainCollider = GetComponent<Collider2D>();
@@ -146,7 +163,6 @@ public abstract class EnemyBase : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
         
-        ChangeState(EnemyState.Chasing);
     }
 
    protected virtual void Update()
@@ -442,7 +458,66 @@ public abstract class EnemyBase : MonoBehaviour
     // ---------------------------------------------------------
     protected void ChangeState(EnemyState newState) { currentState = newState;
     Debug.Log($"{name} changed to {newState} state."); }
-    protected virtual void LogicIdle() { if (playerTarget != null) ChangeState(EnemyState.Chasing); }
+protected virtual void LogicIdle() 
+    {
+        // 1. AGGRO CHECK (High Priority)
+        // If player is in range, immediately drop everything and chase.
+        if (playerTarget != null && Vector2.Distance(transform.position, playerTarget.position) <= stats.aggroRadius)
+        {
+            ChangeState(EnemyState.Chasing);
+            return;
+        }
+
+        // 2. WANDER TIMER LOGIC
+        idleTimer -= Time.deltaTime;
+
+        if (idleTimer <= 0f)
+        {
+            // Time to switch states!
+            if (isWandering)
+            {
+                // We were walking. Time to stop and stand still.
+                isWandering = false;
+                rb.linearVelocity = Vector2.zero; // Stop moving
+                
+                // Pick a random time to stand still
+                idleTimer = UnityEngine.Random.Range(idleWaitTimeMin, idleWaitTimeMax);
+            }
+            else
+            {
+                // We were standing still. Time to pick a direction and walk.
+                isWandering = true;
+                
+                // Pick a random direction (Normalized vector)
+                wanderDirection = UnityEngine.Random.insideUnitCircle.normalized;
+                
+                // Pick a random time to walk in this direction
+                idleTimer = UnityEngine.Random.Range(wanderTimeMin, wanderTimeMax);
+            }
+        }
+
+        // 3. EXECUTE WANDER MOVEMENT
+        if (isWandering && !statusMgr.HasStatus(StatusType.Freeze))
+        {
+            // Calculate a slower speed for wandering
+            float currentSpeed = stats.moveSpeed * wanderSpeedMultiplier * speedMultiplier;
+            
+            // Apply confusion if active
+            Vector2 finalDir = statusMgr.HasStatus(StatusType.Confusion) ? -wanderDirection : wanderDirection;
+
+            rb.linearVelocity = finalDir * currentSpeed;
+
+            // Handle visuals (flip or rotate to face wander direction)
+            HandleSpriteRotation(finalDir);
+        }
+        else if (!isWandering)
+        {
+            // Ensure we are fully stopped if not wandering (and not pushed by physics)
+            rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+
     protected virtual void LogicStunned() { /* Do nothing */ }   
     public float GetCurrentHealth() => currentHealth;
     public float GetMaxHealth() => stats.maxHealth;

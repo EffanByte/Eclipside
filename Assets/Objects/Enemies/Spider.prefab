@@ -149,7 +149,7 @@ MonoBehaviour:
     attackElement: 0
     attackStyle: 0
     attackRange: 1.5
-    aggroRadius: 10
+    aggroRadius: 3
     preferredRangeMin: 0
     preferredRangeMax: 1.5
   currentState: 0
