@@ -8956,7 +8956,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_351
+      name: Hook
       rect:
         serializedVersion: 2
         x: 460
@@ -12487,6 +12487,7 @@ TextureImporter:
       Healing Pool: 470842967897012258
       Heart: 6273962568160558567
       Herbal Tea: 2966215664097128579
+      Hook: -1572217609258574163
       Item: -9191427274821700472
       Item_0: 722583148
       Item_1: 1324159534
@@ -12770,7 +12771,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_348: 3981210090233517679
       The Roguelike Remastered 1-6-10 Alpha_35: 6800274535395384918
       The Roguelike Remastered 1-6-10 Alpha_350: 6294531199490127262
-      The Roguelike Remastered 1-6-10 Alpha_351: -1572217609258574163
       The Roguelike Remastered 1-6-10 Alpha_352: 1373537583161181516
       The Roguelike Remastered 1-6-10 Alpha_353: 5081569068832798005
       The Roguelike Remastered 1-6-10 Alpha_355: -3136715094364316802
