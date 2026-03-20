@@ -1850,7 +1850,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_11
+      name: Cactus Crystal
       rect:
         serializedVersion: 2
         x: 210
@@ -12453,6 +12453,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Item_2
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 389
+        width: 19
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10f0657ba1159a64bb7807ef89a6805c
+      internalID: -869744184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -12472,6 +12494,7 @@ TextureImporter:
       Arrow: 6522347442271817505
       Blessed Roots: -7091367089039682177
       Blue Web: 1698198584
+      Cactus Crystal: -671080905205158725
       Chest: -1425281147272944058
       Corrupted Fairy: 2334044290151761632
       Crystal Eye: -684271743979708211
@@ -12491,6 +12514,7 @@ TextureImporter:
       Item: -9191427274821700472
       Item_0: 722583148
       Item_1: 1324159534
+      Item_2: -869744184
       Large Potion: -2630476455808661796
       Lava: 624604947
       Meteorite Fragment: -4662783380376193228
@@ -12522,7 +12546,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_107: -8653229142832152004
       The Roguelike Remastered 1-6-10 Alpha_108: -3852890257304352414
       The Roguelike Remastered 1-6-10 Alpha_109: 3480881971280819192
-      The Roguelike Remastered 1-6-10 Alpha_11: -671080905205158725
       The Roguelike Remastered 1-6-10 Alpha_110: 8423462927940331890
       The Roguelike Remastered 1-6-10 Alpha_111: 1491117856039036006
       The Roguelike Remastered 1-6-10 Alpha_112: -770456083785691809
