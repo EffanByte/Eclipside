@@ -43,7 +43,7 @@ public class CrystalStag : EnemyBase
         float dist = Vector2.Distance(transform.position, playerTarget.position);
 
 
-        if (dist >= 0.3*5 && dist <= 0.3*14 && isAttackReady && !isCharging)
+        if (dist <= 0.3*14 && isAttackReady && !isCharging) // fix hard coded values later
         {
             // Raycast to check Line of Sight
             Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
@@ -55,6 +55,8 @@ public class CrystalStag : EnemyBase
                 return;
             }
         }
+        else
+            ChangeState(EnemyState.Idle);
     }
 
     // ---------------------------------------------------------

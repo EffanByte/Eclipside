@@ -201,6 +201,6 @@ public class WanderingSpore : EnemyBase
 
         // 3. Destroy Self (Bypass normal death logic so it doesn't drop loot twice)
         currentState = EnemyState.Dead;
-        Destroy(gameObject);
+        Die();
     }
 }

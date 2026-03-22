@@ -14,4 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Crystal Catacombs
   wavesToClear: 10
-  commonEnemies: []
+  commonEnemies:
+  - {fileID: 1433850337741783130, guid: 5f45f82053990cb448bb181de432a53f, type: 3}
+  - {fileID: 2315381636569351507, guid: b8afc3f45e2b5284ead73e0c4cedd867, type: 3}
+  - {fileID: 517600912859041221, guid: 7f5be83352933f24eacff09caf58b6b9, type: 3}
+  bossPool:
+  - {fileID: 2315381636569351507, guid: b8afc3f45e2b5284ead73e0c4cedd867, type: 3}

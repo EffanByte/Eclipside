@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
+using Random = UnityEngine.Random;
 
 public class WaveManager : MonoBehaviour
 {
@@ -16,8 +17,11 @@ public class WaveManager : MonoBehaviour
     private int enemiesAlive = 0;
     private bool tookDamageThisWave = false;
 
+    public event Action<int> OnWaveFinished;
+
     // --- Biome Data ---
     private List<GameObject> commonEnemyPool;
+    private GameObject bossPrefab;
     private void Start()
     {
     }
@@ -36,19 +40,30 @@ public class WaveManager : MonoBehaviour
         MaxWaves = currentBiome.wavesToClear;
         CurrentWave = 1; 
         
-        enemiesAlive = 0;
+        enemiesAlive = 0;     
         tookDamageThisWave = false;
+        bossPrefab = currentBiome.bossPool[Random.Range(0, currentBiome.bossPool.Count)];
     }
 
     // ---------------------------------------------------------
     // WAVE EXECUTION (Called by GameDirector when timer hits 0)
     // ---------------------------------------------------------
-    public void TriggerNextWave(float difficultyMultiplier)
+    public void TriggerWave(float difficultyMultiplier)
     {
         // Tell Director we are locking the shop
         GameDirector.Instance.NotifyWaveStarted();
 
-        int count = Mathf.CeilToInt(3 * difficultyMultiplier);
+        int count = 1; // testing
+        if (CurrentWave == MaxWaves)
+        {
+            Debug.Log("<color=magenta>BOSS WAVE TRIGGERED!</color>");
+            // Boss Wave Logic
+            if (bossPrefab != null)
+            {
+                SpawnBoss(difficultyMultiplier); // This will spawn the boss because of the CurrentWave == MaxWaveCount check in SpawnBiomeEnemy
+                return; // Skip spawning regular enemies this wave
+            }
+        }
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
     }
 
@@ -76,7 +91,6 @@ public class WaveManager : MonoBehaviour
 
         prefabToSpawn = commonEnemyPool[Random.Range(0, commonEnemyPool.Count)];
 
-
         GameObject enemyObj = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         enemiesAlive++;
 
@@ -84,6 +98,23 @@ public class WaveManager : MonoBehaviour
         if (enemyScript != null)
         {
              enemyScript.ApplyDifficultyScaling(difficulty); 
+        }
+    }
+
+    public void SpawnBoss(float difficulty)
+    {
+        if (bossPrefab == null) return;
+
+        Vector2 randomDir = Random.insideUnitCircle.normalized;
+        Vector3 spawnPos = (Vector3)(randomDir * spawnDistance);
+
+        GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+        enemiesAlive++;
+
+        EnemyBase bossScript = bossObj.GetComponent<EnemyBase>();
+        if (bossScript != null)
+        {
+            bossScript.ApplyDifficultyScaling(difficulty);
         }
     }
 
@@ -124,7 +155,7 @@ public class WaveManager : MonoBehaviour
         if (enemiesAlive > 0)
         {
             enemiesAlive--;
-            
+            Debug.Log($"Enemy Killed! {enemiesAlive} remaining.");  
             if (StatisticsManager.Instance != null)
                 StatisticsManager.Instance.IncrementStat("KILLS_REGULAR");
                 
@@ -134,12 +165,10 @@ public class WaveManager : MonoBehaviour
                 // Give Perfect Wave Achievement
                 if (!tookDamageThisWave && StatisticsManager.Instance != null)
                     StatisticsManager.Instance.IncrementStat("PERFECT_WAVES");
-
-                // Tell Director to unlock shops and spawn chests
-                GameDirector.Instance.NotifyWaveFinished();
+                CurrentWave++;
+                OnWaveFinished?.Invoke(CurrentWave);
 
                 // Advance our internal counter for the next time Director calls TriggerNextWave
-                CurrentWave++; 
                 tookDamageThisWave = false; 
             }
         }

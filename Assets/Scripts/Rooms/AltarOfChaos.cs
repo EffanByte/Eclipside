@@ -69,7 +69,6 @@ public class AltarOfChaos : EventObject
             PlayerController.Instance.ApplyPermanentBuff(uniqueBuffKey, StatType.BaseDamage, 0.30f); 
             
             isBuffActive = true;
-            waveActivatedOn = GameDirector.Instance.CurrentWave;
             
             Debug.Log($"[Altar] Player gained 30% damage buff! (Key: {uniqueBuffKey})");
         }
@@ -92,16 +91,11 @@ public class AltarOfChaos : EventObject
     }
 
     // Called every time the wave changes
-    private void OnWaveAdvanced(int newWaveNumber)
+    private void OnWaveAdvanced()
     {
         if (isBuffActive)
         {
-            // Check if 1 full wave has passed since we activated it.
-            // If activated on Wave 3, it expires when Wave 4 starts.
-            if (newWaveNumber > waveActivatedOn)
-            {
-                RemoveBuff();
-            }
+            RemoveBuff();
         }
     }
 

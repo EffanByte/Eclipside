@@ -16,20 +16,23 @@ public class GameDirector : MonoBehaviour
     [SerializeField] private float difficultyScaling = 0.1f; 
     [SerializeField] private int maxWaveCount = 10; // Will be overridden by BiomeData
 
+    [Header("Progression Objects")]
+    [Tooltip("The Portal prefab that spawns after the boss dies")]
+    [SerializeField] private GameObject biomePortalPrefab;
+
     [Header("Generation & Rewards")]
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
     
     // Events
     public event Action<bool> OnCombatStateChanged; 
-    public event Action<int> OnWaveAdvanced; 
+    public event Action OnWaveAdvanced; 
     public event Action OnLevelCompleted;
     public event Action OnRunCompleted;
 
     // State
     public bool IsWaveActive { get; private set; } = false;
     public bool IsPaused { get; private set; } = false;
-    public int CurrentWave { get; private set; } = 1;
     
     private float currentTimerValue; 
     public float currentDifficultyVal = 1.0f;
@@ -51,16 +54,16 @@ public class GameDirector : MonoBehaviour
         }
 
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
+        waveManager.OnWaveFinished += WaveFinishedRoutine;
+        OnWaveAdvanced += TriggerWave;
         
         // Start the first Biome
         if (campaignBiomes != null && campaignBiomes.Count > 0)
-        {
             LoadBiome(0);
-        }
         else
-        {
             Debug.LogError("No Biomes assigned to GameDirector!");
-        }
+        
+        
     }
 
     // ---------------------------------------------------------
@@ -80,58 +83,23 @@ public class GameDirector : MonoBehaviour
 
         Debug.Log($"=== ENTERING BIOME: {currentBiome.biomeName} ===");
 
-        // Setup wave limits based on the biome
-        maxWaveCount = currentBiome.wavesToClear;
-        CurrentWave = 1; // Reset wave counter for new biome
-
         // Tell WaveManager what enemies to use
         waveManager.InitializeBiome(currentBiome);
 
-        // Tell ZoneSpawner what environmental objects to use
-        // Note: You need to update ZoneSpawner to accept this parameter
         ZoneSpawner.SpawnZones();
         
         SpawnChests();
-
-        StartCoroutine(GameLoopRoutine());
+        TriggerWave();  
     }
 
     // ---------------------------------------------------------
     // THE GAME LOOP
     // ---------------------------------------------------------
-    private IEnumerator GameLoopRoutine()
+
+
+    private void TriggerWave()
     {
-        TriggerCurrentWave();
-
-        while (CurrentWave <= maxWaveCount)
-        {
-            currentTimerValue = timeBetweenWaves;
-            
-            while (currentTimerValue > 0)
-            {
-                if (IsPaused) { yield return null; continue; }
-
-                currentTimerValue -= Time.deltaTime;
-                yield return null;
-            }
-
-            AdvanceWave();
-        }
-    }
-
-    private void TriggerCurrentWave()
-    {
-        waveManager.TriggerNextWave(currentDifficultyVal);
-        OnWaveAdvanced?.Invoke(CurrentWave);
-    }
-
-    private void AdvanceWave()
-    {
-        if (CurrentWave >= maxWaveCount) return; 
-
-        CurrentWave++;
-        currentDifficultyVal += difficultyScaling;
-        TriggerCurrentWave();
+        waveManager.TriggerWave(currentDifficultyVal);
     }
 
     // ---------------------------------------------------------
@@ -144,20 +112,52 @@ public class GameDirector : MonoBehaviour
         OnCombatStateChanged?.Invoke(true);
     }
 
-    public void NotifyWaveFinished()
+
+     public void WaveFinishedRoutine(int waveCount)
     {
         IsWaveActive = false;
         OnCombatStateChanged?.Invoke(false);
-        OnWaveAdvanced?.Invoke(CurrentWave);
-
-        // Check Biome Victory Condition
-        if (CurrentWave >= maxWaveCount)
+        currentDifficultyVal += difficultyScaling; 
+        if (waveManager.CurrentWave > maxWaveCount)
         {
             Debug.Log($"BIOME {campaignBiomes[currentBiomeIndex].biomeName} COMPLETE!");
             OnLevelCompleted?.Invoke();
             StopAllCoroutines(); 
             
-            // Advance to next Biome
+            SpawnBiomePortal();
+        }
+        else
+            OnWaveAdvanced?.Invoke();
+    }
+
+    private void SpawnBiomePortal()
+    {
+        if (biomePortalPrefab != null && playerTransform != null)
+        {
+            // Spawn the portal a few units away from the player
+            Vector3 spawnPos = playerTransform.position + new Vector3(0, 3f, 0); 
+            Instantiate(biomePortalPrefab, spawnPos, Quaternion.identity);
+        }
+        else
+        {
+            // Failsafe: If no portal prefab is assigned, just auto-advance
+            Debug.LogWarning("No Portal Prefab assigned! Auto-advancing...");
+            AdvanceToNextBiome();
+        }
+    }
+
+    // Called by the BiomePortal.cs script when the player interacts with it
+    public void AdvanceToNextBiome()
+    {
+        // Check if we just beat the final biome
+        if (currentBiomeIndex + 1 >= campaignBiomes.Count)
+        {
+            Debug.Log("VICTORY! All Biomes Cleared!");
+            CompleteRun();
+        }
+        else
+        {
+            // Load the next one
             LoadBiome(currentBiomeIndex + 1);
         }
     }

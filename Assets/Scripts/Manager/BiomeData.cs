@@ -12,5 +12,7 @@ public class BiomeData : ScriptableObject
     [Header("Spawning Pools")]
     [Tooltip("Normal enemies for this biome")]
     public List<GameObject> commonEnemies;
-    
+
+    [Header("Boss Settings")]
+    public List<GameObject> bossPool;    
 }

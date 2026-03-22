@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Whispering Woods
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Whispering Woods
-  wavesToClear: 10
+  wavesToClear: 1
   commonEnemies:
   - {fileID: 3807409212022251595, guid: 83d7ebc8ed79ba0429d073a1dd4593fd, type: 3}
   - {fileID: 3769831212524782158, guid: 75a3987a0aaa43540883ce20e368657c, type: 3}
   - {fileID: 6323778565200181168, guid: 20af5f84bd662f84eb91d349f038ab40, type: 3}
   - {fileID: 1577481346871148489, guid: 2a4d6e730eff8c648ade79e607c8474e, type: 3}
   - {fileID: 7363133592456617040, guid: 4a831d29fab889345a910026fafa2b2f, type: 3}
+  bossPool:
+  - {fileID: 7193334606115073077, guid: 49eebae7824c04b41aa3e0c51a3b92d8, type: 3}
