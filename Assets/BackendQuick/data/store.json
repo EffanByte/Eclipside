@@ -1,0 +1,436 @@
+{
+  "players": {
+    "smoke-test": {
+      "playerId": "smoke-test",
+      "createdAt": 1774309511657,
+      "wallet": {
+        "Gold": 5000,
+        "Orbs": 5000,
+        "Ticket": 3
+      },
+      "gacha": {
+        "totalPullsLifetime": 0,
+        "currentPityCounter": 0,
+        "consecutivePullsNoEpic": 0
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "missionCycles": {
+        "dayIndex": 20535,
+        "weekIndex": 20535,
+        "dailySeed": "a37fc2464a0db8942954d7f4e47b8630482877e3b5344eada7817c7a99bf848b",
+        "weeklySeed": "d95711d5234797dfb6c711a214479c41bb9457647804404be5b6e478c44961a7",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "seed-test": {
+      "playerId": "seed-test",
+      "createdAt": 1774310162333,
+      "wallet": {
+        "Gold": 1234,
+        "Orbs": 55,
+        "Ticket": 7
+      },
+      "gacha": {
+        "totalPullsLifetime": 12,
+        "currentPityCounter": 4,
+        "consecutivePullsNoEpic": 3
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "missionCycles": {
+        "dayIndex": 20535,
+        "weekIndex": 20535,
+        "dailySeed": "8d5371301fea63c5c36e434f3f2a74775546200db4c2721bca337dd9d83fad20",
+        "weeklySeed": "166f196179d7348741ac51c27804afc3dc1288ccbdcc3d1c0cb752403fd853ff",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "gacha-test": {
+      "playerId": "gacha-test",
+      "createdAt": 1774310213772,
+      "wallet": {
+        "Gold": 4600,
+        "Orbs": 5000,
+        "Ticket": 3
+      },
+      "gacha": {
+        "totalPullsLifetime": 1,
+        "currentPityCounter": 1,
+        "consecutivePullsNoEpic": 1
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "missionCycles": {
+        "dayIndex": 20535,
+        "weekIndex": 20535,
+        "dailySeed": "43582644b19a99093062e422d59248642bf5ee68490496940e835efd100a94b9",
+        "weeklySeed": "f8ba228d6a3c5c44abaed51afd173c573efd942c6192d7408816bd2a6d762dc6",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "b49138a9436d42f08db0e3d568bb8a8c": {
+      "playerId": "b49138a9436d42f08db0e3d568bb8a8c",
+      "createdAt": 1774310648492,
+      "wallet": {
+        "Gold": 3700,
+        "Orbs": 50,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 30,
+        "currentPityCounter": 30,
+        "consecutivePullsNoEpic": 3
+      },
+      "inventory": {
+        "weapons": [
+          "luminous_meteorite_epic_reward"
+        ],
+        "characters": [],
+        "consumables": {}
+      },
+      "missionCycles": {
+        "dayIndex": 20536,
+        "weekIndex": 20535,
+        "dailySeed": "e80eeaf56dfbd8b9802b633fe65fe86148b80fb47f819b6f5e9df33397fba5f5",
+        "weeklySeed": "76764db3a3379b3f89cb846b59830bf5939743e27bafa72d29f241b0350b2c36",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 3,
+            "isCompleted": true,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {
+          "CHESTS_OPENED": 4,
+          "KILLS_REGULAR": 2
+        }
+      }
+    },
+    "claim-test": {
+      "playerId": "claim-test",
+      "createdAt": 1774311457914,
+      "wallet": {
+        "Gold": 1220,
+        "Orbs": 10,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 0,
+        "currentPityCounter": 0,
+        "consecutivePullsNoEpic": 0
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "missionCycles": {
+        "dayIndex": 20536,
+        "weekIndex": 20535,
+        "dailySeed": "7a29bfc50dd67ff73b2e4a3d376a2a52a9772569a09f8c27c815086a2bb9ea8a",
+        "weeklySeed": "f74a2b7cf5fbb2927a5d397fcc4d2d7f7adb63a12f0573942621862a3505fa18",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 3,
+            "isCompleted": true,
+            "isClaimed": true
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {
+          "ITEMS_PURCHASED": 3
+        }
+      }
+    }
+  }
+}

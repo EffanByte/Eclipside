@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Luminous Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: 
+  backendBannerId: luminous_meteorite
   currencyType: 4
   singlePullCost: 100
   tenPullCost: 0

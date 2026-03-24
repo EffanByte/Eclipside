@@ -1,16 +1,18 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+
 public class GachaManager : MonoBehaviour
 {
     public static GachaManager Instance { get; private set; }
 
     [Header("Configuration")]
-    [SerializeField] private int pityThreshold = 50; // 50 pulls
-    [SerializeField] private int epicSoftPity = 10;  // 10 pulls
+    [SerializeField] private int pityThreshold = 50;
+    [SerializeField] private int epicSoftPity = 10;
     [SerializeField] private TextMeshPro debugOutput;
+    [SerializeField] private bool useBackend = true;
 
-    // Internal results structure
     public struct PullResult
     {
         public GachaRewardEntry reward;
@@ -24,54 +26,183 @@ public class GachaManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // ---------------------------------------------------------
-    // PUBLIC API
-    // ---------------------------------------------------------
-
     public bool CanAfford(MeteoriteBanner banner, bool isTenPull)
     {
-        var profile = SaveManager.Profile; 
+        var profile = SaveManager.Profile;
         int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
-        
+
         if (banner.currencyType == CurrencyType.Gold) return profile.user_profile.gold >= cost;
         if (banner.currencyType == CurrencyType.Orb) return profile.user_profile.orbs >= cost;
-        
+
         return false;
     }
 
-    public List<PullResult> PerformPull(MeteoriteBanner banner, bool isTenPull)
+    public void PerformPull(MeteoriteBanner banner, bool isTenPull)
     {
-       int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
+        if (banner == null)
+        {
+            return;
+        }
 
-        // --- THE FIX ---
-        // Attempt to charge. If it fails, stop immediately.
-        // This handles loading, checking balance, deducting, and saving internally.
+        if (useBackend)
+        {
+            StartCoroutine(PerformPullBackendRoutine(banner, isTenPull));
+            return;
+        }
+
+        PerformPullLocal(banner, isTenPull);
+    }
+
+    private IEnumerator PerformPullBackendRoutine(MeteoriteBanner banner, bool isTenPull)
+    {
+        if (!CanAfford(banner, isTenPull))
+        {
+            SetDebugOutput("Pull failed: insufficient currency.");
+            yield break;
+        }
+
+        yield return BackendApiClient.InitializePlayer(
+            response => { },
+            error => Debug.LogWarning($"Backend player init failed before gacha pull. {error}"));
+
+        BackendGachaPullResponse backendResponse = null;
+        string backendError = null;
+
+        yield return BackendApiClient.GachaPull(
+            banner.GetBackendBannerId(),
+            isTenPull ? 10 : 1,
+            response => backendResponse = response,
+            error => backendError = error);
+
+        if (backendResponse == null || !backendResponse.ok)
+        {
+            SetDebugOutput(string.IsNullOrWhiteSpace(backendError) ? "Pull failed." : backendError);
+            Debug.LogWarning($"Gacha pull failed. {backendError}");
+            yield break;
+        }
+
+        BackendApiClient.ApplyWalletToProfile(backendResponse.wallet);
+        BackendApiClient.ApplyGachaToProfile(backendResponse.gacha);
+        ApplyServerRewards(backendResponse.results);
+        SaveManager.SaveProfile();
+
+        SetDebugOutput(BuildPullSummary(backendResponse.results));
+    }
+
+    private void ApplyServerRewards(BackendGachaPullResult[] results)
+    {
+        if (results == null)
+        {
+            return;
+        }
+
+        var profile = SaveManager.Profile;
+        foreach (var result in results)
+        {
+            if (result == null || result.reward == null)
+            {
+                continue;
+            }
+
+            var reward = result.reward;
+            switch (reward.type)
+            {
+                case "Weapon":
+                    if (!profile.weapons.unlocked_weapon_ids.Contains(reward.id))
+                    {
+                        profile.weapons.unlocked_weapon_ids.Add(reward.id);
+                    }
+                    break;
+
+                case "Character":
+                    if (!profile.characters.owned_character_ids.Contains(reward.id))
+                    {
+                        profile.characters.owned_character_ids.Add(reward.id);
+                    }
+                    break;
+
+                case "Consumable":
+                    AddConsumableToProfile(profile, reward.id, Mathf.Max(1, reward.amount));
+                    break;
+            }
+        }
+    }
+
+    private void AddConsumableToProfile(SaveFile_Profile profile, string itemId, int amount)
+    {
+        for (int i = 0; i < profile.consumables.stash.Count; i++)
+        {
+            if (profile.consumables.stash[i].item_id == itemId)
+            {
+                InventoryItemEntry updated = profile.consumables.stash[i];
+                updated.count += amount;
+                profile.consumables.stash[i] = updated;
+                return;
+            }
+        }
+
+        profile.consumables.stash.Add(new InventoryItemEntry
+        {
+            item_id = itemId,
+            count = amount
+        });
+    }
+
+    private string BuildPullSummary(BackendGachaPullResult[] results)
+    {
+        if (results == null || results.Length == 0)
+        {
+            return "No rewards returned.";
+        }
+
+        List<string> lines = new List<string>();
+        foreach (var result in results)
+        {
+            if (result == null || result.reward == null)
+            {
+                continue;
+            }
+
+            string rewardName = !string.IsNullOrWhiteSpace(result.reward.id)
+                ? result.reward.id
+                : $"{result.reward.type} x{result.reward.amount}";
+            lines.Add($"Pulled: {rewardName} ({result.rarity})");
+        }
+
+        return string.Join("\n", lines);
+    }
+
+    private void SetDebugOutput(string text)
+    {
+        if (debugOutput != null)
+        {
+            debugOutput.text = text;
+        }
+    }
+
+    private void PerformPullLocal(MeteoriteBanner banner, bool isTenPull)
+    {
+        int cost = isTenPull ? banner.tenPullCost : banner.singlePullCost;
         if (!CurrencyManager.TrySpendCurrency(banner.currencyType, cost))
         {
             Debug.LogError("Pull Failed: Insufficient Currency");
-            return null; 
+            SetDebugOutput("Pull failed: insufficient currency.");
+            return;
         }
 
-        var profile = SaveManager.Profile; 
-
-        // 3. Calculate Results
+        var profile = SaveManager.Profile;
         List<PullResult> results = new List<PullResult>();
         int iterations = isTenPull ? 10 : 1;
 
         for (int i = 0; i < iterations; i++)
         {
-            // Update Trackers
             profile.gacha_state.total_pulls_lifetime++;
             profile.gacha_state.current_pity_counter++;
             profile.gacha_state.consecutive_pulls_no_epic++;
 
-            // Determine Rarity
             GachaRarity selectedRarity = DetermineRarity(banner, profile.gacha_state);
-
-            // Reset counters based on result
             if (selectedRarity == GachaRarity.Mythical)
             {
-                // Soft reset: If fail, pity set to 25. If Success, reset to 0.
                 profile.gacha_state.current_pity_counter = 0;
             }
             if (selectedRarity == GachaRarity.Epic || selectedRarity == GachaRarity.Mythical)
@@ -79,62 +210,49 @@ public class GachaManager : MonoBehaviour
                 profile.gacha_state.consecutive_pulls_no_epic = 0;
             }
 
-            // Pick Item
             GachaRewardEntry item = PickItemFromPool(banner, selectedRarity);
             Debug.Log($"Pulled: {item.idName} ({selectedRarity})");
-            debugOutput.text = $"\nPulled: {item.idName} ({selectedRarity})";
-            // Process Item (Add to inventory / Handle Duplicate)
-            PullResult result = ProcessReward(item, profile);
-            results.Add(result);
+            results.Add(ProcessReward(item, profile));
         }
 
-        // 4. Save Data
         SaveManager.SaveProfile();
-
-        // 5. Return for Animation
-        return results;
+        SetDebugOutput(BuildLocalPullSummary(results));
     }
 
-    // ---------------------------------------------------------
-    // INTERNAL LOGIC
-    // ---------------------------------------------------------
+    private string BuildLocalPullSummary(List<PullResult> results)
+    {
+        if (results == null || results.Count == 0)
+        {
+            return "No rewards returned.";
+        }
+
+        List<string> lines = new List<string>();
+        foreach (var result in results)
+        {
+            if (result.reward != null)
+            {
+                lines.Add($"Pulled: {result.reward.idName}");
+            }
+        }
+        return string.Join("\n", lines);
+    }
 
     private GachaRarity DetermineRarity(MeteoriteBanner banner, GachaState state)
     {
-        // Rule: After 50 pulls, Mythic chance boosted to 50%
         bool hardPityActive = state.current_pity_counter >= pityThreshold;
-        
-        // Rule: Every 10 continuous pulls guarantees Epic (Soft Pity)
-        // Note: The logic implies if we are at 9, the 10th must be Epic or better.
         bool epicPityActive = state.consecutive_pulls_no_epic >= epicSoftPity;
 
         float roll = Random.Range(0f, 100f);
-
-        // 1. Check Mythic
         float mythicChance = hardPityActive ? 50f : banner.probMythic;
         if (roll < mythicChance) return GachaRarity.Mythical;
 
-        // Hard Pity Fail Logic: "If fail, pity counter set to 25"
-        // If we were at 50+, rolled for 50%, and FAILED (landed here), we reset to 25 later?
-        // Actually, if hard pity active and we failed mythic, 
-        // we essentially wasted the "Boosted" roll. We don't reset counter unless we get it?
-        // acc maybe "Soft reset: If fail, pity counter set to 25 (half)."
-        // This implies if we hit 50, didn't get mythic, we drop back to 25.
-        // Handled in the loop logic if needed, but usually pity guarantees eventually.
-
-        // 2. Check Epic
-        float currentRoll = roll - mythicChance; // Shift window
-        
-        // If Epic Pity is active, we force Epic (unless we got Mythic above)
+        float currentRoll = roll - mythicChance;
         if (epicPityActive) return GachaRarity.Epic;
-
         if (currentRoll < banner.probEpic) return GachaRarity.Epic;
 
-        // 3. Check Rare
         currentRoll -= banner.probEpic;
         if (currentRoll < banner.probRare) return GachaRarity.Rare;
 
-        // 4. Common
         return GachaRarity.Common;
     }
 
@@ -162,32 +280,29 @@ public class GachaManager : MonoBehaviour
     {
         PullResult result = new PullResult { reward = item, isDuplicate = false, convertedAmount = 0 };
 
-        // 1. CURRENCY
         if (item.type == RewardType.Gold)
         {
             CurrencyManager.AddCurrency(CurrencyType.Gold, item.amount);
         }
-                if (item.type == RewardType.Orb)
+        if (item.type == RewardType.Orb)
         {
             CurrencyManager.AddCurrency(CurrencyType.Orb, item.amount);
         }
-        // 2. CONSUMABLE
         else if (item.type == RewardType.Consumable)
         {
-            profile.consumables.stash.Add(new InventoryItemEntry { 
-                item_id = item.itemReference.itemName, 
-                count = item.amount 
+            profile.consumables.stash.Add(new InventoryItemEntry
+            {
+                item_id = item.itemReference.itemName,
+                count = item.amount
             });
         }
-        // 3. WEAPON
         else if (item.type == RewardType.Weapon)
         {
-            string weaponID = item.itemReference.name; // Uses WeaponData asset name
+            string weaponID = item.itemReference.name;
             if (profile.weapons.unlocked_weapon_ids.Contains(weaponID))
             {
                 result.isDuplicate = true;
                 result.convertedAmount = item.duplicateConversionAmount;
-                Debug.Log($"Duplicate Weapon: {weaponID}. Converted to {result.convertedAmount}");
                 AddConversionCurrency(profile, item.duplicateConversionType, item.duplicateConversionAmount);
             }
             else
@@ -195,34 +310,24 @@ public class GachaManager : MonoBehaviour
                 profile.weapons.unlocked_weapon_ids.Add(weaponID);
             }
         }
-        // 4. CHARACTER (NEW LOGIC)
         else if (item.type == RewardType.Character)
         {
-            // Use the ID from CharacterData (e.g. "char_knight")
-            string charID = item.characterReference.characterID; 
-
-            // Check Save File for ownership
+            string charID = item.characterReference.characterID;
             if (profile.characters.owned_character_ids.Contains(charID))
             {
-                // DUPLICATE: Convert to currency
                 result.isDuplicate = true;
                 result.convertedAmount = item.duplicateConversionAmount;
                 AddConversionCurrency(profile, item.duplicateConversionType, item.duplicateConversionAmount);
-                
-                Debug.Log($"Duplicate Character: {charID}. Converted to {result.convertedAmount}");
             }
             else
             {
-                // NEW: Unlock it
                 profile.characters.owned_character_ids.Add(charID);
-                Debug.Log($"Unlocked New Character: {charID}");
             }
         }
 
         return result;
     }
 
-    // Helper to keep code clean
     private void AddConversionCurrency(SaveFile_Profile profile, CurrencyType type, int amount)
     {
         if (type == CurrencyType.Gold) CurrencyManager.AddCurrency(CurrencyType.Gold, amount);

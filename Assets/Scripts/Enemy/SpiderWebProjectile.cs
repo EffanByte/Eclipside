@@ -54,6 +54,7 @@ public class SpiderWebProjectile : MonoBehaviour
             // Deal Impact Damage
             DamageInfo info = new DamageInfo(damageAmount, DamageElement.Physical, AttackStyle.Ranged, transform.position, 0f);
             collision.GetComponent<PlayerController>()?.ReceiveDamage(info);
+            SpawnPuddleAndDestroy();
         }
         // If it hits a wall/environment before reaching max distance
         else if (collision.CompareTag("Wall") || collision.gameObject.layer == LayerMask.NameToLayer("Environment"))

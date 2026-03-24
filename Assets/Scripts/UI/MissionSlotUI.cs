@@ -21,18 +21,14 @@ public class MissionSlotUI : MonoBehaviour
     {
         currentEntry = entry;
 
-        // Text
         progressText.text = $"{entry.current_progress} / {entry.target_value}";
-        descriptionText.text = entry.description;
-        // Progress Bar
-        float pct = (float)entry.current_progress / entry.target_value;
+        descriptionText.text = !string.IsNullOrWhiteSpace(staticData.description) ? staticData.description : entry.description;
+
+        float pct = entry.target_value > 0 ? (float)entry.current_progress / entry.target_value : 0f;
         progressBar.value = pct;
 
-        // Rewards
         rewardAmountText.text = staticData.rewardAmount.ToString();
-        // rewardIcon.sprite = ... logic to pick Gold vs Orb sprite
 
-        // State Logic
         bool isComplete = entry.current_progress >= entry.target_value;
         bool isClaimed = entry.is_claimed;
 
@@ -49,16 +45,19 @@ public class MissionSlotUI : MonoBehaviour
         }
         else
         {
-            // In Progress
             claimButton.gameObject.SetActive(true);
-            claimButton.interactable = false; // Greyed out
+            claimButton.interactable = false;
             completedCheckmark.SetActive(false);
         }
     }
 
     public void OnClaimClicked()
     {
+        if (claimButton != null)
+        {
+            claimButton.interactable = false;
+        }
+
         MissionManager.Instance.ClaimMission(currentEntry);
-        // Refresh UI logic (usually handled by parent re-rendering)
     }
 }

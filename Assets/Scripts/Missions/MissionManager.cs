@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,15 +21,23 @@ public class MissionManager : MonoBehaviour
     [SerializeField] private int dailyBonusOrbs = 15;
     [SerializeField] private int weeklyBonusOrbs = 75;
 
-    // Runtime Lookup for Data
-    private Dictionary<string, MissionData> missionDatabase = new Dictionary<string, MissionData>();
+    [Header("Backend")]
+    [SerializeField] private bool useBackend = true;
+    [SerializeField] private float progressFlushDelay = 0.5f;
+
+    private readonly Dictionary<string, MissionData> missionDatabase = new Dictionary<string, MissionData>();
+    private readonly Dictionary<string, int> pendingProgressDeltas = new Dictionary<string, int>();
+
+    private Coroutine progressFlushCoroutine;
+    private bool backendReady;
+
+    public event Action OnMissionStateChanged;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Build Database for fast lookup
         AddToDatabase(easyPool);
         AddToDatabase(mediumPool);
         AddToDatabase(hardPool);
@@ -37,50 +46,301 @@ public class MissionManager : MonoBehaviour
 
     private void Start()
     {
+        if (StatisticsManager.Instance != null)
+        {
+            StatisticsManager.Instance.OnStatChanged += OnStatUpdated;
+        }
+
+        if (useBackend)
+        {
+            StartCoroutine(InitializeFromBackend());
+            return;
+        }
+
         CheckResets();
-        StatisticsManager.Instance.OnStatChanged += OnStatUpdated;
+        NotifyMissionStateChanged();
     }
 
     private void OnDestroy()
     {
         if (StatisticsManager.Instance != null)
+        {
             StatisticsManager.Instance.OnStatChanged -= OnStatUpdated;
+        }
     }
 
-    // ---------------------------------------------------------
-    // 1. RESET LOGIC (UTC TIME)
-    // ---------------------------------------------------------
+    public bool IsUsingBackend() => useBackend;
+
+    private IEnumerator InitializeFromBackend()
+    {
+        bool initSucceeded = false;
+
+        yield return BackendApiClient.InitializePlayer(
+            response =>
+            {
+                initSucceeded = true;
+                if (response != null)
+                {
+                    BackendApiClient.ApplyWalletToProfile(response.wallet);
+                    SaveManager.SaveProfile();
+                }
+            },
+            error =>
+            {
+                Debug.LogWarning($"Backend init failed, falling back to local missions. {error}");
+            });
+
+        if (!initSucceeded)
+        {
+            useBackend = false;
+            CheckResets();
+            NotifyMissionStateChanged();
+            yield break;
+        }
+
+        yield return RefreshMissionStateFromBackend();
+    }
+
+    private IEnumerator RefreshMissionStateFromBackend()
+    {
+        bool requestSucceeded = false;
+
+        yield return BackendApiClient.RequestMissionsState(
+            response =>
+            {
+                requestSucceeded = true;
+                backendReady = true;
+                ApplyBackendMissionState(response);
+            },
+            error =>
+            {
+                Debug.LogWarning($"Mission state sync failed. {error}");
+            });
+
+        if (!requestSucceeded)
+        {
+            backendReady = false;
+        }
+    }
+
+    private void ApplyBackendMissionState(BackendMissionsStateResponse response)
+    {
+        if (response == null)
+        {
+            return;
+        }
+
+        var tracker = SaveManager.Profile.daily_tracker;
+        tracker.daily_reroll_used = response.dailyRerollUsed;
+        tracker.daily_bonus_claimed = response.dailyBonusClaimed;
+        tracker.weekly_bonus_claimed = response.weeklyBonusClaimed;
+        tracker.last_daily_reset_date = response.dayIndex.ToString();
+        tracker.last_weekly_reset_date = response.weekIndex.ToString();
+        RegisterBackendMissionData(response.dailyMissions, MissionDifficulty.Easy);
+        RegisterBackendMissionData(response.weeklyMissions, MissionDifficulty.Weekly);
+        tracker.active_daily_missions = ConvertMissionEntries(response.dailyMissions);
+        tracker.active_weekly_missions = ConvertMissionEntries(response.weeklyMissions);
+
+        BackendApiClient.ApplyWalletToProfile(response.wallet);
+        SaveManager.SaveProfile();
+        NotifyMissionStateChanged();
+    }
+
+    private List<ActiveMissionEntry> ConvertMissionEntries(BackendMissionEntryDto[] entries)
+    {
+        var converted = new List<ActiveMissionEntry>();
+        if (entries == null)
+        {
+            return converted;
+        }
+
+        foreach (var entry in entries)
+        {
+            string description = entry.title;
+            MissionData staticData = GetMissionDataByID(entry.missionId);
+            if (staticData != null && !string.IsNullOrWhiteSpace(staticData.description))
+            {
+                description = staticData.description;
+            }
+
+            converted.Add(new ActiveMissionEntry
+            {
+                mission_id = entry.missionId,
+                description = description,
+                current_progress = entry.currentProgress,
+                target_value = entry.targetValue,
+                is_completed = entry.isCompleted,
+                is_claimed = entry.isClaimed
+            });
+        }
+
+        return converted;
+    }
+
+    private void RegisterBackendMissionData(BackendMissionEntryDto[] entries, MissionDifficulty fallbackDifficulty)
+    {
+        if (entries == null)
+        {
+            return;
+        }
+
+        foreach (var entry in entries)
+        {
+            if (entry == null || string.IsNullOrWhiteSpace(entry.missionId))
+            {
+                continue;
+            }
+
+            if (missionDatabase.TryGetValue(entry.missionId, out MissionData existing))
+            {
+                if (!string.IsNullOrWhiteSpace(entry.title))
+                {
+                    existing.title = entry.title;
+                }
+
+                if (string.IsNullOrWhiteSpace(existing.description))
+                {
+                    existing.description = entry.title;
+                }
+
+                existing.targetValue = entry.targetValue;
+                ApplyBackendRewardToMission(existing, entry.reward);
+                continue;
+            }
+
+            MissionData runtimeMission = ScriptableObject.CreateInstance<MissionData>();
+            runtimeMission.id = entry.missionId;
+            runtimeMission.title = string.IsNullOrWhiteSpace(entry.title) ? entry.missionId : entry.title;
+            runtimeMission.description = runtimeMission.title;
+            runtimeMission.statKey = entry.statKey;
+            runtimeMission.targetValue = entry.targetValue;
+            runtimeMission.difficulty = GuessDifficulty(entry.missionId, fallbackDifficulty);
+            ApplyBackendRewardToMission(runtimeMission, entry.reward);
+            missionDatabase[entry.missionId] = runtimeMission;
+        }
+    }
+
+    private MissionDifficulty GuessDifficulty(string missionId, MissionDifficulty fallbackDifficulty)
+    {
+        if (string.IsNullOrWhiteSpace(missionId))
+        {
+            return fallbackDifficulty;
+        }
+
+        string normalized = missionId.ToLowerInvariant();
+        if (normalized.Contains("weekly")) return MissionDifficulty.Weekly;
+        if (normalized.Contains("hard")) return MissionDifficulty.Hard;
+        if (normalized.Contains("medium")) return MissionDifficulty.Medium;
+        if (normalized.Contains("easy")) return MissionDifficulty.Easy;
+        return fallbackDifficulty;
+    }
+
+    private void ApplyBackendRewardToMission(MissionData mission, BackendReward reward)
+    {
+        if (mission == null || reward == null)
+        {
+            return;
+        }
+
+        mission.rewardAmount = reward.amount;
+        switch (reward.type)
+        {
+            case "Orbs":
+                mission.rewardType = MissionRewardType.Orbs;
+                break;
+            case "Ticket":
+                mission.rewardType = MissionRewardType.Ticket;
+                break;
+            default:
+                mission.rewardType = MissionRewardType.Gold;
+                break;
+        }
+    }
+    private void QueueMissionProgress(string statKey, int amount)
+    {
+        if (string.IsNullOrWhiteSpace(statKey) || amount == 0)
+        {
+            return;
+        }
+
+        if (!pendingProgressDeltas.ContainsKey(statKey))
+        {
+            pendingProgressDeltas[statKey] = 0;
+        }
+
+        pendingProgressDeltas[statKey] += amount;
+
+        if (progressFlushCoroutine == null)
+        {
+            progressFlushCoroutine = StartCoroutine(FlushMissionProgressRoutine());
+        }
+    }
+
+    private IEnumerator FlushMissionProgressRoutine()
+    {
+        yield return new WaitForSeconds(progressFlushDelay);
+
+        float waitTime = 0f;
+        while (useBackend && !backendReady && waitTime < 5f)
+        {
+            yield return new WaitForSeconds(0.25f);
+            waitTime += 0.25f;
+        }
+
+        if (useBackend && !backendReady)
+        {
+            Debug.LogWarning("Skipping backend mission progress flush because the backend is not ready.");
+            progressFlushCoroutine = null;
+            yield break;
+        }
+
+        var batch = new List<KeyValuePair<string, int>>(pendingProgressDeltas);
+        pendingProgressDeltas.Clear();
+
+        foreach (var delta in batch)
+        {
+            yield return BackendApiClient.PostMissionProgress(
+                delta.Key,
+                delta.Value,
+                response => { },
+                error => Debug.LogWarning($"Mission progress sync failed for {delta.Key}. {error}"));
+        }
+
+        yield return RefreshMissionStateFromBackend();
+        progressFlushCoroutine = null;
+
+        if (pendingProgressDeltas.Count > 0)
+        {
+            progressFlushCoroutine = StartCoroutine(FlushMissionProgressRoutine());
+        }
+    }
+
+    private void NotifyMissionStateChanged()
+    {
+        OnMissionStateChanged?.Invoke();
+    }
+
     private void CheckResets()
     {
         var tracker = SaveManager.Profile.daily_tracker;
         DateTime now = DateTime.UtcNow;
         string todayStr = now.ToString("yyyy-MM-dd");
 
-        // --- DAILY RESET ---
-        Debug.Log("Trying daily reset");
-        // commenting out if to test normally
         if (tracker.last_daily_reset_date != todayStr)
         {
-            Debug.Log("Performing Daily Mission Reset...");
             GenerateDailyMissions(tracker);
             tracker.last_daily_reset_date = todayStr;
             tracker.daily_reroll_used = false;
             tracker.daily_bonus_claimed = false;
             SaveManager.SaveProfile();
         }
-        foreach (ActiveMissionEntry entry in tracker.active_daily_missions)
-        {
-            Debug.Log($"Daily Mission: {entry.description}, Progress: {entry.current_progress}/{entry.target_value}, Completed: {entry.is_completed}, Claimed: {entry.is_claimed}");
-        }
-        // --- WEEKLY RESET (Monday) ---
-        // Calculate the date of the most recent Monday
+
         int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
         DateTime lastMonday = now.AddDays(-1 * diff).Date;
         string weekStr = lastMonday.ToString("yyyy-MM-dd");
 
-         if (tracker.last_weekly_reset_date != weekStr)
+        if (tracker.last_weekly_reset_date != weekStr)
         {
-            Debug.Log("Performing Weekly Mission Reset...");
             GenerateWeeklyMissions(tracker);
             tracker.last_weekly_reset_date = weekStr;
             tracker.weekly_bonus_claimed = false;
@@ -88,14 +348,9 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    // ---------------------------------------------------------
-    // 2. GENERATION
-    // ---------------------------------------------------------
     private void GenerateDailyMissions(DailyTracker tracker)
     {
         tracker.active_daily_missions.Clear();
-
-        // Generate 1 Easy, 1 Medium, 1 Hard
         AddMissionToTracker(tracker.active_daily_missions, GetRandomMission(easyPool));
         AddMissionToTracker(tracker.active_daily_missions, GetRandomMission(mediumPool));
         AddMissionToTracker(tracker.active_daily_missions, GetRandomMission(hardPool));
@@ -104,9 +359,6 @@ public class MissionManager : MonoBehaviour
     private void GenerateWeeklyMissions(DailyTracker tracker)
     {
         tracker.active_weekly_missions.Clear();
-        
-        // Generate 1 Weekly (or 5 if you want a full list)
-        // Ensure unique picks if picking multiple
         AddMissionToTracker(tracker.active_weekly_missions, GetRandomMission(weeklyPool));
     }
 
@@ -119,12 +371,8 @@ public class MissionManager : MonoBehaviour
     private void AddMissionToTracker(List<ActiveMissionEntry> list, MissionData data)
     {
         if (data == null) return;
-        
-        // Check if user already has partial progress in Stats (Optional, usually start at 0)
-        // Ideally, missions track *delta* progress since generation.
-        // For simplicity, we reset the progress to 0.
-        
-        ActiveMissionEntry entry = new ActiveMissionEntry
+
+        list.Add(new ActiveMissionEntry
         {
             mission_id = data.id,
             description = data.description,
@@ -132,46 +380,39 @@ public class MissionManager : MonoBehaviour
             current_progress = 0,
             is_completed = false,
             is_claimed = false
-        };
-        list.Add(entry);
+        });
     }
 
-    // ---------------------------------------------------------
-    // 3. PROGRESS TRACKING
-    // ---------------------------------------------------------
-    // ---------------------------------------------------------
-    // 3. PROGRESS TRACKING (Fixed)
-    // ---------------------------------------------------------
     private void OnStatUpdated(string statKey, int totalValue, int amountAdded)
     {
-        // 1. Get the lists
-        var tracker = SaveManager.Profile.daily_tracker;
-        List<ActiveMissionEntry> activeDaily = tracker.active_daily_missions;
-        List<ActiveMissionEntry> activeWeekly = tracker.active_weekly_missions;
-
-        // 2. Update Standard Increments (e.g. Kill 10 Enemies)
-        // We pass the amountAdded (Delta) because Missions track progress per session
-        UpdateMissionList(activeDaily, statKey, amountAdded);
-        UpdateMissionList(activeWeekly, statKey, amountAdded);
-
-        // 3. Handle Special Conditional Logic ("Without Dying")
-        // Case A: "Complete Run Without Dying"
-        if (statKey == "RUNS_COMPLETED")
+        if (useBackend)
         {
-            if (!StatisticsManager.Instance.HasDiedThisRun())
+            QueueMissionProgress(statKey, amountAdded);
+
+            if (statKey == "RUNS_COMPLETED" && StatisticsManager.Instance != null && !StatisticsManager.Instance.HasDiedThisRun())
             {
-                // Trigger the special mission ID (e.g. DAILY_H_NODEATH) linked to "RUN_NO_DEATH" key
-                UpdateMissionList(activeDaily, "RUN_NO_DEATH", 1);
+                QueueMissionProgress("RUN_NO_DEATH", 1);
             }
+
+            if (statKey == "KILLS_MINIBOSS" && StatisticsManager.Instance != null && !StatisticsManager.Instance.HasDiedThisRun())
+            {
+                QueueMissionProgress("MINIBOSS_NO_DEATH", 1);
+            }
+            return;
         }
 
-        // Case B: "Defeat Miniboss Without Dying"
-        if (statKey == "KILLS_MINIBOSS")
+        var tracker = SaveManager.Profile.daily_tracker;
+        UpdateMissionList(tracker.active_daily_missions, statKey, amountAdded);
+        UpdateMissionList(tracker.active_weekly_missions, statKey, amountAdded);
+
+        if (statKey == "RUNS_COMPLETED" && StatisticsManager.Instance != null && !StatisticsManager.Instance.HasDiedThisRun())
         {
-            if (!StatisticsManager.Instance.HasDiedThisRun())
-            {
-                UpdateMissionList(activeDaily, "MINIBOSS_NO_DEATH", 1);
-            }
+            UpdateMissionList(tracker.active_daily_missions, "RUN_NO_DEATH", 1);
+        }
+
+        if (statKey == "KILLS_MINIBOSS" && StatisticsManager.Instance != null && !StatisticsManager.Instance.HasDiedThisRun())
+        {
+            UpdateMissionList(tracker.active_daily_missions, "MINIBOSS_NO_DEATH", 1);
         }
     }
 
@@ -182,100 +423,135 @@ public class MissionManager : MonoBehaviour
         {
             if (entry.is_completed) continue;
 
-            if (missionDatabase.TryGetValue(entry.mission_id, out MissionData data))
+            if (missionDatabase.TryGetValue(entry.mission_id, out MissionData data) && data.statKey == key)
             {
-                if (data.statKey == key)
+                entry.current_progress += amountToAdd;
+                if (entry.current_progress >= entry.target_value)
                 {
-                    entry.current_progress += amountToAdd;
-                    if (entry.current_progress >= entry.target_value)
-                    {
-                        entry.current_progress = entry.target_value;
-                        entry.is_completed = true;
-                        // Show Notification UI: "Mission Complete!"
-                    }
-                    changed = true;
+                    entry.current_progress = entry.target_value;
+                    entry.is_completed = true;
                 }
+                changed = true;
             }
         }
-        
-        if(changed) SaveManager.SaveProfile();
+
+        if (changed)
+        {
+            SaveManager.SaveProfile();
+            NotifyMissionStateChanged();
+        }
     }
 
-    // ---------------------------------------------------------
-    // 4. CLAIMING & REROLL
-    // ---------------------------------------------------------
-    
-    // Call via UI
     public void ClaimMission(ActiveMissionEntry entry)
     {
-        if (!entry.is_completed || entry.is_claimed) return;
-
-        // Anti-Tamper Check (Placeholder)
-        if (!IsServerTimeSynced()) 
+        if (entry == null)
         {
-            Debug.LogError("Cannot claim: Time not synced!");
             return;
         }
+
+        if (useBackend)
+        {
+            StartCoroutine(ClaimMissionBackendRoutine(entry));
+            return;
+        }
+
+        if (!entry.is_completed || entry.is_claimed) return;
 
         if (missionDatabase.TryGetValue(entry.mission_id, out MissionData data))
         {
             entry.is_claimed = true;
-            
-            // Give Reward
-            if (data.rewardType == MissionRewardType.Gold) 
+            if (data.rewardType == MissionRewardType.Gold)
                 CurrencyManager.AddCurrency(CurrencyType.Gold, data.rewardAmount);
-            else if (data.rewardType == MissionRewardType.Orbs) 
+            else if (data.rewardType == MissionRewardType.Orbs)
                 CurrencyManager.AddCurrency(CurrencyType.Orb, data.rewardAmount);
-            // Handle Ticket logic here
-            
+
             CheckDailyBonus();
             SaveManager.SaveProfile();
+            NotifyMissionStateChanged();
+        }
+    }
+
+    private IEnumerator ClaimMissionBackendRoutine(ActiveMissionEntry entry)
+    {
+        bool claimSucceeded = false;
+
+        yield return BackendApiClient.ClaimMission(
+            entry.mission_id,
+            response => claimSucceeded = response != null && response.ok,
+            error => Debug.LogWarning($"Mission claim failed. {error}"));
+
+        if (claimSucceeded)
+        {
+            yield return RefreshMissionStateFromBackend();
         }
     }
 
     public void RerollDailyMission(ActiveMissionEntry entryToSwap)
     {
+        if (entryToSwap == null)
+        {
+            return;
+        }
+
+        if (useBackend)
+        {
+            StartCoroutine(RerollMissionBackendRoutine(entryToSwap));
+            return;
+        }
+
         var tracker = SaveManager.Profile.daily_tracker;
         if (tracker.daily_reroll_used) return;
 
-        // Find the difficulty of the mission we are swapping
         if (missionDatabase.TryGetValue(entryToSwap.mission_id, out MissionData oldData))
         {
             List<MissionData> pool = null;
-            switch(oldData.difficulty)
+            switch (oldData.difficulty)
             {
                 case MissionDifficulty.Easy: pool = easyPool; break;
                 case MissionDifficulty.Medium: pool = mediumPool; break;
                 case MissionDifficulty.Hard: pool = hardPool; break;
             }
 
-            // Pick new one (try to ensure it's different)
             MissionData newMission = GetRandomMission(pool);
             int attempts = 5;
-            while(newMission.id == oldData.id && attempts > 0) 
+            while (newMission != null && newMission.id == oldData.id && attempts > 0)
             {
                 newMission = GetRandomMission(pool);
                 attempts--;
             }
 
-            // Replace in list
             int index = tracker.active_daily_missions.IndexOf(entryToSwap);
-            if(index != -1)
+            if (index != -1 && newMission != null)
             {
-                // Create new entry
-                ActiveMissionEntry newEntry = new ActiveMissionEntry
+                tracker.active_daily_missions[index] = new ActiveMissionEntry
                 {
                     mission_id = newMission.id,
+                    description = newMission.description,
                     target_value = newMission.targetValue,
-                    current_progress = 0
+                    current_progress = 0,
+                    is_completed = false,
+                    is_claimed = false
                 };
-                tracker.active_daily_missions[index] = newEntry;
-                
+
                 tracker.daily_reroll_used = true;
                 SaveManager.SaveProfile();
-                
-                // Update UI
+                NotifyMissionStateChanged();
             }
+        }
+    }
+
+    private IEnumerator RerollMissionBackendRoutine(ActiveMissionEntry entryToSwap)
+    {
+        bool rerollSucceeded = false;
+
+        yield return BackendApiClient.RerollMission(
+            entryToSwap.mission_id,
+            response => rerollSucceeded = response != null && response.ok,
+            error => Debug.LogWarning($"Mission reroll failed. {error}"));
+
+        if (rerollSucceeded)
+        {
+            yield return RefreshMissionStateFromBackend();
         }
     }
 
@@ -287,36 +563,33 @@ public class MissionManager : MonoBehaviour
         bool allDone = tracker.active_daily_missions.All(m => m.is_claimed);
         if (allDone)
         {
-            // Give Bonus
             CurrencyManager.AddCurrency(CurrencyType.Orb, dailyBonusOrbs);
             tracker.daily_bonus_claimed = true;
-            Debug.Log("Daily Bonus Claimed!");
         }
     }
 
-    // --- HELPERS ---
     private void AddToDatabase(List<MissionData> list)
     {
-        foreach (var m in list) 
-        { 
-            if(!missionDatabase.ContainsKey(m.id)) 
-                missionDatabase.Add(m.id, m); 
+        if (list == null)
+        {
+            return;
+        }
+
+        foreach (var mission in list)
+        {
+            if (mission != null && !missionDatabase.ContainsKey(mission.id))
+            {
+                missionDatabase.Add(mission.id, mission);
+            }
         }
     }
 
-    // Cache for fast lookup
     public MissionData GetMissionDataByID(string id)
     {
         if (missionDatabase.ContainsKey(id))
             return missionDatabase[id];
         return null;
     }
-
-
-    private bool IsServerTimeSynced()
-    {
-        // Real implementation: Call an NTP server or PlayFab GetTime
-        // For now, return true
-        return true;
-    }
 }
+
+

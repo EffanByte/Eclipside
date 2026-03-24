@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Runic Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: 
+  backendBannerId: runic_meteorite
   currencyType: 4
   singlePullCost: 100
   tenPullCost: 0

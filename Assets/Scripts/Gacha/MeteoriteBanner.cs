@@ -14,7 +14,7 @@ public class GachaRewardEntry
     [Header("Values")]
     public int amount = 1; // For Currency/Consumables
     public ItemData itemReference; // If Weapon/Consumable
-    public CharacterData characterReference; 
+    public CharacterData characterReference;
 
     [Header("Duplicate Logic")]
     public int duplicateConversionAmount; // e.g. 300
@@ -25,6 +25,7 @@ public class GachaRewardEntry
 public class MeteoriteBanner : ScriptableObject
 {
     public string bannerName; // e.g., "Dusty Meteorite"
+    public string backendBannerId;
     
     [Header("Cost")]
     public CurrencyType currencyType; // Gold or Orbs
@@ -42,4 +43,24 @@ public class MeteoriteBanner : ScriptableObject
     public List<GachaRewardEntry> rarePool;
     public List<GachaRewardEntry> epicPool;
     public List<GachaRewardEntry> mythicPool;
+
+    public string GetBackendBannerId()
+    {
+        if (!string.IsNullOrWhiteSpace(backendBannerId))
+        {
+            return backendBannerId.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(bannerName))
+        {
+            return bannerName.Trim().ToLowerInvariant().Replace(" ", "_");
+        }
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            return name.Trim().ToLowerInvariant().Replace(" ", "_");
+        }
+
+        return "arcane_meteorite";
+    }
 }

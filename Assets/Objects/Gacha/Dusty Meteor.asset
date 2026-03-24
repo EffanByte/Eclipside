@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Dusty Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: Dusty Meteorite
+  backendBannerId: dusty_meteorite
   currencyType: 3
   singlePullCost: 500
   tenPullCost: 0

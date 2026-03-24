@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Radiant Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
   bannerName: Shiny Meteorite
+  backendBannerId: radiant_meteorite
   currencyType: 3
   singlePullCost: 900
   tenPullCost: 0
