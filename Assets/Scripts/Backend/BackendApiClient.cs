@@ -11,16 +11,104 @@ public static class BackendApiClient
 
     public static string BaseUrl => PlayerPrefs.GetString(BaseUrlPlayerPrefKey, DefaultBaseUrl).TrimEnd('/');
 
-    public static string GetOrCreatePlayerId()
+    public static void EnsureLocalProfileIdentity()
     {
         var profile = SaveManager.Profile;
-        if (string.IsNullOrWhiteSpace(profile.user_profile.user_id))
+        var user = profile.user_profile;
+        bool changed = false;
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        string stableId = !string.IsNullOrWhiteSpace(user.device_profile_id)
+            ? user.device_profile_id
+            : user.user_id;
+
+        if (string.IsNullOrWhiteSpace(stableId))
         {
-            profile.user_profile.user_id = Guid.NewGuid().ToString("N");
-            SaveManager.SaveProfile();
+            stableId = Guid.NewGuid().ToString("N");
+            changed = true;
         }
 
-        return profile.user_profile.user_id;
+        if (user.user_id != stableId)
+        {
+            user.user_id = stableId;
+            changed = true;
+        }
+
+        if (user.device_profile_id != stableId)
+        {
+            user.device_profile_id = stableId;
+            changed = true;
+        }
+
+        if (user.date_created <= 0)
+        {
+            user.date_created = now;
+            changed = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(user.username))
+        {
+            user.username = $"Guest-{stableId.Substring(0, Math.Min(8, stableId.Length))}";
+            changed = true;
+        }
+
+        if (user.last_login_timestamp <= 0)
+        {
+            user.last_login_timestamp = now;
+            changed = true;
+        }
+
+        if (changed)
+        {
+            SaveManager.SaveProfile();
+        }
+    }
+
+    public static string GetOrCreatePlayerId()
+    {
+        EnsureLocalProfileIdentity();
+        return SaveManager.Profile.user_profile.user_id;
+    }
+
+    public static void MarkProfileDirty()
+    {
+        EnsureLocalProfileIdentity();
+        SaveManager.Profile.user_profile.has_pending_sync = true;
+        SaveManager.SaveProfile();
+    }
+
+    public static void ClearPendingSyncFlag()
+    {
+        SaveManager.Profile.user_profile.has_pending_sync = false;
+        SaveManager.SaveProfile();
+    }
+
+    public static void ResetToFreshGuestProfile()
+    {
+        SaveManager.ReplaceProfile(new SaveFile_Profile());
+        EnsureLocalProfileIdentity();
+
+        var user = SaveManager.Profile.user_profile;
+        user.remote_profile_id = string.Empty;
+        user.account_id = string.Empty;
+        user.account_email = string.Empty;
+        user.is_guest = true;
+        user.last_sync_unix = 0;
+        user.last_synced_profile_version = 0;
+        user.has_pending_sync = false;
+        SaveManager.SaveProfile();
+    }
+
+    public static string GetLocalAccountSummary()
+    {
+        EnsureLocalProfileIdentity();
+
+        var user = SaveManager.Profile.user_profile;
+        string mode = string.IsNullOrWhiteSpace(user.account_id) ? "Guest" : "Account";
+        string email = string.IsNullOrWhiteSpace(user.account_email) ? "none" : user.account_email;
+        string remote = string.IsNullOrWhiteSpace(user.remote_profile_id) ? "none" : user.remote_profile_id;
+
+        return $"Mode: {mode}\nUserId: {user.user_id}\nDeviceId: {user.device_profile_id}\nAccountId: {user.account_id}\nEmail: {email}\nRemoteProfileId: {remote}\nProfileVersion: {user.last_synced_profile_version}\nPendingSync: {user.has_pending_sync}";
     }
 
     public static void ApplyWalletToProfile(BackendWalletState wallet)
@@ -49,8 +137,139 @@ public static class BackendApiClient
         profile.gacha_state.consecutive_pulls_no_epic = gacha.consecutivePullsNoEpic;
     }
 
+    private static void ApplyProfileState(
+        string playerId,
+        string deviceProfileId,
+        string remoteProfileId,
+        string accountId,
+        string displayName,
+        bool isGuest,
+        int profileVersion,
+        long serverUnixTime,
+        BackendProfileSyncableData profileData,
+        BackendWalletState wallet,
+        BackendGachaState gacha)
+    {
+        EnsureLocalProfileIdentity();
+
+        var profile = SaveManager.Profile;
+        var user = profile.user_profile;
+
+        if (!string.IsNullOrWhiteSpace(playerId))
+        {
+            user.user_id = playerId;
+        }
+
+        if (string.IsNullOrWhiteSpace(user.device_profile_id) && !string.IsNullOrWhiteSpace(deviceProfileId))
+        {
+            user.device_profile_id = deviceProfileId;
+        }
+
+        user.remote_profile_id = remoteProfileId;
+        user.account_id = accountId;
+        user.is_guest = isGuest;
+        user.last_sync_unix = serverUnixTime;
+        user.last_synced_profile_version = profileVersion;
+        user.has_pending_sync = false;
+
+        if (!string.IsNullOrWhiteSpace(displayName))
+        {
+            user.username = displayName;
+        }
+
+        if (profileData != null)
+        {
+            profile.user_profile.username = string.IsNullOrWhiteSpace(profileData.username)
+                ? profile.user_profile.username
+                : profileData.username;
+            profile.monthly_pass = profileData.monthlyPass ?? profile.monthly_pass;
+            profile.characters = profileData.characters ?? profile.characters;
+            profile.weapons = profileData.weapons ?? profile.weapons;
+            profile.consumables = profileData.consumables ?? profile.consumables;
+            profile.progression = profileData.progression ?? profile.progression;
+        }
+
+        ApplyWalletToProfile(wallet);
+        ApplyGachaToProfile(gacha);
+        SaveManager.SaveProfile();
+    }
+
+    public static BackendProfileSyncableData BuildSyncableProfileData()
+    {
+        var profile = SaveManager.Profile;
+        return new BackendProfileSyncableData
+        {
+            username = profile.user_profile.username,
+            monthlyPass = profile.monthly_pass,
+            characters = profile.characters,
+            weapons = profile.weapons,
+            consumables = profile.consumables,
+            progression = profile.progression
+        };
+    }
+
+    public static void ApplySyncedProfile(BackendProfileResponse response)
+    {
+        if (response == null)
+        {
+            return;
+        }
+
+        ApplyProfileState(
+            response.playerId,
+            response.deviceProfileId,
+            response.remoteProfileId,
+            response.accountId,
+            response.displayName,
+            response.isGuest,
+            response.profileVersion,
+            response.serverUnixTime,
+            response.profile,
+            response.wallet,
+            response.gacha);
+    }
+
+    public static void ApplyAccountAuthResponse(BackendAccountAuthResponse response)
+    {
+        if (response == null)
+        {
+            return;
+        }
+
+        if (response.account != null)
+        {
+            var user = SaveManager.Profile.user_profile;
+            user.account_id = response.account.accountId;
+            user.account_email = response.account.email;
+            if (!string.IsNullOrWhiteSpace(response.account.displayName))
+            {
+                user.username = response.account.displayName;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.playerId) || response.profile != null || response.wallet != null || response.gacha != null)
+        {
+            ApplyProfileState(
+                response.playerId,
+                response.deviceProfileId,
+                response.remoteProfileId,
+                !string.IsNullOrWhiteSpace(response.accountId) ? response.accountId : response.account?.accountId,
+                !string.IsNullOrWhiteSpace(response.displayName) ? response.displayName : response.account?.displayName,
+                response.isGuest,
+                response.profileVersion,
+                response.serverUnixTime,
+                response.profile,
+                response.wallet,
+                response.gacha);
+            return;
+        }
+
+        SaveManager.SaveProfile();
+    }
+
     public static IEnumerator InitializePlayer(Action<BackendInitResponse> onSuccess, Action<string> onError)
     {
+        EnsureLocalProfileIdentity();
         var profile = SaveManager.Profile;
         var request = new BackendInitRequest
         {
@@ -70,6 +289,101 @@ public static class BackendApiClient
         };
 
         yield return PostJson("/player/init", request, onSuccess, onError);
+    }
+
+    public static IEnumerator BootstrapProfile(Action<BackendProfileResponse> onSuccess, Action<string> onError)
+    {
+        EnsureLocalProfileIdentity();
+
+        var profile = SaveManager.Profile;
+        var request = new BackendProfileBootstrapRequest
+        {
+            playerId = GetOrCreatePlayerId(),
+            deviceProfileId = profile.user_profile.device_profile_id,
+            accountId = profile.user_profile.account_id,
+            displayName = profile.user_profile.username,
+            lastKnownProfileVersion = profile.user_profile.last_synced_profile_version,
+            seedWallet = new BackendWalletState
+            {
+                Gold = profile.user_profile.gold,
+                Orbs = profile.user_profile.orbs,
+                Ticket = profile.user_profile.arena_tickets
+            },
+            seedGacha = new BackendGachaState
+            {
+                totalPullsLifetime = profile.gacha_state.total_pulls_lifetime,
+                currentPityCounter = profile.gacha_state.current_pity_counter,
+                consecutivePullsNoEpic = profile.gacha_state.consecutive_pulls_no_epic
+            },
+            profile = BuildSyncableProfileData()
+        };
+
+        yield return PostJson("/profile/bootstrap", request, onSuccess, onError);
+    }
+
+    public static IEnumerator SyncProfile(bool pushLocalChanges, Action<BackendProfileResponse> onSuccess, Action<string> onError)
+    {
+        EnsureLocalProfileIdentity();
+
+        var profile = SaveManager.Profile;
+        var request = new BackendProfileSyncRequest
+        {
+            playerId = GetOrCreatePlayerId(),
+            deviceProfileId = profile.user_profile.device_profile_id,
+            accountId = profile.user_profile.account_id,
+            displayName = profile.user_profile.username,
+            lastKnownProfileVersion = profile.user_profile.last_synced_profile_version,
+            pushLocalChanges = pushLocalChanges,
+            profile = pushLocalChanges ? BuildSyncableProfileData() : null
+        };
+
+        yield return PostJson("/profile/sync", request, onSuccess, onError);
+    }
+
+    public static IEnumerator RegisterDevAccount(string email, string password, string displayName, bool linkCurrentPlayer, Action<BackendAccountAuthResponse> onSuccess, Action<string> onError)
+    {
+        EnsureLocalProfileIdentity();
+
+        var request = new BackendAccountAuthRequest
+        {
+            playerId = GetOrCreatePlayerId(),
+            email = email,
+            password = password,
+            displayName = displayName,
+            linkCurrentPlayer = linkCurrentPlayer
+        };
+
+        yield return PostJson("/auth/register", request, onSuccess, onError);
+    }
+
+    public static IEnumerator LoginDevAccount(string email, string password, bool linkCurrentPlayer, Action<BackendAccountAuthResponse> onSuccess, Action<string> onError)
+    {
+        EnsureLocalProfileIdentity();
+
+        var request = new BackendAccountAuthRequest
+        {
+            playerId = GetOrCreatePlayerId(),
+            email = email,
+            password = password,
+            displayName = SaveManager.Profile.user_profile.username,
+            linkCurrentPlayer = linkCurrentPlayer
+        };
+
+        yield return PostJson("/auth/login", request, onSuccess, onError);
+    }
+
+    public static IEnumerator LinkCurrentProfileToAccount(string email, string password, Action<BackendAccountAuthResponse> onSuccess, Action<string> onError)
+    {
+        EnsureLocalProfileIdentity();
+
+        var request = new BackendAccountLinkRequest
+        {
+            playerId = GetOrCreatePlayerId(),
+            email = email,
+            password = password
+        };
+
+        yield return PostJson("/profile/link-account", request, onSuccess, onError);
     }
 
     public static IEnumerator RequestMissionsState(Action<BackendMissionsStateResponse> onSuccess, Action<string> onError)
@@ -128,6 +442,7 @@ public static class BackendApiClient
     {
         using (var request = UnityWebRequest.Get(BaseUrl + relativePath))
         {
+            Debug.Log($"[BackendApi] GET {request.url}");
             yield return request.SendWebRequest();
             HandleResponse(request, onSuccess, onError);
         }
@@ -144,6 +459,7 @@ public static class BackendApiClient
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
+            Debug.Log($"[BackendApi] POST {request.url} {json}");
             yield return request.SendWebRequest();
             HandleResponse(request, onSuccess, onError);
         }
@@ -155,11 +471,13 @@ public static class BackendApiClient
         {
             string errorBody = request.downloadHandler != null ? request.downloadHandler.text : string.Empty;
             string message = string.IsNullOrWhiteSpace(errorBody) ? request.error : errorBody;
+            Debug.LogWarning($"[BackendApi] ERROR {request.method} {request.url} {message}");
             onError?.Invoke(message);
             return;
         }
 
         string responseText = request.downloadHandler.text;
+        Debug.Log($"[BackendApi] OK {request.method} {request.url} {responseText}");
         if (typeof(T) == typeof(string))
         {
             onSuccess?.Invoke(responseText as T);
@@ -196,6 +514,107 @@ public class BackendInitResponse
 {
     public string playerId;
     public BackendWalletState wallet;
+}
+
+[Serializable]
+public class BackendProfileSyncableData
+{
+    public string username;
+    public MonthlyPass monthlyPass;
+    public SaveCharacterData characters;
+    public WeaponInventory weapons;
+    public ConsumableInventory consumables;
+    public ProgressionData progression;
+}
+
+[Serializable]
+public class BackendProfileBootstrapRequest
+{
+    public string playerId;
+    public string deviceProfileId;
+    public string accountId;
+    public string displayName;
+    public int lastKnownProfileVersion;
+    public BackendWalletState seedWallet;
+    public BackendGachaState seedGacha;
+    public BackendProfileSyncableData profile;
+}
+
+[Serializable]
+public class BackendProfileSyncRequest
+{
+    public string playerId;
+    public string deviceProfileId;
+    public string accountId;
+    public string displayName;
+    public int lastKnownProfileVersion;
+    public bool pushLocalChanges;
+    public BackendProfileSyncableData profile;
+}
+
+[Serializable]
+public class BackendProfileResponse
+{
+    public string playerId;
+    public string deviceProfileId;
+    public string remoteProfileId;
+    public string accountId;
+    public string displayName;
+    public bool isGuest;
+    public int profileVersion;
+    public long serverUnixTime;
+    public bool conflict;
+    public BackendProfileSyncableData profile;
+    public BackendWalletState wallet;
+    public BackendGachaState gacha;
+}
+
+[Serializable]
+public class BackendAccountAuthRequest
+{
+    public string playerId;
+    public string email;
+    public string password;
+    public string displayName;
+    public bool linkCurrentPlayer;
+}
+
+[Serializable]
+public class BackendAccountLinkRequest
+{
+    public string playerId;
+    public string email;
+    public string password;
+}
+
+[Serializable]
+public class BackendAccountInfo
+{
+    public string accountId;
+    public string email;
+    public string displayName;
+    public string linkedPlayerId;
+    public long createdAt;
+    public long lastLoginAt;
+}
+
+[Serializable]
+public class BackendAccountAuthResponse
+{
+    public bool ok;
+    public BackendAccountInfo account;
+    public string playerId;
+    public string deviceProfileId;
+    public string remoteProfileId;
+    public string accountId;
+    public string displayName;
+    public bool isGuest;
+    public int profileVersion;
+    public long serverUnixTime;
+    public bool conflict;
+    public BackendProfileSyncableData profile;
+    public BackendWalletState wallet;
+    public BackendGachaState gacha;
 }
 
 [Serializable]

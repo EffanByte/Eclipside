@@ -6,15 +6,27 @@ const crypto = require("crypto");
 const PORT = Number(process.env.PORT || 8080);
 const DATA_DIR = path.join(__dirname, "data");
 const STORE_PATH = path.join(DATA_DIR, "store.json");
+const LOG_PATH = path.join(DATA_DIR, "server.log");
+
+ensureDir(DATA_DIR);
+if (!fs.existsSync(LOG_PATH)) {
+  fs.writeFileSync(LOG_PATH, "");
+}
 
 function log(message, payload) {
   const stamp = new Date().toISOString();
-  if (payload === undefined) {
-    console.log(`[${stamp}] ${message}`);
-    return;
-  }
+  const line = payload === undefined
+    ? `[${stamp}] ${message}`
+    : `[${stamp}] ${message} ${JSON.stringify(payload)}`;
 
-  console.log(`[${stamp}] ${message}`, payload);
+  console.log(line);
+
+  try {
+    ensureDir(DATA_DIR);
+    fs.appendFileSync(LOG_PATH, line + "\n");
+  } catch (error) {
+    console.error(`[${stamp}] Failed to write log file: ${error.message}`);
+  }
 }
 
 const DAILY_MISSIONS = {
@@ -78,18 +90,28 @@ function ensureDir(dirPath) {
   }
 }
 
+function defaultStore() {
+  return {
+    players: {},
+    accounts: {}
+  };
+}
+
 function loadStore() {
   ensureDir(DATA_DIR);
   if (!fs.existsSync(STORE_PATH)) {
-    const initial = { players: {} };
+    const initial = defaultStore();
     fs.writeFileSync(STORE_PATH, JSON.stringify(initial, null, 2));
     return initial;
   }
 
   try {
-    return JSON.parse(fs.readFileSync(STORE_PATH, "utf8"));
+    const parsed = JSON.parse(fs.readFileSync(STORE_PATH, "utf8"));
+    if (!parsed.players || typeof parsed.players !== "object") parsed.players = {};
+    if (!parsed.accounts || typeof parsed.accounts !== "object") parsed.accounts = {};
+    return parsed;
   } catch {
-    return { players: {} };
+    return defaultStore();
   }
 }
 
@@ -100,7 +122,11 @@ function saveStore() {
   const tempPath = `${STORE_PATH}.tmp`;
   fs.writeFileSync(tempPath, JSON.stringify(store, null, 2));
   fs.renameSync(tempPath, STORE_PATH);
-  log("Store saved", { path: STORE_PATH, playerCount: Object.keys(store.players).length });
+  log("Store saved", {
+    path: STORE_PATH,
+    playerCount: Object.keys(store.players).length,
+    accountCount: Object.keys(store.accounts || {}).length
+  });
 }
 
 function sendJson(res, statusCode, payload) {
@@ -109,6 +135,7 @@ function sendJson(res, statusCode, payload) {
     "Content-Type": "application/json; charset=utf-8",
     "Content-Length": Buffer.byteLength(body)
   });
+  log("Response", { statusCode, payload });
   res.end(body);
 }
 
@@ -166,6 +193,283 @@ function seededIndex(seed, length) {
   return hashToUint32(seed) % length;
 }
 
+function cloneJson(value, fallback) {
+  if (value === undefined || value === null) {
+    return JSON.parse(JSON.stringify(fallback));
+  }
+
+  return JSON.parse(JSON.stringify(value));
+}
+
+function defaultSyncableProfile(playerId, displayName = "") {
+  return {
+    username: displayName || `Guest-${String(playerId).slice(0, 8)}`,
+    monthlyPass: {
+      is_active: false,
+      expiration_date: 0,
+      current_exp_progress: 0
+    },
+    characters: {
+      owned_character_ids: [],
+      equipped_character_id: "",
+      skins: [],
+      character_progress: []
+    },
+    weapons: {
+      unlocked_weapon_ids: [],
+      weapon_skins: []
+    },
+    consumables: {
+      stash: []
+    },
+    progression: {
+      flags: {
+        has_watched_intro_cutscene: false,
+        has_completed_tutorial: false,
+        has_defeated_final_boss: false,
+        is_hard_mode_unlocked: false,
+        is_arena_unlocked: false
+      },
+      tutorial_steps: {
+        initial_selection_done: false,
+        movement_done: false,
+        attack_done: false,
+        upgrade_done: false,
+        special_attack_done: false,
+        shop_purchase_done: false
+      }
+    }
+  };
+}
+
+function normalizeSyncableProfile(rawProfile, playerId, displayName = "") {
+  const defaults = defaultSyncableProfile(playerId, displayName);
+  const profile = Object.assign(defaults, cloneJson(rawProfile, {}));
+  profile.username = typeof profile.username === "string" && profile.username.trim()
+    ? profile.username.trim()
+    : displayName || `Guest-${String(playerId).slice(0, 8)}`;
+
+  profile.monthlyPass = Object.assign(defaults.monthlyPass, cloneJson(profile.monthlyPass, {}));
+  profile.characters = Object.assign(defaults.characters, cloneJson(profile.characters, {}));
+  profile.weapons = Object.assign(defaults.weapons, cloneJson(profile.weapons, {}));
+  profile.consumables = Object.assign(defaults.consumables, cloneJson(profile.consumables, {}));
+  profile.progression = Object.assign(defaults.progression, cloneJson(profile.progression, {}));
+  profile.progression.flags = Object.assign(defaults.progression.flags, cloneJson(profile.progression.flags, {}));
+  profile.progression.tutorial_steps = Object.assign(defaults.progression.tutorial_steps, cloneJson(profile.progression.tutorial_steps, {}));
+
+  if (!Array.isArray(profile.characters.owned_character_ids)) profile.characters.owned_character_ids = [];
+  if (!Array.isArray(profile.characters.skins)) profile.characters.skins = [];
+  if (!Array.isArray(profile.characters.character_progress)) profile.characters.character_progress = [];
+  if (!Array.isArray(profile.weapons.unlocked_weapon_ids)) profile.weapons.unlocked_weapon_ids = [];
+  if (!Array.isArray(profile.weapons.weapon_skins)) profile.weapons.weapon_skins = [];
+  if (!Array.isArray(profile.consumables.stash)) profile.consumables.stash = [];
+
+  return profile;
+}
+
+function defaultProfileState(playerId, displayName = "") {
+  return {
+    remoteProfileId: `remote_${playerId}`,
+    deviceProfileId: playerId,
+    accountId: "",
+    displayName: displayName || `Guest-${String(playerId).slice(0, 8)}`,
+    isGuest: true,
+    profileVersion: 0,
+    lastSyncUnix: 0,
+    data: defaultSyncableProfile(playerId, displayName)
+  };
+}
+
+function ensureProfileState(player) {
+  if (!player.profile) {
+    player.profile = defaultProfileState(player.playerId);
+  }
+
+  const profile = player.profile;
+  if (!profile.remoteProfileId) profile.remoteProfileId = `remote_${player.playerId}`;
+  if (!profile.deviceProfileId) profile.deviceProfileId = player.playerId;
+  if (typeof profile.accountId !== "string") profile.accountId = "";
+  if (typeof profile.displayName !== "string" || !profile.displayName.trim()) {
+    profile.displayName = `Guest-${String(player.playerId).slice(0, 8)}`;
+  }
+  profile.isGuest = !profile.accountId;
+  profile.profileVersion = Number.isFinite(profile.profileVersion) ? Math.max(0, Math.floor(profile.profileVersion)) : 0;
+  profile.lastSyncUnix = Number.isFinite(profile.lastSyncUnix) ? Math.max(0, Math.floor(profile.lastSyncUnix)) : 0;
+  profile.data = normalizeSyncableProfile(profile.data, player.playerId, profile.displayName);
+  return profile;
+}
+
+function updateProfileMetadata(player, body = {}) {
+  const profile = ensureProfileState(player);
+  let changed = false;
+
+  if (typeof body.deviceProfileId === "string" && body.deviceProfileId.trim() && profile.deviceProfileId !== body.deviceProfileId.trim()) {
+    profile.deviceProfileId = body.deviceProfileId.trim();
+    changed = true;
+  }
+
+  if (typeof body.accountId === "string" && profile.accountId !== body.accountId.trim()) {
+    profile.accountId = body.accountId.trim();
+    changed = true;
+  }
+
+  if (typeof body.displayName === "string" && body.displayName.trim() && profile.displayName !== body.displayName.trim()) {
+    profile.displayName = body.displayName.trim();
+    changed = true;
+  }
+
+  profile.isGuest = !profile.accountId;
+  return changed;
+}
+
+function buildProfileResponse(player, conflict = false) {
+  const profile = ensureProfileState(player);
+  return {
+    playerId: player.playerId,
+    deviceProfileId: profile.deviceProfileId,
+    remoteProfileId: profile.remoteProfileId,
+    accountId: profile.accountId,
+    displayName: profile.displayName,
+    isGuest: profile.isGuest,
+    profileVersion: profile.profileVersion,
+    serverUnixTime: Math.floor(Date.now() / 1000),
+    conflict,
+    profile: cloneJson(profile.data, defaultSyncableProfile(player.playerId, profile.displayName)),
+    wallet: player.wallet,
+    gacha: player.gacha
+  };
+}
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function generateAccountId() {
+  return `acct_${crypto.randomBytes(8).toString("hex")}`;
+}
+
+function hashPassword(password, salt) {
+  return crypto.createHash("sha256").update(`${salt}:${password}`).digest("hex");
+}
+
+function ensureAccountsStore() {
+  if (!store.accounts || typeof store.accounts !== "object") {
+    store.accounts = {};
+  }
+
+  return store.accounts;
+}
+
+function sanitizeAccount(account) {
+  if (!account) {
+    return null;
+  }
+
+  return {
+    accountId: account.accountId,
+    email: account.email,
+    displayName: account.displayName,
+    linkedPlayerId: account.linkedPlayerId || "",
+    createdAt: account.createdAt,
+    lastLoginAt: account.lastLoginAt
+  };
+}
+
+function getAccountByEmail(email) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
+    return null;
+  }
+
+  return ensureAccountsStore()[normalizedEmail] || null;
+}
+
+function buildAccountAuthResponse(account, player, conflict = false) {
+  const response = {
+    ok: true,
+    account: sanitizeAccount(account)
+  };
+
+  if (player) {
+    return Object.assign(response, buildProfileResponse(player, conflict));
+  }
+
+  return response;
+}
+
+function attachAccountToPlayer(account, player) {
+  const profile = ensureProfileState(player);
+
+  if (profile.accountId && profile.accountId !== account.accountId) {
+    throw new Error("Profile is already linked to another account");
+  }
+
+  if (account.linkedPlayerId && account.linkedPlayerId !== player.playerId) {
+    throw new Error("Account is already linked to another profile");
+  }
+
+  account.linkedPlayerId = player.playerId;
+  profile.accountId = account.accountId;
+  profile.isGuest = false;
+
+  if (account.displayName) {
+    profile.displayName = account.displayName;
+    profile.data = normalizeSyncableProfile(profile.data, player.playerId, profile.displayName);
+    profile.data.username = account.displayName;
+  }
+
+  profile.lastSyncUnix = Math.floor(Date.now() / 1000);
+}
+
+function createAccount(email, password, displayName = "") {
+  const normalizedEmail = normalizeEmail(email);
+  const trimmedPassword = String(password || "");
+
+
+  if (!normalizedEmail || !normalizedEmail.includes("@")) {
+    throw new Error("A valid email is required");
+  }
+
+  if (trimmedPassword.length < 4) {
+    throw new Error("Password must be at least 4 characters for dev auth");
+  }
+
+  if (getAccountByEmail(normalizedEmail)) {
+    throw new Error("Account already exists");
+  }
+
+  const now = Date.now();
+  const passwordSalt = crypto.randomBytes(8).toString("hex");
+  const account = {
+    accountId: generateAccountId(),
+    email: normalizedEmail,
+    passwordSalt,
+    passwordHash: hashPassword(trimmedPassword, passwordSalt),
+    displayName: String(displayName || "").trim() || normalizedEmail.split("@")[0],
+    linkedPlayerId: "",
+    createdAt: now,
+    lastLoginAt: now
+  };
+
+  ensureAccountsStore()[normalizedEmail] = account;
+  return account;
+}
+
+function validateAccountCredentials(email, password) {
+  const account = getAccountByEmail(email);
+  if (!account) {
+    return { account: null, error: "Account not found" };
+  }
+
+  const attemptedHash = hashPassword(String(password || ""), account.passwordSalt);
+  if (attemptedHash !== account.passwordHash) {
+    return { account: null, error: "Invalid password" };
+  }
+
+  account.lastLoginAt = Date.now();
+  return { account, error: null };
+}
+
 function defaultPlayer(playerId, seed = {}) {
   const seedWallet = seed.wallet || {};
   const seedGacha = seed.gacha || {};
@@ -187,6 +491,7 @@ function defaultPlayer(playerId, seed = {}) {
       characters: [],
       consumables: {}
     },
+    profile: defaultProfileState(playerId, seed.displayName || ""),
     missionCycles: {
       dayIndex: null,
       weekIndex: null,
@@ -213,6 +518,7 @@ function getPlayer(playerId) {
     log("Created default player", { playerId });
   }
 
+  ensureProfileState(store.players[playerId]);
   return store.players[playerId];
 }
 
@@ -394,6 +700,187 @@ const server = http.createServer(async (req, res) => {
       saveStore();
       log("Player init result", { playerId: player.playerId, wallet: player.wallet, dayIndex: player.missionCycles.dayIndex, weekIndex: player.missionCycles.weekIndex });
       sendJson(res, 200, { playerId: player.playerId, wallet: player.wallet, missionCycles: player.missionCycles });
+      return;
+    }
+
+    if (req.method === "POST" && pathname === "/auth/register") {
+      const body = await readJsonBody(req);
+      const normalizedEmail = normalizeEmail(body.email);
+      log("Auth register request", { email: normalizedEmail, playerId: body.playerId, linkCurrentPlayer: body.linkCurrentPlayer === true });
+
+      try {
+        const account = createAccount(body.email, body.password, body.displayName);
+        let player = null;
+
+        if (body.linkCurrentPlayer === true && body.playerId) {
+          player = getPlayer(body.playerId);
+          ensureMissionCycles(player);
+          attachAccountToPlayer(account, player);
+        }
+
+        saveStore();
+        log("Auth register success", { email: account.email, accountId: account.accountId, linkedPlayerId: account.linkedPlayerId || "" });
+        sendJson(res, 200, buildAccountAuthResponse(account, player, false));
+      } catch (error) {
+        log("Auth register failed", { email: normalizedEmail, error: error.message });
+        sendJson(res, error.message === "Account already exists" ? 409 : 400, { error: error.message });
+      }
+      return;
+    }
+
+    if (req.method === "POST" && pathname === "/auth/login") {
+      const body = await readJsonBody(req);
+      const normalizedEmail = normalizeEmail(body.email);
+      log("Auth login request", { email: normalizedEmail, playerId: body.playerId, linkCurrentPlayer: body.linkCurrentPlayer === true });
+
+      const { account, error } = validateAccountCredentials(body.email, body.password);
+      if (error) {
+        log("Auth login failed", { email: normalizedEmail, error });
+        sendJson(res, error === "Account not found" ? 404 : 401, { error });
+        return;
+      }
+
+      let player = account.linkedPlayerId ? getPlayer(account.linkedPlayerId) : null;
+      if (player) {
+        ensureMissionCycles(player);
+      }
+
+      if (body.linkCurrentPlayer === true && body.playerId) {
+        const localPlayer = getPlayer(body.playerId);
+        ensureMissionCycles(localPlayer);
+
+        if (!account.linkedPlayerId) {
+          attachAccountToPlayer(account, localPlayer);
+          player = localPlayer;
+          log("Auth login linked account to current player", { email: account.email, accountId: account.accountId, linkedPlayerId: localPlayer.playerId });
+        } else if (account.linkedPlayerId === localPlayer.playerId) {
+          player = localPlayer;
+        } else {
+          log("Auth login returned existing linked profile", { email: account.email, accountId: account.accountId, requestedPlayerId: localPlayer.playerId, linkedPlayerId: account.linkedPlayerId });
+        }
+      }
+
+      saveStore();
+      log("Auth login success", { email: account.email, accountId: account.accountId, linkedPlayerId: account.linkedPlayerId || "" });
+      sendJson(res, 200, buildAccountAuthResponse(account, player, false));
+      return;
+    }
+
+    if (req.method === "POST" && pathname === "/profile/link-account") {
+      const body = await readJsonBody(req);
+      const normalizedEmail = normalizeEmail(body.email);
+      log("Profile link-account request", { email: normalizedEmail, playerId: body.playerId });
+
+      if (!body.playerId) {
+        sendJson(res, 400, { error: "playerId is required" });
+        return;
+      }
+
+      const player = getPlayer(body.playerId);
+      ensureMissionCycles(player);
+      const profile = ensureProfileState(player);
+      const auth = validateAccountCredentials(body.email, body.password);
+
+      if (auth.error) {
+        log("Profile link-account failed", { email: normalizedEmail, playerId: body.playerId, error: auth.error });
+        sendJson(res, auth.error === "Account not found" ? 404 : 401, { error: auth.error });
+        return;
+      }
+
+      const account = auth.account;
+      if (account.linkedPlayerId && account.linkedPlayerId !== player.playerId) {
+        log("Profile link-account failed", { email: normalizedEmail, playerId: body.playerId, accountId: account.accountId, linkedPlayerId: account.linkedPlayerId, error: "Account is already linked to another profile" });
+        sendJson(res, 409, { error: "Account is already linked to another profile" });
+        return;
+      }
+
+      if (profile.accountId && profile.accountId !== account.accountId) {
+        log("Profile link-account failed", { email: normalizedEmail, playerId: body.playerId, profileAccountId: profile.accountId, error: "Profile is already linked to another account" });
+        sendJson(res, 409, { error: "Profile is already linked to another account" });
+        return;
+      }
+
+      attachAccountToPlayer(account, player);
+      saveStore();
+      log("Profile link-account success", { email: account.email, accountId: account.accountId, linkedPlayerId: player.playerId });
+      sendJson(res, 200, buildAccountAuthResponse(account, player, false));
+      return;
+    }
+
+    if (req.method === "POST" && pathname === "/profile/bootstrap") {
+      const body = await readJsonBody(req);
+      log("Profile bootstrap body", body);
+      const playerId = body.playerId || body.deviceProfileId || `player-${Date.now()}`;
+
+      if (!store.players[playerId]) {
+        store.players[playerId] = defaultPlayer(playerId, {
+          wallet: body.seedWallet,
+          gacha: body.seedGacha,
+          displayName: body.displayName
+        });
+        log("Created seeded player during profile bootstrap", { playerId, seedWallet: body.seedWallet, seedGacha: body.seedGacha });
+      }
+
+      const player = getPlayer(playerId);
+      ensureMissionCycles(player);
+      updateProfileMetadata(player, body);
+      const profile = ensureProfileState(player);
+
+      if (body.profile && profile.profileVersion === 0) {
+        profile.data = normalizeSyncableProfile(body.profile, player.playerId, profile.displayName);
+        profile.profileVersion = 1;
+        profile.lastSyncUnix = Math.floor(Date.now() / 1000);
+        if (profile.data.username) {
+          profile.displayName = profile.data.username;
+        }
+        log("Profile bootstrap seeded server profile", { playerId: player.playerId, profileVersion: profile.profileVersion, remoteProfileId: profile.remoteProfileId });
+      } else {
+        log("Profile bootstrap returned existing server profile", { playerId: player.playerId, profileVersion: profile.profileVersion, remoteProfileId: profile.remoteProfileId });
+      }
+
+      saveStore();
+      sendJson(res, 200, buildProfileResponse(player, false));
+      return;
+    }
+
+    if (req.method === "POST" && pathname === "/profile/sync") {
+      const body = await readJsonBody(req);
+      log("Profile sync body", body);
+      const player = getPlayer(body.playerId || body.deviceProfileId);
+
+      if (!player) {
+        sendJson(res, 400, { error: "playerId or deviceProfileId is required" });
+        return;
+      }
+
+      ensureMissionCycles(player);
+      updateProfileMetadata(player, body);
+      const profile = ensureProfileState(player);
+      const clientVersion = Number.isFinite(Number(body.lastKnownProfileVersion))
+        ? Math.max(0, Math.floor(Number(body.lastKnownProfileVersion)))
+        : 0;
+      const pushLocalChanges = body.pushLocalChanges === true && body.profile;
+      let conflict = false;
+
+      if (pushLocalChanges) {
+        if (clientVersion !== profile.profileVersion) {
+          conflict = true;
+          log("Profile sync conflict", { playerId: player.playerId, clientVersion, serverVersion: profile.profileVersion });
+        } else {
+          profile.data = normalizeSyncableProfile(body.profile, player.playerId, profile.displayName);
+          if (profile.data.username) {
+            profile.displayName = profile.data.username;
+          }
+          profile.profileVersion += 1;
+          profile.lastSyncUnix = Math.floor(Date.now() / 1000);
+          log("Profile sync push accepted", { playerId: player.playerId, profileVersion: profile.profileVersion, remoteProfileId: profile.remoteProfileId });
+        }
+      } else {
+        log("Profile sync pull", { playerId: player.playerId, profileVersion: profile.profileVersion, remoteProfileId: profile.remoteProfileId });
+      }
+
+      saveStore();
+      sendJson(res, 200, buildProfileResponse(player, conflict));
       return;
     }
 
@@ -630,5 +1117,19 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  log(`Eclipside quick backend listening on http://localhost:${PORT}`);
+  log("Eclipside quick backend listening", {
+    url: `http://localhost:${PORT}`,
+    storePath: STORE_PATH,
+    logPath: LOG_PATH
+  });
 });
+
+
+
+
+
+
+
+
+
+

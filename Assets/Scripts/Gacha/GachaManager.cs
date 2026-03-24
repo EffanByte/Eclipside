@@ -84,6 +84,7 @@ public class GachaManager : MonoBehaviour
         BackendApiClient.ApplyWalletToProfile(backendResponse.wallet);
         BackendApiClient.ApplyGachaToProfile(backendResponse.gacha);
         ApplyServerRewards(backendResponse.results);
+        BackendApiClient.MarkProfileDirty();
         SaveManager.SaveProfile();
 
         SetDebugOutput(BuildPullSummary(backendResponse.results));
@@ -216,6 +217,7 @@ public class GachaManager : MonoBehaviour
         }
 
         SaveManager.SaveProfile();
+        BackendApiClient.MarkProfileDirty();
         SetDebugOutput(BuildLocalPullSummary(results));
     }
 

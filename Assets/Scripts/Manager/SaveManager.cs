@@ -24,9 +24,17 @@ public class SaveFile_Profile
 public class UserProfile
 {
     public string user_id;
+    public string device_profile_id;
+    public string remote_profile_id;
+    public string account_id;
+    public string account_email;
     public string username;
     public long date_created;           // timestamp
     public long last_login_timestamp;   // timestamp
+    public long last_sync_unix;         // timestamp
+    public int last_synced_profile_version;
+    public bool has_pending_sync;
+    public bool is_guest = true;
     public int gold;
     public int orbs;
     public int arena_tickets;
@@ -309,6 +317,12 @@ public static class SaveManager
         {
             Save("Save_Profile", _cachedProfile);
         }
+    }
+
+    public static void ReplaceProfile(SaveFile_Profile profile)
+    {
+        _cachedProfile = profile ?? new SaveFile_Profile();
+        SaveProfile();
     }
 
     // --- Existing Methods (Keep these) ---

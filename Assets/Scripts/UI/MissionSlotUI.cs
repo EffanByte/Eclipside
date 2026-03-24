@@ -17,6 +17,23 @@ public class MissionSlotUI : MonoBehaviour
 
     private ActiveMissionEntry currentEntry;
 
+    private void Awake()
+    {
+        if (claimButton != null)
+        {
+            claimButton.onClick.RemoveListener(OnClaimClicked);
+            claimButton.onClick.AddListener(OnClaimClicked);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (claimButton != null)
+        {
+            claimButton.onClick.RemoveListener(OnClaimClicked);
+        }
+    }
+
     public void Setup(ActiveMissionEntry entry, MissionData staticData)
     {
         currentEntry = entry;
