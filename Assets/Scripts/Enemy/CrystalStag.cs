@@ -65,7 +65,6 @@ public class CrystalStag : EnemyBase
 
     protected override IEnumerator AttackWindup()
     {
-        Debug.Log("Stag Windup!");
         
         // 1. Lock-On
         chargeDirection = (playerTarget.position - transform.position).normalized;
@@ -147,12 +146,10 @@ public class CrystalStag : EnemyBase
 
         if (crashedIntoWall)
         {
-            Debug.Log("Stag Crashed into environment! Stunned.");
             ForceStun(stunOnCrash); 
         }
         else
         {
-            Debug.Log("Stag finished charge.");
 
         }
     }

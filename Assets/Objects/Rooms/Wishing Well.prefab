@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 5993169664904241010}
   - component: {fileID: 1852569683598534721}
   - component: {fileID: 7724530064847319345}
-  - component: {fileID: 6395099519646318615}
-  - component: {fileID: 1176421500196999965}
+  - component: {fileID: 2473923894041975401}
   m_Layer: 10
   m_Name: Wishing Well
   m_TagString: Untagged
@@ -140,20 +139,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.29, y: 0.32}
   m_EdgeRadius: 0
---- !u!114 &6395099519646318615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486536695124348317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daecee9241a0d094097ed6631853f4fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelofFate
-  oneTimeUse: 1
---- !u!114 &1176421500196999965
+--- !u!114 &2473923894041975401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

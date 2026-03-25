@@ -456,7 +456,7 @@ public abstract class EnemyBase : MonoBehaviour
     // UTILS
     // ---------------------------------------------------------
     protected void ChangeState(EnemyState newState) { currentState = newState;
-    Debug.Log($"{name} changed to {newState} state."); }
+    ; }
 protected virtual void LogicIdle() 
     {
         // 1. AGGRO CHECK (High Priority)

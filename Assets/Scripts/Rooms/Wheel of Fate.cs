@@ -56,10 +56,10 @@ public class WheelofFate : EventObject
     {
         string[] effects = new string[]
         {
-            "Buff",
-            "Debuff",
-            "Hearts",
-            "Poison"
+          //  "Buff",
+         //   "Debuff",
+            "Hearts"
+           // "Poison"
         };
 
         int randomIndex = UnityEngine.Random.Range(0, effects.Length);

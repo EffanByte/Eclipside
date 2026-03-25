@@ -44,7 +44,6 @@ public class CrumblingSkeleton : EnemyBase
             isFuseLit = true;
             fuseTimer = 0f;
             currentFuseStage = FuseStage.NONE;
-            Debug.Log("<color=green>Skeleton Fuse Lit!</color>");
         }
     }
 
@@ -67,14 +66,12 @@ public class CrumblingSkeleton : EnemyBase
         }
         else
         {
-            Debug.Log("Skeleton safely disarmed!");
         }
     }
 
 
     private void Detonate(FuseStage stage)
     {
-        Debug.Log($"Skeleton Exploded! Stage: {stage}");
 
         if (stage == FuseStage.SMALL)
         {
@@ -151,14 +148,12 @@ public class CrumblingSkeleton : EnemyBase
             {
                 currentFuseStage = FuseStage.SMALL;
                 if (anim != null) anim.SetTrigger("Attack"); // GDD: Switches to charge pose
-                Debug.Log("<color=yellow>Phase 2: Small Bomb Ready</color>");
                 // Optional: Enable a spark particle effect on the barrel
             }
             // Phase 3: Big Fuse (2.4s - 3.6s)
             else if (fuseTimer >= 2.4f && currentFuseStage == FuseStage.SMALL)
             {
                 currentFuseStage = FuseStage.BIG;
-                Debug.Log("<color=red>Phase 3: Big Bomb Ready</color>");
                 // Optional: Increase spark intensity
             }
             // Auto Detonation (3.6s)

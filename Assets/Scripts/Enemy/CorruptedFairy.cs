@@ -95,7 +95,6 @@ public class CorruptedFairy : EnemyBase
     {
         if (Time.time >= lastBlinkTime + blinkCooldown)
         {
-            Debug.Log("Fairy uses Blink!");
             StartCoroutine(BlinkRoutine());
         }
         else
@@ -125,7 +124,6 @@ public class CorruptedFairy : EnemyBase
 
         // Visuals: Fade out
         spriteRenderer.color = new Color(1, 0, 1, 0.3f); // Purple ghostly hue
-        Debug.Log($"Blinking to {targetPos}");
 
         // 0.15s i-frame window
         yield return new WaitForSeconds(0.15f);
