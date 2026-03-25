@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f361bc394a55f6648b0d17b923963769, type: 3}
   m_Name: Boost Defense
   m_EditorClassIdentifier: Assembly-CSharp::EffectStatBuff
-  type: 7
+  type: 8
   duration: 15
   amount: 0.15

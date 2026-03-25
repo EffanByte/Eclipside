@@ -62,8 +62,15 @@ public class PlayerController : MonoBehaviour
 
     // --- Buff State ---
     private float baseMovementSpeed; 
+    private float globalDamageMultiplier = 1f;
+    private float magicDamageMultiplier = 1f;
+    private float heavyDamageMultiplier = 1f;
     private bool hasLuck = false; 
     private bool isLuckLocked = false;
+    private bool isReviveInvulnerable = false;
+    private bool hasPendingRevive = false;
+    private float pendingReviveHealthFraction = 0.25f;
+    private float pendingReviveInvulnerabilityDuration = 5f;
 
     // A class to store exactly what a buff did, so we can cleanly reverse it
     private class ActiveBuff
@@ -73,7 +80,14 @@ public class PlayerController : MonoBehaviour
         public Coroutine TimerCoroutine;
     }
 
+    private class ActiveWaveEffect
+    {
+        public int WavesRemaining;
+        public Action ExpireAction;
+    }
+
     private Dictionary<string, ActiveBuff> activeBuffs = new Dictionary<string, ActiveBuff>();  
+    private Dictionary<string, ActiveWaveEffect> activeWaveEffects = new Dictionary<string, ActiveWaveEffect>();
 
 
     // --- References ---
@@ -142,12 +156,29 @@ public class PlayerController : MonoBehaviour
         EquipWeapon(currentWeapon);
         onCurrencyUpdate?.Invoke();
 
+        if (GameDirector.Instance != null)
+        {
+            GameDirector.Instance.OnWaveAdvanced += HandleWaveTransition;
+            GameDirector.Instance.OnLevelCompleted += HandleWaveTransition;
+        }
+
         // Initialize HFSM
         InitializeStateMachine();
     }
 
     private void OnEnable() => controls.Enable();
     private void OnDisable() => controls.Disable();
+
+    private void OnDestroy()
+    {
+        PlayerHealth.OnPlayerDeath -= PlayerKilled;
+
+        if (GameDirector.Instance != null)
+        {
+            GameDirector.Instance.OnWaveAdvanced -= HandleWaveTransition;
+            GameDirector.Instance.OnLevelCompleted -= HandleWaveTransition;
+        }
+    }
 
     // ---------------------------------------------------------
     // STATE MACHINE SETUP
@@ -337,8 +368,11 @@ public class PlayerController : MonoBehaviour
     {
         gameObject.SetActive(true);
         transform.position = Vector2.zero;
+        ClearActiveWaveEffects();
         healthComp.Heal(healthComp.GetMaxHealth());
         isDead = false;
+        isReviveInvulnerable = false;
+        hasPendingRevive = false;
         
         // Reset Logic State
         isDashing = false;
@@ -433,7 +467,7 @@ public class PlayerController : MonoBehaviour
     // --- Damage & Status ---
     public void ReceiveDamage(DamageInfo dmg)
     {
-        if (isDashing) return; // i-frames
+        if (isDashing || isReviveInvulnerable) return; // i-frames
 
         float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
 
@@ -452,6 +486,8 @@ public class PlayerController : MonoBehaviour
 
     public void StatusDamage(DamageInfo dmg)
     {
+        if (isReviveInvulnerable) return;
+
         float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
         statusMgr.FlashSpriteRoutine(dmg.element);
         healthComp.ReceiveDamage(finalAmount, dmg.element);
@@ -491,14 +527,18 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case StatType.BaseDamage:
-                // Note: Modifying ScriptableObjects directly alters the asset!
-                // Best practice: Use a 'currentRunDamage' variable in PlayerController instead.
-                // Assuming you stick with this for now:
-                if (currentWeapon != null)
-                {
-                    flatChange = currentWeapon.damage * amount; 
-                    currentWeapon.damage += flatChange;
-                }
+                flatChange = amount;
+                globalDamageMultiplier += flatChange;
+                break;
+
+            case StatType.MagicDamage:
+                flatChange = amount;
+                magicDamageMultiplier += flatChange;
+                break;
+
+            case StatType.HeavyDamage:
+                flatChange = amount;
+                heavyDamageMultiplier += flatChange;
                 break;
 
             case StatType.Speed:
@@ -513,7 +553,7 @@ public class PlayerController : MonoBehaviour
 
             case StatType.MaxHealth:
                 flatChange = amount;
-                healthComp.SetMaxHealth(flatChange); // Assuming SetMaxHealth adds to current max
+                healthComp.SetMaxHealth(healthComp.GetMaxHealth() + flatChange);
                 break;
         }
 
@@ -551,7 +591,13 @@ public class PlayerController : MonoBehaviour
                 if (statusMgr != null) statusMgr.ChangeDamageMultiplier(buff.FlatAmountAdded); 
                 break;
             case StatType.BaseDamage:
-                if (currentWeapon != null) currentWeapon.damage -= buff.FlatAmountAdded;
+                globalDamageMultiplier -= buff.FlatAmountAdded;
+                break;
+            case StatType.MagicDamage:
+                magicDamageMultiplier -= buff.FlatAmountAdded;
+                break;
+            case StatType.HeavyDamage:
+                heavyDamageMultiplier -= buff.FlatAmountAdded;
                 break;
             case StatType.Speed:
                 movementSpeed -= buff.FlatAmountAdded;
@@ -560,13 +606,135 @@ public class PlayerController : MonoBehaviour
                 playerAttackSpeedMultiplier -= buff.FlatAmountAdded;
                 break;
             case StatType.MaxHealth:
-                healthComp.SetMaxHealth(-buff.FlatAmountAdded);
+                healthComp.SetMaxHealth(healthComp.GetMaxHealth() - buff.FlatAmountAdded);
                 break;
         }
 
         // 3. Remove from tracking
         activeBuffs.Remove(buffKey);
         Debug.Log($"[Buffs] Removed '{buffKey}'. Reversed: {buff.FlatAmountAdded}");
+    }
+
+    public void ApplyBuffForWaves(string buffKey, StatType type, float amount, int waveCount)
+    {
+        ApplyPermanentBuff(buffKey, type, amount);
+        RegisterWaveEffect(buffKey, waveCount, () => RemoveBuff(buffKey));
+    }
+
+    public void AddTemporaryHeartsForWaves(string effectKey, float amount, int waveCount)
+    {
+        healthComp.AddTemporaryHearts(amount);
+        RegisterWaveEffect(effectKey, waveCount, () => healthComp.RemoveTemporaryHearts(amount));
+    }
+
+    public void ArmRevive(string sourceKey, float healthFraction, float invulnerabilityDuration)
+    {
+        hasPendingRevive = true;
+        pendingReviveHealthFraction = Mathf.Max(0.01f, healthFraction);
+        pendingReviveInvulnerabilityDuration = Mathf.Max(0f, invulnerabilityDuration);
+        Debug.Log($"[Player] Armed revive from {sourceKey} with {pendingReviveHealthFraction:P0} health and {pendingReviveInvulnerabilityDuration}s invulnerability.");
+    }
+
+    public bool TryTriggerRevive()
+    {
+        if (!hasPendingRevive)
+        {
+            return false;
+        }
+
+        hasPendingRevive = false;
+        isDead = false;
+
+        float reviveHealth = Mathf.Max(1f, healthComp.GetMaxHealth() * pendingReviveHealthFraction);
+        healthComp.ReviveToHealth(reviveHealth);
+
+        if (pendingReviveInvulnerabilityDuration > 0f)
+        {
+            StartCoroutine(ReviveInvulnerabilityRoutine(pendingReviveInvulnerabilityDuration));
+        }
+
+        Debug.Log($"[Player] Revived with {reviveHealth} health.");
+        return true;
+    }
+
+    public float GetDamageMultiplierForWeapon(WeaponData weapon)
+    {
+        float multiplier = globalDamageMultiplier;
+
+        if (weapon is MagicWeapon)
+        {
+            multiplier *= magicDamageMultiplier;
+        }
+        else if (weapon is HeavyMelee)
+        {
+            multiplier *= heavyDamageMultiplier;
+        }
+
+        return multiplier;
+    }
+
+    private void RegisterWaveEffect(string effectKey, int waveCount, Action expireAction)
+    {
+        if (string.IsNullOrWhiteSpace(effectKey))
+        {
+            effectKey = Guid.NewGuid().ToString("N");
+        }
+
+        if (activeWaveEffects.TryGetValue(effectKey, out ActiveWaveEffect existing))
+        {
+            existing.ExpireAction?.Invoke();
+            activeWaveEffects.Remove(effectKey);
+        }
+
+        activeWaveEffects[effectKey] = new ActiveWaveEffect
+        {
+            WavesRemaining = Mathf.Max(1, waveCount),
+            ExpireAction = expireAction
+        };
+    }
+
+    private void HandleWaveTransition()
+    {
+        if (activeWaveEffects.Count == 0)
+        {
+            return;
+        }
+
+        List<string> expiredKeys = new List<string>();
+        foreach (var entry in activeWaveEffects)
+        {
+            entry.Value.WavesRemaining -= 1;
+            if (entry.Value.WavesRemaining <= 0)
+            {
+                expiredKeys.Add(entry.Key);
+            }
+        }
+
+        foreach (string key in expiredKeys)
+        {
+            if (!activeWaveEffects.TryGetValue(key, out ActiveWaveEffect effect))
+            {
+                continue;
+            }
+
+            effect.ExpireAction?.Invoke();
+            activeWaveEffects.Remove(key);
+        }
+    }
+
+    private void ClearActiveWaveEffects()
+    {
+        if (activeWaveEffects.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var effect in activeWaveEffects.Values)
+        {
+            effect.ExpireAction?.Invoke();
+        }
+
+        activeWaveEffects.Clear();
     }
 
     // ---------------------------------------------------------
@@ -579,6 +747,13 @@ public class PlayerController : MonoBehaviour
         
         // Once time is up, use the central Remove method
         RemoveBuff(buffKey);
+    }
+
+    private IEnumerator ReviveInvulnerabilityRoutine(float duration)
+    {
+        isReviveInvulnerable = true;
+        yield return new WaitForSeconds(duration);
+        isReviveInvulnerable = false;
     }
 
     // ---------------------------------------------------------
@@ -616,7 +791,9 @@ public class PlayerController : MonoBehaviour
     {
         switch (stat)
         {
-            case StatType.BaseDamage: if (currentWeapon != null) currentWeapon.damage *= 1.1f; break;
+            case StatType.BaseDamage: globalDamageMultiplier += 0.1f; break;
+            case StatType.MagicDamage: magicDamageMultiplier += 0.1f; break;
+            case StatType.HeavyDamage: heavyDamageMultiplier += 0.1f; break;
             case StatType.MaxHealth: healthComp.ModifyMaxHealth(1); healthComp.Heal(1f); break; // +1 Heart
             case StatType.Speed: baseMovementSpeed *= 1.05f; movementSpeed = baseMovementSpeed; break;
             case StatType.AttackSpeed: playerAttackSpeedMultiplier += 0.05f; break;
@@ -625,8 +802,10 @@ public class PlayerController : MonoBehaviour
 
     public void TryAddStatus(StatusType effect) => statusMgr.TryAddStatus(effect);
     public float GetMaxHealth() => healthComp.GetMaxHealth();
+    public bool IsDead => isDead;
     public void Heal(float amount) => healthComp.Heal(amount);
     public void AddTemporaryHearts(float amount) => healthComp.AddTemporaryHearts(amount);
+    public void RemoveTemporaryHearts(float amount) => healthComp.RemoveTemporaryHearts(amount);
     
     public void ToggleLuck(bool state) { hasLuck = state; Debug.Log($"Luck: {state}"); }
     public void LockLuck() => isLuckLocked = true;
@@ -694,5 +873,9 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(dir * force, ForceMode2D.Impulse);
     }
     
-    public void PlayerKilled() => OnPlayerDeath?.Invoke();
+    public void PlayerKilled()
+    {
+        isDead = true;
+        OnPlayerDeath?.Invoke();
+    }
 }

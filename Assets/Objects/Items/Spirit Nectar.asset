@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125d2e8b771185e42b9e207b24877348, type: 3}
+  m_Name: Spirit Nectar
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
+  itemName: Spirit Nectar
+  icon: {fileID: 2966215664097128579, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  description: Gain 2 temporary hearts for 1 wave.
+  rarity: 2
+  consumeOnUse: 1
+  effects:
+  - {fileID: 11400000, guid: a5c66fcd5b0540cb9ff31fb8ff8b63a7, type: 2}

@@ -6,48 +6,70 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Image sprite1;
     [SerializeField] private Image sprite2;
     [SerializeField] private Image sprite3;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void OnEnable()
     {
-        InventoryManager.Instance.OnInventoryUpdated += UpdateInventoryUI;
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnInventoryUpdated += UpdateInventoryUI;
+        }
+
         UpdateInventoryUI();
     }
 
     public void UpdateInventoryUI()
     {
-        Color tempColor = sprite1.color;
-        if (InventoryManager.Instance.slots[0])
+        if (InventoryManager.Instance == null || InventoryManager.Instance.slots == null)
         {
-        sprite1.sprite = InventoryManager.Instance.slots[0].icon;
-        tempColor.a = 1.0f;
+            SetSlotVisual(sprite1, null);
+            SetSlotVisual(sprite2, null);
+            SetSlotVisual(sprite3, null);
+            return;
         }
-        else
-            tempColor.a = 0.0f;
-        sprite1.color = tempColor;
-        if (InventoryManager.Instance.slots[1])
-        {
-        sprite2.sprite = InventoryManager.Instance.slots[1].icon;
-        tempColor.a = 1.0f;
-        }
-        else
-            tempColor.a = 0.0f;
-        sprite2.color = tempColor;
-        if (InventoryManager.Instance.slots[1])
-        {
-        sprite3.sprite = InventoryManager.Instance.slots[2].icon;
-        tempColor.a = 1.0f;
-        }
-        else
-            tempColor.a = 0.0f;
-        sprite3.color = tempColor;
+
+        SetSlotVisual(sprite1, GetSlotItem(0));
+        SetSlotVisual(sprite2, GetSlotItem(1));
+        SetSlotVisual(sprite3, GetSlotItem(2));
     }
 
-    private void OnDestroy()
+    private ConsumableItem GetSlotItem(int slotIndex)
+    {
+        var slots = InventoryManager.Instance.slots;
+        if (slotIndex < 0 || slotIndex >= slots.Length)
+        {
+            return null;
+        }
+
+        return slots[slotIndex];
+    }
+
+    private void SetSlotVisual(Image slotImage, ConsumableItem item)
+    {
+        if (slotImage == null)
+        {
+            return;
+        }
+
+        Color color = slotImage.color;
+        if (item != null && item.icon != null)
+        {
+            slotImage.sprite = item.icon;
+            color.a = 1.0f;
+        }
+        else
+        {
+            slotImage.sprite = null;
+            color.a = 0.0f;
+        }
+
+        slotImage.color = color;
+    }
+
+    private void OnDisable()
     {
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnInventoryUpdated -= UpdateInventoryUI;
         }
     }
-    
 }

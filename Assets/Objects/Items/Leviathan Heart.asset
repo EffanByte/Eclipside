@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125d2e8b771185e42b9e207b24877348, type: 3}
+  m_Name: Leviathan Heart
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
+  itemName: Leviathan Heart
+  icon: {fileID: -2630476455808661796, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  description: Revive at your death spot with 1/4 total health and 5s invulnerability.
+  rarity: 3
+  consumeOnUse: 1
+  effects:
+  - {fileID: 11400000, guid: 1e62b5c357b74ec18bffb18cc30e5eb9, type: 2}

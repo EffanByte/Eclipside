@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
             // Pass the Player GameObject to the item logic
             itemToUse.Use(PlayerController.Instance);
             Debug.Log($"Used item: {itemToUse.itemName} from slot {slot + 1}");
-            slots[currentItemIndex] = null;
+            slots[slot] = null;
             OnInventoryUpdated?.Invoke();
         }
         else
@@ -45,11 +45,18 @@ public class InventoryManager : MonoBehaviour
 
     public void AddItem(ItemData newItem)
     {
+        ConsumableItem consumable = newItem as ConsumableItem;
+        if (consumable == null)
+        {
+            Debug.LogWarning($"InventoryManager could not add non-consumable item: {newItem?.itemName}");
+            return;
+        }
+
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i] == null)
             {
-                slots[i] = newItem as ConsumableItem;
+                slots[i] = consumable;
                 Debug.Log($"Added item: {newItem.itemName} to slot {i + 1}");
                 OnInventoryUpdated?.Invoke();
                 return;

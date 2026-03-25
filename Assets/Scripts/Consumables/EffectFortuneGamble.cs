@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Eclipside/Item Effects/Max HP Gamble")]
-public class EffectFortuneGamble : ItemEffect
+public class EffectMaxHPGamble : ItemEffect
 {
     [Range(0f, 1f)] public float winChance = 0.75f;
     public int winAmount = 1;  // +1 Heart Container

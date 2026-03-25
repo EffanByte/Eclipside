@@ -75,6 +75,12 @@ public class PlayerHealth : MonoBehaviour
         OnTempHealthChanged?.Invoke(temporaryHealth);
     }
 
+    public void RemoveTemporaryHearts(float amount)
+    {
+        temporaryHealth = Mathf.Max(0f, temporaryHealth - amount);
+        OnTempHealthChanged?.Invoke(temporaryHealth);
+    }
+
     // Standard healing (Only affects Red Hearts)
     public void Heal(float amount)
     {
@@ -85,6 +91,12 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        PlayerController player = GetComponent<PlayerController>();
+        if (player != null && player.TryTriggerRevive())
+        {
+            return;
+        }
+
         Debug.Log("Player Died!");
         deathMenu = FindFirstObjectByType<DeathMenu>(FindObjectsInactive.Include);
         deathMenu.OnPauseButtonPressed();
@@ -106,6 +118,15 @@ public class PlayerHealth : MonoBehaviour
         maxHealth = max;
         OnMaxHealthChanged?.Invoke(maxHealth);
     }
+
+    public void ReviveToHealth(float amount)
+    {
+        temporaryHealth = 0f;
+        currentHealth = Mathf.Clamp(amount, 1f, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth);
+        OnTempHealthChanged?.Invoke(temporaryHealth);
+    }
+
     public void ModifyMaxHealth(int value)
     {
         SetMaxHealth(maxHealth + value);

@@ -45,7 +45,10 @@ public abstract class WeaponData : ItemData
     {
         // 1. Start with Base Stats
         float finalDamage = damage;
-        // Apply Player stat multipliers here if needed (e.g. finalDamage *= player.damageMultiplier)
+        if (player != null)
+        {
+            finalDamage *= player.GetDamageMultiplierForWeapon(this);
+        }
         
         bool isCrit = criticalChance >= Random.Range(0f, 100f);
 

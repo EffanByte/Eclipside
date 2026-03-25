@@ -11772,7 +11772,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: The Roguelike Remastered 1-6-10 Alpha_480
+      name: Lightning Stone
       rect:
         serializedVersion: 2
         x: 241
@@ -12462,7 +12462,7 @@ TextureImporter:
         width: 19
         height: 72
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -12517,6 +12517,7 @@ TextureImporter:
       Item_2: -869744184
       Large Potion: -2630476455808661796
       Lava: 624604947
+      Lightning Stone: 4528839052115411930
       Meteorite Fragment: -4662783380376193228
       Meteorite Pedestal: 861426214864616172
       Mythical Chest: -5407780538770509343
@@ -12917,7 +12918,6 @@ TextureImporter:
       The Roguelike Remastered 1-6-10 Alpha_476: 8429125274054008343
       The Roguelike Remastered 1-6-10 Alpha_477: -3562699778079094523
       The Roguelike Remastered 1-6-10 Alpha_48: -1676562743632278489
-      The Roguelike Remastered 1-6-10 Alpha_480: 4528839052115411930
       The Roguelike Remastered 1-6-10 Alpha_481: -301279424340395508
       The Roguelike Remastered 1-6-10 Alpha_482: 8082614335329916179
       The Roguelike Remastered 1-6-10 Alpha_483: 4944439468643968544

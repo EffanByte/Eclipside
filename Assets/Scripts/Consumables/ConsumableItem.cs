@@ -17,7 +17,10 @@ public class ConsumableItem : ItemData // Or inherit from a lighter ItemData bas
         // Run all effects (e.g., Heal + Cure Poison)
         foreach (var effect in effects)
         {
-            effect.Apply(player);
+            if (effect != null)
+            {
+                effect.Apply(player, itemName);
+            }
         }
     }
 }
