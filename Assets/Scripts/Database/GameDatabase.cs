@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering;
 
 [CreateAssetMenu(menuName = "Eclipside/System/Game Database")]
 public class GameDatabase : ScriptableObject
@@ -82,11 +81,22 @@ public class GameDatabase : ScriptableObject
         return null;
     }
 
+    public CharacterData GetCharacterByID(string id)
+    {
+        if (characterMap.TryGetValue(id, out CharacterData character)) return character;
+        Debug.LogWarning($"Character ID not found: {id}");
+        return null;
+    }
+
     public ConsumableItem GetRandomConsumable()
     {
-        var subset = allConsumables.ToList();
-        if (subset.Count == 0) return null;
-        return subset[Random.Range(0, subset.Count)];
+        float currentLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
+        return GetRandomConsumable(currentLuck);
+    }
+
+    public ConsumableItem GetRandomConsumable(float luck)
+    {
+        return LuckUtility.PickWeightedByRarity(allConsumables, luck, consumable => consumable.rarity);
     }
 
 
@@ -98,26 +108,33 @@ public class GameDatabase : ScriptableObject
         return subset[Random.Range(0, subset.Count)];
     }
 
-        public WeaponData GetRandomWeapon()
+    public WeaponData GetRandomWeapon()
     {
-        var subset = allWeapons.ToList();
-        if (subset.Count == 0) return null;
-        return subset[Random.Range(0, subset.Count)];
+        float currentLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
+        return GetRandomWeapon(currentLuck);
+    }
+
+    public WeaponData GetRandomWeapon(float luck)
+    {
+        return LuckUtility.PickWeightedByRarity(allWeapons, luck, weapon => weapon.rarity);
     }
     public ItemData GetRandomItem()
     {
+        float currentLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
+        return GetRandomItem(currentLuck);
+    }
+
+    public ItemData GetRandomItem(float luck)
+    {
         var subset = allWeapons.Cast<ItemData>().ToList();
         subset.AddRange(allConsumables);
-        foreach(ItemData item in subset)
-        {
-            Debug.Log(item.itemName);
-        }
-        return subset[Random.Range(0, subset.Count)];
+        return LuckUtility.PickWeightedByRarity(subset, luck, item => item.rarity);
     }
         public ItemData GetRandomItem(ItemRarity rarity)
     {
-         var subset = allWeapons.Cast<ItemData>().Where(w => w.rarity == rarity).ToList();
+        var subset = allWeapons.Cast<ItemData>().Where(w => w.rarity == rarity).ToList();
         subset.AddRange(allConsumables.Where(c => c.rarity == rarity));
+        if (subset.Count == 0) return null;
         return subset[Random.Range(0, subset.Count)];
     }
 }

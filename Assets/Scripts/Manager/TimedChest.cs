@@ -59,14 +59,17 @@ public class TimedChest : MonoBehaviour, IInteractable
         isOpened = true;
         
         float roll = Random.value;
+        float playerLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
         ItemData reward = null;
 
         if (roll < 0.6f && weaponPool.Count > 0)
-            reward = weaponPool[Random.Range(0, weaponPool.Count)];
+            reward = LuckUtility.PickWeightedByRarity(weaponPool, playerLuck, weapon => weapon.rarity);
         else if (roll < 0.9f && consumablePool.Count > 0)
-            reward = consumablePool[Random.Range(0, consumablePool.Count)];
+            reward = LuckUtility.PickWeightedByRarity(consumablePool, playerLuck, item => item.rarity);
         else if (keyItem != null)
             reward = keyItem;
+
+        Debug.Log($"[Luck] Chest opened at {playerLuck:0.##} luck. Reward: {reward?.itemName ?? "None"}");
         // 2. Spawn Visual Loot
         if (reward != null && lootPedestalPrefab != null)
         {

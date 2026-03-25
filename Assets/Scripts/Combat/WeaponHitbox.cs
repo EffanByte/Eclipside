@@ -43,15 +43,19 @@
         // Extracted logic so we can call it from both OnTriggerEnter and Initialize
         private void TryDealDamage(Collider2D collision)
         {
-            // Won't hold up sourceposition when attack is something besides a sword
-        currentDamageInfo = playerController.currentWeapon.GetDamageInfoOnHit(playerController, collision.GetComponent<EnemyBase>());
+            if (playerController == null || playerController.currentWeapon == null)
+            {
+                return;
+            }
 
-            EnemyBase target = collision.GetComponent<EnemyBase>();
+            EnemyBase target = collision.GetComponent<EnemyBase>() ?? collision.GetComponentInParent<EnemyBase>();
 
             if (target != null)
             {
-                    target.ReceiveDamage(currentDamageInfo);
-            }   
+                currentDamageInfo = playerController.currentWeapon.GetDamageInfoOnHit(playerController, target);
+                target.ReceiveDamage(currentDamageInfo);
+                playerController.NotifyWeaponHit(target, currentDamageInfo);
+            }
         }
         private DamageElement GetRandomDamageElement()
     {

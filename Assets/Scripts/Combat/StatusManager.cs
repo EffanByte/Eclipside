@@ -29,6 +29,8 @@ public class StatusManager : MonoBehaviour
     private bool freezeConfusionThawBonus = false;
     
     private Dictionary<SynergyPair, Action> synergyLibrary;
+    public event Action<StatusType> OnStatusApplied;
+    public event Action<StatusType> OnStatusRemoved;
 
     // ---------------------------------------------------------
     // INITIALIZATION
@@ -53,13 +55,13 @@ public class StatusManager : MonoBehaviour
     // PUBLIC API
     // ---------------------------------------------------------
 
-    public void TryAddStatus(StatusType incoming)
+    public void TryAddStatus(StatusType incoming, float durationOverride = -1f)
     {
         if (incoming == StatusType.None) return;
 
         if (CheckAndTriggerSynergy(incoming)) return;
 
-        ApplyBaseStatus(incoming);
+        ApplyBaseStatus(incoming, durationOverride);
     }
 
     public bool HasStatus(StatusType type)
@@ -83,6 +85,7 @@ public class StatusManager : MonoBehaviour
             if (type == StatusType.Fragile) DamageTakenMultiplier = 1f;
             if (type == StatusType.Freeze) IsFrozen = false;
             if (type == StatusType.Confusion) IsConfused = false;
+            OnStatusRemoved?.Invoke(type);
         }
     }
 
@@ -145,16 +148,31 @@ public class StatusManager : MonoBehaviour
     // STATUS APPLICATIONS
     // ---------------------------------------------------------
 
-    private void ApplyBaseStatus(StatusType type)
+    private void ApplyBaseStatus(StatusType type, float durationOverride = -1f)
     {
+        float finalDuration = durationOverride > 0f ? durationOverride : GetBaseDuration(type);
+
         switch (type)
         {
-            case StatusType.Burn: StartDot(StatusType.Burn, 2f, 3f); break; 
-            case StatusType.Poison: StartDot(StatusType.Poison, 1f, 5f); break; 
-            case StatusType.Freeze: ApplyFreeze(3f); break;
-            case StatusType.Confusion: ApplyConfusion(3f); break;
-            case StatusType.Fragile: ApplyFragile(3f); break;
+            case StatusType.Burn: StartDot(StatusType.Burn, 2f, finalDuration); break; 
+            case StatusType.Poison: StartDot(StatusType.Poison, 1f, finalDuration); break; 
+            case StatusType.Freeze: ApplyFreeze(finalDuration); break;
+            case StatusType.Confusion: ApplyConfusion(finalDuration); break;
+            case StatusType.Fragile: ApplyFragile(finalDuration); break;
         }
+    }
+
+    public float GetBaseDuration(StatusType type)
+    {
+        return type switch
+        {
+            StatusType.Burn => 3f,
+            StatusType.Poison => 5f,
+            StatusType.Freeze => 3f,
+            StatusType.Confusion => 3f,
+            StatusType.Fragile => 3f,
+            _ => 0f
+        };
     }
         public StatusType GetStatusFromElement(DamageElement element)
     {
@@ -172,6 +190,7 @@ public class StatusManager : MonoBehaviour
         ClearStatus(type); 
         statusEndTimes[type] = Time.time + duration;
         statusCoroutines[type] = host.StartCoroutine(DotRoutine(type, dps, duration));
+        OnStatusApplied?.Invoke(type);
     }
 
     private IEnumerator DotRoutine(StatusType type, float dps, float duration)
@@ -183,7 +202,7 @@ public class StatusManager : MonoBehaviour
             timer += 1f;
             
             // Deal Damage via Callback
-            DealDamageToHost(dps, DamageElement.True); 
+            DealDamageToHost(dps, GetDamageElementForStatus(type)); 
         }
         ClearStatus(type);
     }
@@ -197,22 +216,37 @@ public class StatusManager : MonoBehaviour
         applyDamageCallback?.Invoke(info);
     }
 
+    private DamageElement GetDamageElementForStatus(StatusType type)
+    {
+        return type switch
+        {
+            StatusType.Burn => DamageElement.Fire,
+            StatusType.Poison => DamageElement.Poison,
+            StatusType.Freeze => DamageElement.Ice,
+            StatusType.Confusion => DamageElement.Psychic,
+            _ => DamageElement.True
+        };
+    }
+
     private void ApplyFreeze(float duration)
     {
         statusEndTimes[StatusType.Freeze] = Time.time + duration;
         IsFrozen = true;
+        OnStatusApplied?.Invoke(StatusType.Freeze);
     }
 
     private void ApplyConfusion(float duration)
     {
         statusEndTimes[StatusType.Confusion] = Time.time + duration;
         IsConfused = true;
+        OnStatusApplied?.Invoke(StatusType.Confusion);
     }
 
     private void ApplyFragile(float duration)
     {
         statusEndTimes[StatusType.Fragile] = Time.time + duration;
         DamageTakenMultiplier = 1.2f;
+        OnStatusApplied?.Invoke(StatusType.Fragile);
     }
     public void ChangeDamageMultiplier(float amount)
     {

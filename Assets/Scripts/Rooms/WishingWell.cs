@@ -85,22 +85,10 @@ public class WishingWell : EventObject
         Debug.Log("The well is silent...");
     }
 
-        private ItemRarity GetRandomRarity(float[] weights)
+    private ItemRarity GetRandomRarity(float[] weights)
     {
-        float totalWeight = weights[0] + weights[1] + weights[2];
-        float randomPoint = Random.Range(0, totalWeight);
-        float currentSum = 0;
-
-        // 0=Common, 1=Rare, 2=Legendary
-        for (int i = 0; i < weights.Length; i++)
-        {
-            currentSum += weights[i];
-            if (randomPoint <= currentSum)
-            {
-                return (ItemRarity)i;
-            }
-        }
-        return ItemRarity.Common; // Fallback
+        float playerLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
+        return LuckUtility.RollRarity(weights, playerLuck, ItemRarity.Common);
     }
 
     private void RandomizeInvestmentRange()

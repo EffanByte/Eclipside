@@ -65,6 +65,10 @@ public class PlayerController : MonoBehaviour
     private float globalDamageMultiplier = 1f;
     private float magicDamageMultiplier = 1f;
     private float heavyDamageMultiplier = 1f;
+    private float critChanceFlatBonus = 0f;
+    private float critDamageMultiplier = 1f;
+    private float projectileSpeedMultiplier = 1f;
+    private float pendingLuckRupeeFraction = 0f;
     private bool hasLuck = false; 
     private bool isLuckLocked = false;
     private bool isReviveInvulnerable = false;
@@ -93,6 +97,7 @@ public class PlayerController : MonoBehaviour
     // --- References ---
     private PlayerControls controls; 
     private InventoryManager inventory; 
+    private PlayerCharacterRuntime characterRuntime;
 
     // --- Events ---
     public event Action onCurrencyUpdate;
@@ -123,12 +128,18 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerControls();
         healthComp = GetComponent<PlayerHealth>();
         PlayerHealth.OnPlayerDeath += PlayerKilled;
+        characterRuntime = GetComponent<PlayerCharacterRuntime>();
+        if (characterRuntime == null)
+        {
+            characterRuntime = gameObject.AddComponent<PlayerCharacterRuntime>();
+        }
         
         statusMgr = GetComponent<StatusManager>();
         // Ensure StatusManager calls StatusDamage when it triggers DOTs
         statusMgr.Initialize(rb, this, StatusDamage, GetComponentInChildren<SpriteRenderer>());
         
         baseMovementSpeed = movementSpeed;
+        hasLuck = luck > 0f && !isLuckLocked;
 
         // --- INPUT BINDINGS ---
         controls.Player.Move.performed += ctx => rawInputMovement = ctx.ReadValue<Vector2>();
@@ -153,7 +164,14 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
-        EquipWeapon(currentWeapon);
+        characterRuntime.Initialize(this, healthComp, statusMgr);
+        characterRuntime.ApplyEquippedCharacter();
+
+        if (currentWeapon != null && (weaponObject == null || weaponObject.childCount == 0))
+        {
+            EquipWeapon(currentWeapon);
+        }
+
         onCurrencyUpdate?.Invoke();
 
         if (GameDirector.Instance != null)
@@ -283,6 +301,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        characterRuntime?.ManualUpdate(Time.deltaTime);
         if (isDead) return;
 
         // Tick the State Machine
@@ -319,21 +338,24 @@ public class PlayerController : MonoBehaviour
     private IEnumerator DashRoutine()
     {
         isDashing = true; // Locks State
+        characterRuntime?.NotifyDashStarted();
         
         Vector2 dashDir = rawInputMovement == Vector2.zero ? Vector2.right : rawInputMovement.normalized;
-        rb.linearVelocity = dashDir * dashForce;
+        float dashDistanceMultiplier = characterRuntime != null ? characterRuntime.GetDashDistanceMultiplier() : 1f;
+        rb.linearVelocity = dashDir * (dashForce * dashDistanceMultiplier);
         
         yield return new WaitForSeconds(dashDuration);
         
         rb.linearVelocity = Vector2.zero; 
         isDashing = false; // Unlocks State -> FSM transitions to Idle
+        characterRuntime?.NotifyDashEnded();
     }
 
     // 3. ATTACK LOGIC
     private bool CanAttackCheck()
     {
         if (currentWeapon == null) return false;
-        float actualCooldown = currentWeapon.Cooldown / playerAttackSpeedMultiplier;
+        float actualCooldown = currentWeapon.Cooldown / GetAttackSpeedMultiplierForWeapon(currentWeapon);
         return Time.time >= lastAttackTime + actualCooldown;
     }
 
@@ -371,6 +393,7 @@ public class PlayerController : MonoBehaviour
         ClearActiveWaveEffects();
         healthComp.Heal(healthComp.GetMaxHealth());
         isDead = false;
+        pendingLuckRupeeFraction = 0f;
         isReviveInvulnerable = false;
         hasPendingRevive = false;
         
@@ -383,7 +406,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 GetLastMovementDirection()
     {
         if (rawInputMovement != Vector2.zero) return rawInputMovement;
-        return transform.localScale.x < 0 ? Vector2.right : Vector2.left; 
+        return transform.localScale.x < 0 ? Vector2.left : Vector2.right; 
     }
 
     public void EquipWeapon(WeaponData newWeapon)
@@ -393,6 +416,18 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Can't equip weapon due to gladiator");
             return;
         }
+
+        if (characterRuntime != null && !characterRuntime.CanEquipWeapon(newWeapon))
+        {
+            Debug.Log($"[Character] {characterRuntime.GetActiveCharacterName()} cannot equip {newWeapon?.name ?? "null"}.");
+            return;
+        }
+
+        if (currentWeapon != null)
+        {
+            currentWeapon.Cleanup(this);
+        }
+
         currentWeapon = newWeapon;
 
         if (weaponObject.childCount > 0)
@@ -410,11 +445,24 @@ public class PlayerController : MonoBehaviour
                 anim.runtimeAnimatorController = currentWeapon.animatorOverride;
             }
         }
+
+        if (currentWeapon != null)
+        {
+            currentWeapon.Initialize(this);
+        }
+
+        characterRuntime?.NotifyWeaponEquipped(currentWeapon);
     }
 
     // --- Special Ability ---
     public void OnDealtDamage(float damageAmount)
     {
+        if (characterRuntime != null && characterRuntime.HandlesSpecialCooldowns())
+        {
+            characterRuntime.NotifyDamageDealt(damageAmount);
+            return;
+        }
+
         if (!isSpecialReady)
         {
             if (specialMeterFill) specialMeterFill.SetValue(currentSpecialCharge);
@@ -430,11 +478,28 @@ public class PlayerController : MonoBehaviour
 
     private void AttemptSpecial()
     {
-        if (isSpecialReady && !isDead) ActivateSpecialAbility();
+        if (isDead)
+        {
+            return;
+        }
+
+        if (characterRuntime != null && characterRuntime.HandlesSpecialCooldowns())
+        {
+            characterRuntime.TryActivateSpecial();
+            return;
+        }
+
+        if (isSpecialReady) ActivateSpecialAbility();
     }
 
     private void ActivateSpecialAbility()
     {
+        if (characterRuntime != null && characterRuntime.HandlesSpecialCooldowns())
+        {
+            characterRuntime.TryActivateSpecial();
+            return;
+        }
+
         Debug.Log("SPECIAL ABILITY UNLEASHED!");
         currentSpecialCharge = 0;
         isSpecialReady = false;
@@ -470,6 +535,10 @@ public class PlayerController : MonoBehaviour
         if (isDashing || isReviveInvulnerable) return; // i-frames
 
         float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
+        if (characterRuntime != null)
+        {
+            finalAmount *= characterRuntime.GetIncomingDamageMultiplier(dmg, false);
+        }
 
         if (dmg.element != DamageElement.True)
         {
@@ -477,8 +546,12 @@ public class PlayerController : MonoBehaviour
             TryAddStatus(effect);
         }
         
-        statusMgr.FlashSpriteRoutine(dmg.element);
+        if (statusMgr != null)
+        {
+            StartCoroutine(statusMgr.FlashSpriteRoutine(dmg.element));
+        }
         healthComp.ReceiveDamage(finalAmount, dmg.element);
+        characterRuntime?.NotifyDamageTaken(dmg, finalAmount, false);
         
         WaveManager waveMgr = FindFirstObjectByType<WaveManager>();
         if(waveMgr) waveMgr.TookDamageThisWave();
@@ -489,8 +562,16 @@ public class PlayerController : MonoBehaviour
         if (isReviveInvulnerable) return;
 
         float finalAmount = dmg.amount * statusMgr.DamageTakenMultiplier;
-        statusMgr.FlashSpriteRoutine(dmg.element);
+        if (characterRuntime != null)
+        {
+            finalAmount *= characterRuntime.GetIncomingDamageMultiplier(dmg, true);
+        }
+        if (statusMgr != null)
+        {
+            StartCoroutine(statusMgr.FlashSpriteRoutine(dmg.element));
+        }
         healthComp.ReceiveDamage(finalAmount, dmg.element);
+        characterRuntime?.NotifyDamageTaken(dmg, finalAmount, true);
     }
 
     /// <summary>
@@ -541,6 +622,28 @@ public class PlayerController : MonoBehaviour
                 heavyDamageMultiplier += flatChange;
                 break;
 
+            case StatType.CritChance:
+                flatChange = amount;
+                critChanceFlatBonus += flatChange;
+                break;
+
+            case StatType.CritDamage:
+                flatChange = amount;
+                critDamageMultiplier += flatChange;
+                break;
+
+            case StatType.Luck:
+                if (isLuckLocked)
+                {
+                    Debug.LogWarning($"[Luck] Ignored buff '{buffKey}' because luck is locked.");
+                    return;
+                }
+
+                flatChange = amount;
+                luck += flatChange;
+                hasLuck = luck > 0f;
+                break;
+
             case StatType.Speed:
                 flatChange = baseMovementSpeed * amount;
                 movementSpeed += flatChange;
@@ -551,9 +654,21 @@ public class PlayerController : MonoBehaviour
                 playerAttackSpeedMultiplier += flatChange;
                 break;
 
+            case StatType.projectileSpeed:
+                flatChange = amount;
+                projectileSpeedMultiplier += flatChange;
+                break;
+
             case StatType.MaxHealth:
                 flatChange = amount;
-                healthComp.SetMaxHealth(healthComp.GetMaxHealth() + flatChange);
+                if (flatChange > 0f && characterRuntime != null && characterRuntime.TryHandleMaxHealthGain(flatChange))
+                {
+                    flatChange = 0f;
+                }
+                else
+                {
+                    healthComp.SetMaxHealth(healthComp.GetMaxHealth() + flatChange);
+                }
                 break;
         }
 
@@ -599,14 +714,30 @@ public class PlayerController : MonoBehaviour
             case StatType.HeavyDamage:
                 heavyDamageMultiplier -= buff.FlatAmountAdded;
                 break;
+            case StatType.CritChance:
+                critChanceFlatBonus -= buff.FlatAmountAdded;
+                break;
+            case StatType.CritDamage:
+                critDamageMultiplier -= buff.FlatAmountAdded;
+                break;
+            case StatType.Luck:
+                luck -= buff.FlatAmountAdded;
+                hasLuck = luck > 0f && !isLuckLocked;
+                break;
             case StatType.Speed:
                 movementSpeed -= buff.FlatAmountAdded;
                 break;
             case StatType.AttackSpeed:
                 playerAttackSpeedMultiplier -= buff.FlatAmountAdded;
                 break;
+            case StatType.projectileSpeed:
+                projectileSpeedMultiplier -= buff.FlatAmountAdded;
+                break;
             case StatType.MaxHealth:
-                healthComp.SetMaxHealth(healthComp.GetMaxHealth() - buff.FlatAmountAdded);
+                if (buff.FlatAmountAdded != 0f)
+                {
+                    healthComp.SetMaxHealth(healthComp.GetMaxHealth() - buff.FlatAmountAdded);
+                }
                 break;
         }
 
@@ -670,7 +801,53 @@ public class PlayerController : MonoBehaviour
             multiplier *= heavyDamageMultiplier;
         }
 
+        if (characterRuntime != null)
+        {
+            multiplier *= characterRuntime.GetCharacterDamageMultiplierForWeapon(weapon);
+        }
+
         return multiplier;
+    }
+
+    public float GetAttackSpeedMultiplierForWeapon(WeaponData weapon)
+    {
+        float multiplier = playerAttackSpeedMultiplier;
+
+        if (characterRuntime != null)
+        {
+            multiplier *= characterRuntime.GetCharacterAttackSpeedMultiplierForWeapon(weapon);
+        }
+
+        return Mathf.Max(0.01f, multiplier);
+    }
+
+    public float GetCriticalChanceForWeapon(WeaponData weapon, float weaponCritChance)
+    {
+        float finalChance = weaponCritChance + critChanceFlatBonus;
+
+        if (characterRuntime != null)
+        {
+            finalChance = characterRuntime.GetCharacterCriticalChanceForWeapon(weapon, finalChance);
+        }
+
+        return Mathf.Clamp(finalChance, 0f, 100f);
+    }
+
+    public float GetCriticalDamageMultiplier()
+    {
+        return Mathf.Max(1f, critDamageMultiplier);
+    }
+
+    public float GetProjectileSpeedMultiplier()
+    {
+        float multiplier = projectileSpeedMultiplier;
+
+        if (characterRuntime != null)
+        {
+            multiplier *= characterRuntime.GetProjectileSpeedMultiplier();
+        }
+
+        return Mathf.Max(0.01f, multiplier);
     }
 
     private void RegisterWaveEffect(string effectKey, int waveCount, Action expireAction)
@@ -697,6 +874,7 @@ public class PlayerController : MonoBehaviour
     {
         if (activeWaveEffects.Count == 0)
         {
+            characterRuntime?.NotifyWaveTransition();
             return;
         }
 
@@ -720,6 +898,8 @@ public class PlayerController : MonoBehaviour
             effect.ExpireAction?.Invoke();
             activeWaveEffects.Remove(key);
         }
+
+        characterRuntime?.NotifyWaveTransition();
     }
 
     private void ClearActiveWaveEffects()
@@ -794,21 +974,67 @@ public class PlayerController : MonoBehaviour
             case StatType.BaseDamage: globalDamageMultiplier += 0.1f; break;
             case StatType.MagicDamage: magicDamageMultiplier += 0.1f; break;
             case StatType.HeavyDamage: heavyDamageMultiplier += 0.1f; break;
+            case StatType.CritChance: critChanceFlatBonus += 5f; break;
+            case StatType.CritDamage: critDamageMultiplier += 0.1f; break;
+            case StatType.Luck:
+                if (!isLuckLocked)
+                {
+                    luck += 1f;
+                    hasLuck = luck > 0f;
+                }
+                break;
             case StatType.MaxHealth: healthComp.ModifyMaxHealth(1); healthComp.Heal(1f); break; // +1 Heart
             case StatType.Speed: baseMovementSpeed *= 1.05f; movementSpeed = baseMovementSpeed; break;
             case StatType.AttackSpeed: playerAttackSpeedMultiplier += 0.05f; break;
+            case StatType.projectileSpeed: projectileSpeedMultiplier += 0.1f; break;
         }
     }
 
     public void TryAddStatus(StatusType effect) => statusMgr.TryAddStatus(effect);
+    public void TryAddStatus(StatusType effect, float durationOverride) => statusMgr.TryAddStatus(effect, durationOverride);
     public float GetMaxHealth() => healthComp.GetMaxHealth();
     public bool IsDead => isDead;
-    public void Heal(float amount) => healthComp.Heal(amount);
+    public float GetLuckValue() => hasLuck && !isLuckLocked ? Mathf.Max(0f, luck) : 0f;
+    public float GetStatusProcChanceBonus() => LuckUtility.GetStatusProcChanceBonus(GetLuckValue());
+    public float GetOutgoingStatusDuration(StatusType statusType, float baseDuration)
+    {
+        if (characterRuntime == null)
+        {
+            return baseDuration;
+        }
+
+        return characterRuntime.GetOutgoingStatusDuration(statusType, baseDuration);
+    }
+
+    public void NotifyWeaponHit(EnemyBase target, DamageInfo damageInfo)
+    {
+        characterRuntime?.NotifyWeaponHit(target, damageInfo);
+    }
+
+    public void Heal(float amount)
+    {
+        if (characterRuntime != null && characterRuntime.TryHandleHealing(amount))
+        {
+            return;
+        }
+
+        healthComp.Heal(amount);
+    }
     public void AddTemporaryHearts(float amount) => healthComp.AddTemporaryHearts(amount);
     public void RemoveTemporaryHearts(float amount) => healthComp.RemoveTemporaryHearts(amount);
     
-    public void ToggleLuck(bool state) { hasLuck = state; Debug.Log($"Luck: {state}"); }
-    public void LockLuck() => isLuckLocked = true;
+    public void ToggleLuck(bool state)
+    {
+        hasLuck = state && !isLuckLocked && luck > 0f;
+        Debug.Log($"Luck enabled: {hasLuck} (value: {GetLuckValue():0.##})");
+    }
+
+    public void LockLuck()
+    {
+        isLuckLocked = true;
+        hasLuck = false;
+        Debug.Log("[Luck] Luck is now locked.");
+    }
 
     public float GetBaseDamage()
     {
@@ -818,16 +1044,69 @@ public class PlayerController : MonoBehaviour
     }
     public void SetLuck(int value)
     {
-        if (!isLuckLocked) { hasLuck = true; luck = value; }
+        if (!isLuckLocked)
+        {
+            luck = value;
+            hasLuck = luck > 0f;
+        }
     }
 
     public void AddCurrency(CurrencyType type, int amount)
     {
+        int finalAmount = amount;
+
+        if (type == CurrencyType.Rupee && amount > 0)
+        {
+            finalAmount = ApplyLuckToRupeeGain(amount);
+        }
+
         switch (type) {
-            case CurrencyType.Rupee: rupees += amount; break;
-            case CurrencyType.Key: keys += amount; break;
+            case CurrencyType.Rupee: rupees += finalAmount; break;
+            case CurrencyType.Key: keys += finalAmount; break;
         }
         onCurrencyUpdate?.Invoke();
+    }
+
+    public void ConfigureBaseMovementSpeed(float speed)
+    {
+        baseMovementSpeed = speed;
+        movementSpeed = speed;
+    }
+
+    public float GetCurrentMovementSpeed() => movementSpeed;
+    public float GetDashForce() => dashForce;
+    public float GetDashDuration() => dashDuration;
+    public float GetCurrentHealth() => healthComp.GetCurrentHealth();
+    public StatusManager GetStatusManager() => statusMgr;
+    public PlayerHealth GetHealthComponent() => healthComp;
+    public void SetSpecialMeterNormalized(float normalized)
+    {
+        if (specialMeterFill == null)
+        {
+            return;
+        }
+
+        specialMeterFill.SetValue(Mathf.Clamp01(normalized) * 100f);
+    }
+
+    private int ApplyLuckToRupeeGain(int baseAmount)
+    {
+        float currentLuck = GetLuckValue();
+        if (currentLuck <= 0f || baseAmount <= 0)
+        {
+            return baseAmount;
+        }
+
+        float bonusFraction = (baseAmount * (LuckUtility.GetRupeeMultiplier(currentLuck) - 1f)) + pendingLuckRupeeFraction;
+        int bonusRupees = Mathf.FloorToInt(bonusFraction);
+        pendingLuckRupeeFraction = bonusFraction - bonusRupees;
+
+        if (bonusRupees > 0)
+        {
+            Debug.Log($"[Luck] Added +{bonusRupees} bonus rupees from {currentLuck:0.##} luck on a base reward of {baseAmount}.");
+        }
+
+        return baseAmount + bonusRupees;
     }
 
     public bool DeductCurrency(CurrencyType type, int amount)

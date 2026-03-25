@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: edbf474352e48534191445f36adca962, type: 3}
-  m_Name: Zoryn
+  m_Name: Eryndor
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
-  characterID: E_Zoryn
-  characterName: Zoryn
+  characterID: D_Eryndor
+  characterName: Eryndor
   lore: 
-  rarity: 1
+  rarity: 0
   portrait: {fileID: 0}
   inGameSprite: {fileID: 0}
   animatorOverride: {fileID: 0}
   maxHealth: 50
-  moveSpeed: 1.1
+  moveSpeed: 1
   dashCooldown: 1
   damageMultiplier: 1
   defense: 0
-  attackSpeedMultiplier: 1.1
+  attackSpeedMultiplier: 1
   lightDamageMultiplier: 1
-  magicDamageMultiplier: 1.05
+  magicDamageMultiplier: 1
   heavyDamageMultiplier: 1
   lightAttackSpeedMultiplier: 1
   magicAttackSpeedMultiplier: 1
@@ -35,9 +35,9 @@ MonoBehaviour:
   critChanceMultiplier: 1
   critChanceFlatBonus: 0
   dashDistanceMultiplier: 1
-  outgoingStatusDurationBonusSeconds: 1
+  outgoingStatusDurationBonusSeconds: 0
   outgoingStatusDurationMultiplier: 1
-  contactDamageTakenMultiplier: 1.1
+  contactDamageTakenMultiplier: 1
   projectileDamageTakenMultiplier: 1
   statusDamageTakenMultiplier: 1
   fireDamageTakenMultiplier: 1
@@ -51,8 +51,8 @@ MonoBehaviour:
   maxHealthIncreasesBecomeTemporaryHealth: 0
   temporaryHealthCap: 0
   temporaryHealthDecayInterval: 0
-  startingWeapon: {fileID: 11400000, guid: fa783fea21ecf424eaefa93dd7e3b43b, type: 2}
+  startingWeapon: {fileID: 11400000, guid: b78e6248387b4d8459a01fc5d1a18f15, type: 2}
   specialAbility: {fileID: 0}
   chargeType: 3
   chargeMax: 100
-  specialCooldownSeconds: 45
+  specialCooldownSeconds: 30

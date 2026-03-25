@@ -16,12 +16,43 @@ public class CharacterData : ScriptableObject
     public AnimatorOverrideController animatorOverride; // Essential for "Flashier animations" on Epics
 
     [Header("Base Stats")]
-    public float maxHealth = 100f; // 10 Hearts
-    public float moveSpeed = 5f;
+    public float maxHealth = 50f; // 5 Hearts
+    public float moveSpeed = 1f;
     public float dashCooldown = 1f;
     [Tooltip("Base damage multiplier (1.0 = 100%)")]
     public float damageMultiplier = 1.0f;
     public float defense = 0f; // Damage reduction %
+    public float attackSpeedMultiplier = 1f;
+    public float lightDamageMultiplier = 1f;
+    public float magicDamageMultiplier = 1f;
+    public float heavyDamageMultiplier = 1f;
+    public float lightAttackSpeedMultiplier = 1f;
+    public float magicAttackSpeedMultiplier = 1f;
+    public float heavyAttackSpeedMultiplier = 1f;
+    public float projectileSpeedMultiplier = 1f;
+    public float critChanceMultiplier = 1f;
+    public float critChanceFlatBonus = 0f;
+    public float dashDistanceMultiplier = 1f;
+    public float outgoingStatusDurationBonusSeconds = 0f;
+    public float outgoingStatusDurationMultiplier = 1f;
+
+    [Header("Damage Taken Multipliers")]
+    public float contactDamageTakenMultiplier = 1f;
+    public float projectileDamageTakenMultiplier = 1f;
+    public float statusDamageTakenMultiplier = 1f;
+    public float fireDamageTakenMultiplier = 1f;
+    public float poisonDamageTakenMultiplier = 1f;
+    public float iceDamageTakenMultiplier = 1f;
+    public float magicDamageTakenMultiplier = 1f;
+    public float physicalDamageTakenMultiplier = 1f;
+    public float heavyDamageTakenMultiplier = 1f;
+
+    [Header("Unique Rules")]
+    public float permanentHealthCap = 0f;
+    public bool overflowHealingCreatesTemporaryHealth = false;
+    public bool maxHealthIncreasesBecomeTemporaryHealth = false;
+    public float temporaryHealthCap = 0f;
+    public float temporaryHealthDecayInterval = 0f;
 
     [Header("Combat Loadout")]
     [Tooltip("The weapon they start with.")]
@@ -34,6 +65,7 @@ public class CharacterData : ScriptableObject
     public CharacterAbility specialAbility;
     public AbilityChargeType chargeType;
     public float chargeMax = 100f; // How much damage/healing needed to fill bar
+    public float specialCooldownSeconds = 30f;
 
     // ---------------------------------------------------------
     // PROGRESSION LOOKUP (Badges)

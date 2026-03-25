@@ -75,6 +75,19 @@ public class PlayerHealth : MonoBehaviour
         OnTempHealthChanged?.Invoke(temporaryHealth);
     }
 
+    public float AddTemporaryHeartsCapped(float amount, float maxTemporaryHealth)
+    {
+        float previous = temporaryHealth;
+        temporaryHealth = Mathf.Clamp(temporaryHealth + amount, 0f, Mathf.Max(0f, maxTemporaryHealth));
+
+        if (!Mathf.Approximately(previous, temporaryHealth))
+        {
+            OnTempHealthChanged?.Invoke(temporaryHealth);
+        }
+
+        return temporaryHealth - previous;
+    }
+
     public void RemoveTemporaryHearts(float amount)
     {
         temporaryHealth = Mathf.Max(0f, temporaryHealth - amount);
@@ -112,11 +125,14 @@ public class PlayerHealth : MonoBehaviour
         return maxHealth;
     }
     public float GetCurrentHealth() => currentHealth;
+    public float GetTemporaryHealth() => temporaryHealth;
     
     public void SetMaxHealth(float max)
     {
-        maxHealth = max;
+        maxHealth = Mathf.Max(1f, max);
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         OnMaxHealthChanged?.Invoke(maxHealth);
+        OnHealthChanged?.Invoke(currentHealth);
     }
 
     public void ReviveToHealth(float amount)

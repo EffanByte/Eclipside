@@ -15,15 +15,22 @@ public class SanctuaryOfFortune : EventObject
     {
         if (PlayerController.Instance.DeductCurrency(CurrencyType.Rupee, price))
         {
-        ItemData item = GameDatabase.Instance.GetRandomItem();
-        Vector3 spawnPos = transform.position + Vector3.up * 0.2f;
-        GameObject lootObj = Instantiate(lootPedestalPrefab, spawnPos, Quaternion.identity);
-        LootPedestal pedestal = lootObj.GetComponent<LootPedestal>();
-        if (pedestal != null)
-        {
-            pedestal.Setup(item);
-        }
-        Debug.Log("Sanctuary rewarded a " + item.itemName + "!");
+            float playerLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
+            ItemData item = GameDatabase.Instance.GetRandomItem(playerLuck);
+            if (item == null)
+            {
+                Debug.LogWarning("Sanctuary of Fortune could not find a reward.");
+                return;
+            }
+
+            Vector3 spawnPos = transform.position + Vector3.up * 0.2f;
+            GameObject lootObj = Instantiate(lootPedestalPrefab, spawnPos, Quaternion.identity);
+            LootPedestal pedestal = lootObj.GetComponent<LootPedestal>();
+            if (pedestal != null)
+            {
+                pedestal.Setup(item);
+            }
+            Debug.Log($"Sanctuary rewarded a {item.itemName} at {playerLuck:0.##} luck!");
         }
         else
         {

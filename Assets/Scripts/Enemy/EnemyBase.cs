@@ -125,7 +125,10 @@ public abstract class EnemyBase : MonoBehaviour
     // Status Modifiers
     protected float speedMultiplier = 1.0f; 
     protected float originalSpeedMultiplier;      
+    protected float attackSpeedMultiplier = 1.0f;
     private float selfAttackMaxHpPercent = 0f;        
+    private Coroutine temporaryMoveSpeedRoutine;
+    private Coroutine temporaryAttackSpeedRoutine;
 
     public static event Action<EnemyBase> OnEnemyKilled;
     protected Collider2D mainCollider;      
@@ -405,7 +408,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected IEnumerator AttackCooldownRoutine()
     {
         isAttackReady = false; 
-        yield return new WaitForSeconds(stats.attackCooldown); 
+        yield return new WaitForSeconds(stats.attackCooldown / Mathf.Max(0.01f, attackSpeedMultiplier)); 
         isAttackReady = true; 
     }
 
@@ -568,6 +571,52 @@ public bool HasStatus(StatusType status)
 public void TryAddStatus(StatusType status)
 {
     statusMgr.TryAddStatus(status);
+}
+
+public void TryAddStatus(StatusType status, float durationOverride)
+{
+    statusMgr.TryAddStatus(status, durationOverride);
+}
+
+public void ApplyTemporaryMoveSpeedMultiplier(float multiplier, float duration)
+{
+    if (temporaryMoveSpeedRoutine != null)
+    {
+        StopCoroutine(temporaryMoveSpeedRoutine);
+    }
+
+    speedMultiplier = Mathf.Max(0.01f, multiplier);
+    temporaryMoveSpeedRoutine = StartCoroutine(ResetMoveSpeedRoutine(duration));
+}
+
+public void ApplyTemporaryAttackSpeedMultiplier(float multiplier, float duration)
+{
+    if (temporaryAttackSpeedRoutine != null)
+    {
+        StopCoroutine(temporaryAttackSpeedRoutine);
+    }
+
+    attackSpeedMultiplier = Mathf.Max(0.01f, multiplier);
+    temporaryAttackSpeedRoutine = StartCoroutine(ResetAttackSpeedRoutine(duration));
+}
+
+public void SetTargetOverride(Transform target)
+{
+    playerTarget = target;
+}
+
+private IEnumerator ResetMoveSpeedRoutine(float duration)
+{
+    yield return new WaitForSeconds(duration);
+    speedMultiplier = originalSpeedMultiplier;
+    temporaryMoveSpeedRoutine = null;
+}
+
+private IEnumerator ResetAttackSpeedRoutine(float duration)
+{
+    yield return new WaitForSeconds(duration);
+    attackSpeedMultiplier = 1f;
+    temporaryAttackSpeedRoutine = null;
 }
 
 }

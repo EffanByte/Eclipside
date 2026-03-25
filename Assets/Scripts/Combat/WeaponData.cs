@@ -50,13 +50,18 @@ public abstract class WeaponData : ItemData
             finalDamage *= player.GetDamageMultiplierForWeapon(this);
         }
         
-        bool isCrit = criticalChance >= Random.Range(0f, 100f);
+        float critChanceToUse = player != null ? player.GetCriticalChanceForWeapon(this, criticalChance) : criticalChance;
+        bool isCrit = critChanceToUse >= Random.Range(0f, 100f);
+        if (isCrit && player != null)
+        {
+            finalDamage *= player.GetCriticalDamageMultiplier();
+        }
 
         DamageInfo info = new DamageInfo(
             amount: finalDamage,
             element: element,
             style: style,
-            sourcePosition: player.transform.position,
+            sourcePosition: player != null ? (Vector2)player.transform.position : Vector2.zero,
             knockbackForce: knockbackForce,
             isCritical: isCrit
         );

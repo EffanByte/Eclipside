@@ -19,12 +19,40 @@ MonoBehaviour:
   portrait: {fileID: 0}
   inGameSprite: {fileID: 0}
   animatorOverride: {fileID: 0}
-  maxHealth: 100
-  moveSpeed: 5
+  maxHealth: 40
+  moveSpeed: 1.2
   dashCooldown: 1
   damageMultiplier: 1
   defense: 0
-  startingWeapon: {fileID: 0}
+  attackSpeedMultiplier: 1.2
+  lightDamageMultiplier: 1.1
+  magicDamageMultiplier: 1
+  heavyDamageMultiplier: 1
+  lightAttackSpeedMultiplier: 1
+  magicAttackSpeedMultiplier: 1
+  heavyAttackSpeedMultiplier: 1
+  projectileSpeedMultiplier: 1
+  critChanceMultiplier: 1
+  critChanceFlatBonus: 0
+  dashDistanceMultiplier: 1
+  outgoingStatusDurationBonusSeconds: 0
+  outgoingStatusDurationMultiplier: 1
+  contactDamageTakenMultiplier: 1.1
+  projectileDamageTakenMultiplier: 1
+  statusDamageTakenMultiplier: 1
+  fireDamageTakenMultiplier: 1
+  poisonDamageTakenMultiplier: 1
+  iceDamageTakenMultiplier: 1
+  magicDamageTakenMultiplier: 1
+  physicalDamageTakenMultiplier: 1
+  heavyDamageTakenMultiplier: 1
+  permanentHealthCap: 0
+  overflowHealingCreatesTemporaryHealth: 0
+  maxHealthIncreasesBecomeTemporaryHealth: 0
+  temporaryHealthCap: 0
+  temporaryHealthDecayInterval: 0
+  startingWeapon: {fileID: 11400000, guid: 7d20fb1723c53be48b59198fd9158245, type: 2}
   specialAbility: {fileID: 0}
-  chargeType: 0
+  chargeType: 3
   chargeMax: 100
+  specialCooldownSeconds: 40
