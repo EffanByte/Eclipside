@@ -26,12 +26,17 @@ public class PauseMenu : MonoBehaviour
     {
         // Logic to return to main menu
         Time.timeScale = 1f; // Ensure game time is normal
+        RunSceneTransitionState.Clear();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu"); // Load main menu scene
     }
     public void OnRetryButtonPressed()
     {
         // Logic to retry the current level
         Time.timeScale = 1f; // Ensure game time is normal
+        if (GameDirector.Instance != null)
+        {
+            RunSceneTransitionState.SetBiomeState(GameDirector.Instance.CurrentBiomeIndex, GameDirector.Instance.CurrentDifficultyValue);
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); // Reload current scene
     }
 }

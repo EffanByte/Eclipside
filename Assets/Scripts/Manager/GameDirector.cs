@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 public class GameDirector : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class GameDirector : MonoBehaviour
     // State
     public bool IsWaveActive { get; private set; } = false;
     public bool IsPaused { get; private set; } = false;
+    public int CurrentBiomeIndex => currentBiomeIndex;
+    public float CurrentDifficultyValue => currentDifficultyVal;
     
     private float currentTimerValue; 
     public float currentDifficultyVal = 1.0f;
@@ -56,14 +59,40 @@ public class GameDirector : MonoBehaviour
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
         waveManager.OnWaveFinished += WaveFinishedRoutine;
         OnWaveAdvanced += TriggerWave;
-        
-        // Start the first Biome
-        if (campaignBiomes != null && campaignBiomes.Count > 0)
-            LoadBiome(0);
-        else
+
+        if (campaignBiomes == null || campaignBiomes.Count == 0)
+        {
             Debug.LogError("No Biomes assigned to GameDirector!");
-        
-        
+            return;
+        }
+
+        if (!RunSceneTransitionState.HasActiveRun)
+        {
+            RunSceneTransitionState.BeginNewRun();
+        }
+
+        currentDifficultyVal = RunSceneTransitionState.CurrentDifficultyValue;
+        LoadBiome(RunSceneTransitionState.CurrentBiomeIndex);
+    }
+
+    private void OnDestroy()
+    {
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.OnPlayerDeath -= CompleteRun;
+        }
+
+        if (waveManager != null)
+        {
+            waveManager.OnWaveFinished -= WaveFinishedRoutine;
+        }
+
+        OnWaveAdvanced -= TriggerWave;
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     // ---------------------------------------------------------
@@ -80,8 +109,17 @@ public class GameDirector : MonoBehaviour
 
         currentBiomeIndex = index;
         BiomeData currentBiome = campaignBiomes[index];
+        RunSceneTransitionState.SetBiomeState(currentBiomeIndex, currentDifficultyVal);
+
+        if (TryLoadBiomeScene(currentBiome))
+        {
+            return;
+        }
+
+        PrepareSceneForBiomeLoad();
 
         Debug.Log($"=== ENTERING BIOME: {currentBiome.biomeName} ===");
+        BiomeTitleOverlay.Show(currentBiome.biomeName);
 
         // Tell WaveManager what enemies to use
         waveManager.InitializeBiome(currentBiome);
@@ -149,16 +187,17 @@ public class GameDirector : MonoBehaviour
     // Called by the BiomePortal.cs script when the player interacts with it
     public void AdvanceToNextBiome()
     {
-        // Check if we just beat the final biome
-        if (currentBiomeIndex + 1 >= campaignBiomes.Count)
+        int nextBiomeIndex = currentBiomeIndex + 1;
+
+        if (nextBiomeIndex >= campaignBiomes.Count)
         {
             Debug.Log("VICTORY! All Biomes Cleared!");
+            RunSceneTransitionState.Clear();
             CompleteRun();
         }
         else
         {
-            // Load the next one
-            LoadBiome(currentBiomeIndex + 1);
+            LoadBiome(nextBiomeIndex);
         }
     }
 
@@ -183,6 +222,8 @@ public class GameDirector : MonoBehaviour
 
     private void CompleteRun()
     {
+        RunSceneTransitionState.Clear();
+
         if (StatisticsManager.Instance != null)
             StatisticsManager.Instance.IncrementStat("RUNS_COMPLETED");
         else
@@ -190,4 +231,55 @@ public class GameDirector : MonoBehaviour
     }
 
     public float GetTimer() => currentTimerValue;
+
+    private bool TryLoadBiomeScene(BiomeData biome)
+    {
+        if (biome == null || string.IsNullOrWhiteSpace(biome.sceneName))
+        {
+            return false;
+        }
+
+        string activeSceneName = SceneManager.GetActiveScene().name;
+        if (string.Equals(activeSceneName, biome.sceneName, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        Debug.Log($"[GameDirector] Loading biome scene '{biome.sceneName}' for '{biome.biomeName}'.");
+        SceneManager.LoadScene(biome.sceneName);
+        return true;
+    }
+
+    private void PrepareSceneForBiomeLoad()
+    {
+        StopAllCoroutines();
+        ZoneSpawner.ClearZones();
+
+        EnemyBase[] enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.None);
+        foreach (EnemyBase enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
+
+        TimedChest[] chests = FindObjectsByType<TimedChest>(FindObjectsSortMode.None);
+        foreach (TimedChest chest in chests)
+        {
+            if (chest != null)
+            {
+                Destroy(chest.gameObject);
+            }
+        }
+
+        BiomePortal[] portals = FindObjectsByType<BiomePortal>(FindObjectsSortMode.None);
+        foreach (BiomePortal portal in portals)
+        {
+            if (portal != null)
+            {
+                Destroy(portal.gameObject);
+            }
+        }
+    }
 }

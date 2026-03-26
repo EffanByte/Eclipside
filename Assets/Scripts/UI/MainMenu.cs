@@ -96,6 +96,7 @@ public class MainMenu : MonoBehaviour
         profile.characters.equipped_character_id = pendingCharacterSelectionId;
         SaveManager.SaveProfile();
 
+        RunSceneTransitionState.BeginNewRun();
         SceneManager.LoadScene(gameplaySceneName);
     }
 
