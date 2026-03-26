@@ -23,7 +23,6 @@ public class PlayerCharacterRuntime : MonoBehaviour
     private PlayerHealth health;
     private StatusManager statusManager;
     private CharacterData activeCharacter;
-    private float baseMovementSpeedReference;
     private float specialCooldownRemaining;
     private float aylithIceHeartDecayTimer;
     private float veyloriaWithdrawalRecoveryUntil = float.NegativeInfinity;
@@ -41,7 +40,6 @@ public class PlayerCharacterRuntime : MonoBehaviour
         player = controller;
         health = playerHealth;
         statusManager = playerStatusManager;
-        baseMovementSpeedReference = Mathf.Max(0.01f, player.GetCurrentMovementSpeed());
 
         EnemyBase.OnEnemyKilled += HandleEnemyKilled;
         if (statusManager != null)
@@ -237,20 +235,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
             return 1f;
         }
 
-        float multiplier = activeCharacter.damageMultiplier;
-
-        if (weapon is MagicWeapon)
-        {
-            multiplier *= activeCharacter.magicDamageMultiplier;
-        }
-        else if (weapon is HeavyMelee)
-        {
-            multiplier *= activeCharacter.heavyDamageMultiplier;
-        }
-        else
-        {
-            multiplier *= activeCharacter.lightDamageMultiplier;
-        }
+        float multiplier = 1f;
 
         if (activeCharacter.characterID == VeyloriaId && IsVeyloriaWithdrawalActive() && weapon is LightMeleeWeapon)
         {
@@ -272,20 +257,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
             return 1f;
         }
 
-        float multiplier = activeCharacter.attackSpeedMultiplier;
-
-        if (weapon is MagicWeapon)
-        {
-            multiplier *= activeCharacter.magicAttackSpeedMultiplier;
-        }
-        else if (weapon is HeavyMelee)
-        {
-            multiplier *= activeCharacter.heavyAttackSpeedMultiplier;
-        }
-        else
-        {
-            multiplier *= activeCharacter.lightAttackSpeedMultiplier;
-        }
+        float multiplier = 1f;
 
         if (activeCharacter.characterID == VeyloriaId && IsVeyloriaWithdrawalActive())
         {
@@ -302,7 +274,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
             return currentChance;
         }
 
-        float finalChance = (currentChance * activeCharacter.critChanceMultiplier) + activeCharacter.critChanceFlatBonus;
+        float finalChance = currentChance;
 
         if (activeCharacter.characterID == VeyloriaId)
         {
@@ -322,12 +294,12 @@ public class PlayerCharacterRuntime : MonoBehaviour
 
     public float GetProjectileSpeedMultiplier()
     {
-        return activeCharacter != null ? Mathf.Max(0.01f, activeCharacter.projectileSpeedMultiplier) : 1f;
+        return 1f;
     }
 
     public float GetDashDistanceMultiplier()
     {
-        return activeCharacter != null ? Mathf.Max(0.01f, activeCharacter.dashDistanceMultiplier) : 1f;
+        return 1f;
     }
 
     public float GetIncomingDamageMultiplier(DamageInfo damageInfo, bool isStatusDamage)
@@ -499,9 +471,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
             return;
         }
 
-        player.ConfigureBaseMovementSpeed(baseMovementSpeedReference * Mathf.Max(0.01f, activeCharacter.moveSpeed));
-        health.SetMaxHealth(activeCharacter.maxHealth);
-        health.Heal(activeCharacter.maxHealth);
+        player.ApplyCharacterBaseStats(activeCharacter);
         aylithIceHeartDecayTimer = 0f;
     }
 

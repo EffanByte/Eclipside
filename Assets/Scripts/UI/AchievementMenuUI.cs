@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
@@ -41,6 +42,61 @@ public class AchievementMenuUI : MonoBehaviour
             if (slot != null)
             {
                 slot.Initialize(achievement, currentVal);
+            }
+
+            BeautifySlot(obj);
+        }
+    }
+
+    private void BeautifySlot(GameObject slotObject)
+    {
+        if (slotObject == null)
+        {
+            return;
+        }
+
+        Image[] images = slotObject.GetComponentsInChildren<Image>(true);
+        foreach (Image image in images)
+        {
+            if (image == null)
+            {
+                continue;
+            }
+
+            if (image.transform == slotObject.transform)
+            {
+                image.color = new Color(0.18f, 0.18f, 0.24f, 0.98f);
+            }
+            else if (image.GetComponent<Button>() == null)
+            {
+                image.color = new Color(
+                    Mathf.Clamp01(image.color.r * 0.95f),
+                    Mathf.Clamp01(image.color.g * 0.90f),
+                    Mathf.Clamp01(image.color.b * 0.90f),
+                    image.color.a <= 0f ? 1f : image.color.a);
+            }
+        }
+
+        TMPro.TextMeshProUGUI[] texts = slotObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>(true);
+        foreach (TMPro.TextMeshProUGUI text in texts)
+        {
+            if (text == null)
+            {
+                continue;
+            }
+
+            string lowerName = text.name.ToLowerInvariant();
+            if (lowerName.Contains("progress"))
+            {
+                text.color = new Color(0.92f, 0.75f, 0.28f, 1f);
+            }
+            else if (lowerName.Contains("title"))
+            {
+                text.color = new Color(1f, 0.96f, 0.88f, 1f);
+            }
+            else
+            {
+                text.color = new Color(0.92f, 0.92f, 0.94f, 1f);
             }
         }
     }

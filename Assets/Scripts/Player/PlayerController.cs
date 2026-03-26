@@ -61,13 +61,22 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
 
     // --- Buff State ---
+    private float defaultMovementSpeed;
+    private float defaultDashForce;
+    private float defaultDashDuration;
     private float baseMovementSpeed; 
     private float globalDamageMultiplier = 1f;
+    private float lightDamageMultiplier = 1f;
     private float magicDamageMultiplier = 1f;
     private float heavyDamageMultiplier = 1f;
+    private float lightAttackSpeedMultiplier = 1f;
+    private float magicAttackSpeedMultiplier = 1f;
+    private float heavyAttackSpeedMultiplier = 1f;
+    private float critChanceMultiplier = 1f;
     private float critChanceFlatBonus = 0f;
     private float critDamageMultiplier = 1f;
     private float projectileSpeedMultiplier = 1f;
+    private float characterDashDistanceMultiplier = 1f;
     private float pendingLuckRupeeFraction = 0f;
     private bool hasLuck = false; 
     private bool isLuckLocked = false;
@@ -138,6 +147,9 @@ public class PlayerController : MonoBehaviour
         // Ensure StatusManager calls StatusDamage when it triggers DOTs
         statusMgr.Initialize(rb, this, StatusDamage, GetComponentInChildren<SpriteRenderer>());
         
+        defaultMovementSpeed = movementSpeed;
+        defaultDashForce = dashForce;
+        defaultDashDuration = dashDuration;
         baseMovementSpeed = movementSpeed;
         hasLuck = luck > 0f && !isLuckLocked;
 
@@ -265,9 +277,6 @@ public class PlayerController : MonoBehaviour
         },
         onLogic: (state) => 
         {
-            // Keep moving! 
-            // The Base Layer will handle switching "Run" <-> "Idle" visuals based on speed
-            // The Attack Layer will override the arms.
             float penalty = 0.8f;
             MoveLogic(penalty); 
         }
@@ -341,7 +350,11 @@ public class PlayerController : MonoBehaviour
         characterRuntime?.NotifyDashStarted();
         
         Vector2 dashDir = rawInputMovement == Vector2.zero ? Vector2.right : rawInputMovement.normalized;
-        float dashDistanceMultiplier = characterRuntime != null ? characterRuntime.GetDashDistanceMultiplier() : 1f;
+        float dashDistanceMultiplier = characterDashDistanceMultiplier;
+        if (characterRuntime != null)
+        {
+            dashDistanceMultiplier *= characterRuntime.GetDashDistanceMultiplier();
+        }
         rb.linearVelocity = dashDir * (dashForce * dashDistanceMultiplier);
         
         yield return new WaitForSeconds(dashDuration);
@@ -800,6 +813,10 @@ public class PlayerController : MonoBehaviour
         {
             multiplier *= heavyDamageMultiplier;
         }
+        else
+        {
+            multiplier *= lightDamageMultiplier;
+        }
 
         if (characterRuntime != null)
         {
@@ -813,6 +830,19 @@ public class PlayerController : MonoBehaviour
     {
         float multiplier = playerAttackSpeedMultiplier;
 
+        if (weapon is MagicWeapon)
+        {
+            multiplier *= magicAttackSpeedMultiplier;
+        }
+        else if (weapon is HeavyMelee)
+        {
+            multiplier *= heavyAttackSpeedMultiplier;
+        }
+        else
+        {
+            multiplier *= lightAttackSpeedMultiplier;
+        }
+
         if (characterRuntime != null)
         {
             multiplier *= characterRuntime.GetCharacterAttackSpeedMultiplierForWeapon(weapon);
@@ -823,7 +853,7 @@ public class PlayerController : MonoBehaviour
 
     public float GetCriticalChanceForWeapon(WeaponData weapon, float weaponCritChance)
     {
-        float finalChance = weaponCritChance + critChanceFlatBonus;
+        float finalChance = (weaponCritChance * critChanceMultiplier) + critChanceFlatBonus;
 
         if (characterRuntime != null)
         {
@@ -1065,6 +1095,37 @@ public class PlayerController : MonoBehaviour
             case CurrencyType.Key: keys += finalAmount; break;
         }
         onCurrencyUpdate?.Invoke();
+    }
+
+    public void ApplyCharacterBaseStats(CharacterData character)
+    {
+        if (character == null)
+        {
+            return;
+        }
+
+        baseMovementSpeed = defaultMovementSpeed * Mathf.Max(0.01f, character.moveSpeed);
+        movementSpeed = baseMovementSpeed;
+        dashForce = defaultDashForce;
+        dashDuration = defaultDashDuration;
+        playerAttackSpeedMultiplier = Mathf.Max(0.01f, character.attackSpeedMultiplier);
+        globalDamageMultiplier = Mathf.Max(0.01f, character.damageMultiplier);
+        lightDamageMultiplier = Mathf.Max(0.01f, character.lightDamageMultiplier);
+        magicDamageMultiplier = Mathf.Max(0.01f, character.magicDamageMultiplier);
+        heavyDamageMultiplier = Mathf.Max(0.01f, character.heavyDamageMultiplier);
+        lightAttackSpeedMultiplier = Mathf.Max(0.01f, character.lightAttackSpeedMultiplier);
+        magicAttackSpeedMultiplier = Mathf.Max(0.01f, character.magicAttackSpeedMultiplier);
+        heavyAttackSpeedMultiplier = Mathf.Max(0.01f, character.heavyAttackSpeedMultiplier);
+        critChanceMultiplier = Mathf.Max(0.01f, character.critChanceMultiplier);
+        critChanceFlatBonus = character.critChanceFlatBonus;
+        projectileSpeedMultiplier = Mathf.Max(0.01f, character.projectileSpeedMultiplier);
+        characterDashDistanceMultiplier = Mathf.Max(0.01f, character.dashDistanceMultiplier);
+
+        if (healthComp != null)
+        {
+            healthComp.SetMaxHealth(character.maxHealth);
+            healthComp.Heal(character.maxHealth);
+        }
     }
 
     public void ConfigureBaseMovementSpeed(float speed)

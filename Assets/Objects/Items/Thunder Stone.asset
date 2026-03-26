@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Thunder Stone
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   itemName: Thunder Stone
-  icon: {fileID: 5963437217261167676, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  icon: {fileID: 4528839052115411930, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: Summon lightning on a random enemy.
   rarity: 1
   consumeOnUse: 1
