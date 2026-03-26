@@ -12,18 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fac84221be31d4590c6227b8cb4368, type: 3}
   m_Name: Venom Axe
   m_EditorClassIdentifier: Assembly-CSharp::HeavyMelee
-  itemName: 
+  itemName: Venom Axe
   icon: {fileID: 0}
-  description: 
-  rarity: 0
+  description: +10% damage against poisoned enemies.
+  rarity: 1
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 0
-  cooldown: 0
-  knockbackForce: 0
-  hitDuration: 0.2
-  criticalChance: 0
+  damage: 11.2
+  cooldown: 0.71
+  knockbackForce: 6.8
+  hitDuration: 0.22
+  criticalChance: 5
   projectileSpeed: 0
-  element: 0
-  style: 0
-  effects: []
+  element: 3
+  style: 1
+  effects:
+  - {fileID: 7920095477997459339}
+--- !u!114 &7920095477997459339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ac557601a84e24a88b4cb379906e79, type: 3}
+  m_Name: Conditional
+  m_EditorClassIdentifier: Assembly-CSharp::ConditionalDamageEffect
+  condition: 1
+  damageMultiplier: 0.1
+  critChanceBonus: 0
+  speedMultiplier: 0
+  knockbackMultiplier: 0
+  speedBuffDuration: 0.9

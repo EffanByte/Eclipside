@@ -1,5 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4150243683681019892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d6efd1331087649ab85f12b6777973, type: 3}
+  m_Name: Status
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatusChance
+  statusToApply: 1
+  chance: 0.2
+  durationOverride: -1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,18 +27,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
   m_Name: Flamefang Daggers
   m_EditorClassIdentifier: Assembly-CSharp::LightMeleeWeapon
-  itemName: 
+  itemName: Flamefang Daggers
   icon: {fileID: 0}
-  description: 
-  rarity: 0
+  description: 20% burn chance and +5% attack speed.
+  rarity: 2
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 0
-  cooldown: 0
-  knockbackForce: 0
-  hitDuration: 0.2
-  criticalChance: 0
+  damage: 7.2
+  cooldown: 0.39
+  knockbackForce: 3.2
+  hitDuration: 0.16
+  criticalChance: 7
   projectileSpeed: 0
-  element: 0
+  element: 3
   style: 0
-  effects: []
+  effects:
+  - {fileID: -4150243683681019892}
+  - {fileID: 6185630948458497249}
+--- !u!114 &6185630948458497249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 0
+  amount: 0.05

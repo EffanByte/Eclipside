@@ -458,6 +458,10 @@ public class PlayerController : MonoBehaviour
                 anim.runtimeAnimatorController = currentWeapon.animatorOverride;
             }
         }
+        else
+        {
+            currentWeaponHitBox = CreateFallbackWeaponHitbox(currentWeapon);
+        }
 
         if (currentWeapon != null)
         {
@@ -465,6 +469,24 @@ public class PlayerController : MonoBehaviour
         }
 
         characterRuntime?.NotifyWeaponEquipped(currentWeapon);
+    }
+
+    private WeaponHitbox CreateFallbackWeaponHitbox(WeaponData weapon)
+    {
+        if (weaponObject == null || weapon == null || weapon is MagicWeapon)
+        {
+            return null;
+        }
+
+        GameObject hitboxObject = new GameObject($"{weapon.name}_RuntimeHitbox");
+        hitboxObject.transform.SetParent(weaponObject, false);
+        hitboxObject.transform.localPosition = weapon is HeavyMelee ? new Vector3(1.05f, 0f, 0f) : new Vector3(0.8f, 0f, 0f);
+
+        BoxCollider2D collider = hitboxObject.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+        collider.size = weapon is HeavyMelee ? new Vector2(1.7f, 1.25f) : new Vector2(1.1f, 0.95f);
+
+        return hitboxObject.AddComponent<WeaponHitbox>();
     }
 
     // --- Special Ability ---

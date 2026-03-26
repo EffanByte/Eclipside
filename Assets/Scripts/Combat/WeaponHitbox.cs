@@ -1,66 +1,67 @@
-    using UnityEngine;
-    using System.Collections.Generic;
-    using System;
-    public class WeaponHitbox : MonoBehaviour
+using UnityEngine;
+using System.Collections.Generic;
+
+public class WeaponHitbox : MonoBehaviour
+{
+    private DamageInfo currentDamageInfo;
+    private Collider2D myCollider;
+    private ContactFilter2D filter;
+    private readonly List<Collider2D> overlapResults = new List<Collider2D>();
+    private PlayerController playerController;
+
+    private void Awake()
     {
-        private DamageInfo currentDamageInfo;
-        private List<Collider2D> hitList = new List<Collider2D>();
-        private Collider2D myCollider;
-        
-        // Cache the filter to avoid creating garbage memory every attack
-        private ContactFilter2D filter;
-        private List<Collider2D> overlapResults = new List<Collider2D>();
-        private PlayerController playerController;
-        private void Awake()
+        myCollider = GetComponent<Collider2D>();
+        myCollider.enabled = false;
+        myCollider.isTrigger = true;
+        playerController = GetComponentInParent<PlayerController>();
+        filter = ContactFilter2D.noFilter;
+    }
+
+    public void EnableHitbox()
+    {
+        if (myCollider == null)
         {
-            myCollider = GetComponent<Collider2D>();
-            myCollider.enabled = false; 
-            myCollider.isTrigger = true;
-            playerController = GetComponentInParent<PlayerController>();
-            // Set up a filter that checks everything (or specific layers if you prefer)
-            filter = ContactFilter2D.noFilter;
+            return;
         }
 
-        public void Start()
+        overlapResults.Clear();
+        myCollider.enabled = true;
+        Physics2D.OverlapCollider(myCollider, filter, overlapResults);
+
+        foreach (Collider2D overlap in overlapResults)
         {
-            hitList.Clear();
-            myCollider.enabled = true; // Ensure it's on
-
-            Physics2D.OverlapCollider(myCollider, filter, overlapResults);
+            TryDealDamage(overlap);
         }
+    }
 
-        public void DisableHitbox()
+    public void DisableHitbox()
+    {
+        if (myCollider != null)
         {
             myCollider.enabled = false;
         }
+    }
 
-        // Unity calls this automatically when something enters
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            TryDealDamage(collision);
-        }
-
-        // Extracted logic so we can call it from both OnTriggerEnter and Initialize
-        private void TryDealDamage(Collider2D collision)
-        {
-            if (playerController == null || playerController.currentWeapon == null)
-            {
-                return;
-            }
-
-            EnemyBase target = collision.GetComponent<EnemyBase>() ?? collision.GetComponentInParent<EnemyBase>();
-
-            if (target != null)
-            {
-                currentDamageInfo = playerController.currentWeapon.GetDamageInfoOnHit(playerController, target);
-                target.ReceiveDamage(currentDamageInfo);
-                playerController.NotifyWeaponHit(target, currentDamageInfo);
-            }
-        }
-        private DamageElement GetRandomDamageElement()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Array values = Enum.GetValues(typeof(DamageElement));
-        return (DamageElement)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+        TryDealDamage(collision);
     }
 
+    private void TryDealDamage(Collider2D collision)
+    {
+        if (playerController == null || playerController.currentWeapon == null)
+        {
+            return;
+        }
+
+        EnemyBase target = collision.GetComponent<EnemyBase>() ?? collision.GetComponentInParent<EnemyBase>();
+        if (target == null)
+        {
+            return;
+        }
+        currentDamageInfo = playerController.currentWeapon.GetDamageInfoOnHit(playerController, target);
+        target.ReceiveDamage(currentDamageInfo);
+        playerController.NotifyWeaponHit(target, currentDamageInfo);
     }
+}

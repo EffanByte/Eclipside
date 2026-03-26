@@ -53,7 +53,7 @@ public class WaveManager : MonoBehaviour
         // Tell Director we are locking the shop
         GameDirector.Instance.NotifyWaveStarted();
 
-        int count = 1; // testing
+        int count = 8;
         if (CurrentWave == MaxWaves)
         {
             Debug.Log("<color=magenta>BOSS WAVE TRIGGERED!</color>");

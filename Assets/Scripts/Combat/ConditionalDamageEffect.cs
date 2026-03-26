@@ -3,43 +3,81 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Eclipside/Effects/Conditional Damage")]
 public class ConditionalDamageEffect : WeaponEffect
 {
-    public enum Condition { Below30PercentHP, TargetIsPoisoned, TargetIsFrozen, TargetIsConfused }
+    public enum Condition
+    {
+        Below30PercentHP,
+        TargetIsPoisoned,
+        TargetIsFrozen,
+        TargetIsConfused,
+        TargetIsBurning
+    }
+
     public Condition condition;
-    public float damageMultiplier; // 0.08 for +8%
-    public float critChanceBonus;  // 0.15 for +15% crit
-    public float speedMultiplier;  // 0.05 for +5% attack speed
+    public float damageMultiplier;
+    public float critChanceBonus;
+    public float speedMultiplier;
+    public float knockbackMultiplier;
+    public float speedBuffDuration = 0.9f;
+
+    public override void OnBeforeHit(PlayerController player, EnemyBase target, ref float damage, ref float criticalChance, ref float criticalDamageMultiplier, ref float knockback)
+    {
+        if (!IsConditionMet(target))
+        {
+            return;
+        }
+
+        if (damageMultiplier > 0f)
+        {
+            damage *= 1f + damageMultiplier;
+        }
+
+        if (critChanceBonus > 0f)
+        {
+            criticalChance += critChanceBonus;
+        }
+
+        if (knockbackMultiplier > 0f)
+        {
+            knockback *= 1f + knockbackMultiplier;
+        }
+    }
 
     public override void OnHit(PlayerController player, EnemyBase target, ref DamageInfo dmgInfo)
     {
-        bool conditionMet = false;
+        if (player == null || speedMultiplier <= 0f || !IsConditionMet(target))
+        {
+            return;
+        }
+
+        player.ApplyBuff(GetSpeedBuffKey(), StatType.AttackSpeed, speedMultiplier, speedBuffDuration);
+    }
+
+    private bool IsConditionMet(EnemyBase target)
+    {
+        if (target == null)
+        {
+            return false;
+        }
 
         switch (condition)
         {
             case Condition.Below30PercentHP:
-                if (target.GetCurrentHealth() / target.GetMaxHealth() < 0.3f) conditionMet = true;
-                break;
+                return target.GetMaxHealth() > 0f && (target.GetCurrentHealth() / target.GetMaxHealth()) < 0.3f;
             case Condition.TargetIsPoisoned:
-                if (target.HasStatus(StatusType.Poison)) conditionMet = true;
-                break;
+                return target.HasStatus(StatusType.Poison);
             case Condition.TargetIsFrozen:
-                if (target.HasStatus(StatusType.Freeze)) conditionMet = true;
-                break;
+                return target.HasStatus(StatusType.Freeze);
             case Condition.TargetIsConfused:
-                if (target.HasStatus(StatusType.Confusion)) conditionMet = true;
-                break;
+                return target.HasStatus(StatusType.Confusion);
+            case Condition.TargetIsBurning:
+                return target.HasStatus(StatusType.Burn);
+            default:
+                return false;
         }
+    }
 
-        if (conditionMet)
-        {
-            // Apply Damage Bonus
-            if (damageMultiplier > 0)
-                dmgInfo.amount *= 1f + damageMultiplier;
-            // Apply Crit Bonus (We might need to retroactively force crit logic here or in player)
-            if (critChanceBonus > 0 && Random.value <= critChanceBonus)
-                dmgInfo.isCritical = true;
-            // Apply Attack Speed Bonus
-            if (speedMultiplier > 0)
-                player.playerAttackSpeedMultiplier *= 1f + speedMultiplier;
-        }
+    private string GetSpeedBuffKey()
+    {
+        return $"WeaponConditionalSpeed_{GetInstanceID()}";
     }
 }

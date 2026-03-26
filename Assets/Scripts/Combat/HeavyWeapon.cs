@@ -8,6 +8,11 @@ public class HeavyMelee : WeaponData
     {
         if (player.anim != null) player.anim.SetTrigger("Attack");
 
+        if (activeHitbox != null)
+        {
+            activeHitbox.EnableHitbox();
+        }
+
         yield return new WaitForSeconds(hitDuration);
 
         if (activeHitbox != null)

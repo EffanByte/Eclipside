@@ -12,18 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
   m_Name: Bloodforged Colossus
   m_EditorClassIdentifier: Assembly-CSharp::LightMeleeWeapon
-  itemName: Dull Sword
+  itemName: Bloodforged Colossus
   icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
-  description: 
-  rarity: 0
+  description: +50% damage. Every 3 kills, take 0.2 heart true damage.
+  rarity: 3
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 8
-  cooldown: 0.5
-  knockbackForce: 3
-  hitDuration: 0.2
-  criticalChance: 5
-  element: 1
-  style: 0
+  damage: 15
+  cooldown: 0.74
+  knockbackForce: 8.2
+  hitDuration: 0.24
+  criticalChance: 8
+  projectileSpeed: 0
+  element: 3
+  style: 1
   effects:
-  - {fileID: 11400000, guid: d64e915fb536ad544be7293dffb2826e, type: 2}
+  - {fileID: 2299759137765367737}
+  - {fileID: 1207129295184178366}
+--- !u!114 &1207129295184178366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e0cc4a2b33cdf42a5c12387843cfb9, type: 3}
+  m_Name: SelfDamageOnKill
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSelfDamageOnKillEffect
+  killThreshold: 3
+  selfDamageAmount: 2
+--- !u!114 &2299759137765367737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 1
+  amount: 0.5

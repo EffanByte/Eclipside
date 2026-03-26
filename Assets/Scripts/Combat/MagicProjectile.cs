@@ -1,80 +1,165 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
 public class MagicProjectile : MonoBehaviour
 {
+    private readonly HashSet<int> hitTargets = new HashSet<int>();
+
     private float speed;
-    private float damage;
-    private float knockback;
     private Rigidbody2D rb;
     private Transform target;
+    private EnemyBase targetEnemy;
+    private PlayerController owner;
+    private WeaponData weaponData;
+    private int remainingPierces;
+    private float lifetime = 3f;
 
     [Header("Homing Stats")]
-    public float homingStrength = 1.5f; // "Slightly" homing (Low number)
+    public float homingStrength = 1.5f;
     public float detectionRadius = 5f;
 
-    public void Setup(Vector2 direction, float speed, float damage, float knockback)
+    public static void Spawn(PlayerController player, WeaponData weapon)
     {
-        this.speed = speed;
-        this.damage = damage;
-        this.knockback = knockback;
+        if (player == null || weapon == null)
+        {
+            return;
+        }
+
+        Vector2 direction = player.GetLastMovementDirection().normalized;
+        if (direction == Vector2.zero)
+        {
+            direction = Vector2.right;
+        }
+
+        GameObject projectileObject = new GameObject($"{weapon.name}_Projectile");
+        projectileObject.transform.position = player.transform.position + (Vector3)(direction * 0.75f);
+
+        Rigidbody2D body = projectileObject.AddComponent<Rigidbody2D>();
+        body.gravityScale = 0f;
+        body.freezeRotation = true;
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        CircleCollider2D collider = projectileObject.AddComponent<CircleCollider2D>();
+        collider.isTrigger = true;
+        collider.radius = 0.24f;
+
+        MagicProjectile projectile = projectileObject.AddComponent<MagicProjectile>();
+        projectile.Setup(player, weapon, direction);
+    }
+
+    public void Setup(PlayerController player, WeaponData weapon, Vector2 direction)
+    {
+        owner = player;
+        weaponData = weapon;
+        speed = Mathf.Max(4f, weapon.ProjectileSpeed * (player != null ? player.GetProjectileSpeedMultiplier() : 1f));
 
         rb = GetComponent<Rigidbody2D>();
-        rb.linearVelocity = direction.normalized * speed; // Use 'velocity' if on older Unity
+        rb.linearVelocity = direction.normalized * speed;
 
-        // Destroy after 3 seconds so it doesn't fly forever
-        Destroy(gameObject, 3f); 
-        
         FindNearestTarget();
+        weapon.ConfigureProjectile(player, this);
+
+        Destroy(gameObject, lifetime);
+    }
+
+    public EnemyBase GetCurrentTargetEnemy()
+    {
+        return targetEnemy;
+    }
+
+    public void MultiplySpeed(float multiplier)
+    {
+        speed = Mathf.Max(1f, speed * Mathf.Max(0.01f, multiplier));
+        if (rb != null && rb.linearVelocity != Vector2.zero)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * speed;
+        }
+    }
+
+    public void AddPierceCount(int additionalPierces)
+    {
+        remainingPierces += Mathf.Max(0, additionalPierces);
+    }
+
+    public void MultiplyColliderRadius(float multiplier)
+    {
+        CircleCollider2D circle = GetComponent<CircleCollider2D>();
+        if (circle != null)
+        {
+            circle.radius *= Mathf.Max(0.1f, multiplier);
+        }
+    }
+
+    public void SetLifetime(float newLifetime)
+    {
+        lifetime = Mathf.Max(0.1f, newLifetime);
     }
 
     private void FindNearestTarget()
     {
-        // Find closest enemy to lock onto
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
         float closestDist = Mathf.Infinity;
 
-        foreach (var hit in hits)
+        foreach (Collider2D hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
+            EnemyBase enemy = hit.GetComponent<EnemyBase>() ?? hit.GetComponentInParent<EnemyBase>();
+            if (enemy == null || enemy.currentState == EnemyState.Dead)
             {
-                float dist = Vector2.Distance(transform.position, hit.transform.position);
-                if (dist < closestDist)
-                {
-                    closestDist = dist;
-                    target = hit.transform;
-                }
+                continue;
+            }
+
+            float dist = Vector2.Distance(transform.position, enemy.transform.position);
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                target = enemy.transform;
+                targetEnemy = enemy;
             }
         }
     }
 
     private void FixedUpdate()
     {
-        if (target != null)
+        if (rb == null || target == null)
         {
-            // Calculate direction to target
-            Vector2 direction = (Vector2)target.position - rb.position;
-            direction.Normalize();
-
-            // "Slightly" rotate the velocity towards the target
-            // We use Vector3.RotateTowards or simple interpolation
-            Vector2 newVelocity = Vector2.Lerp(rb.linearVelocity.normalized, direction, homingStrength * Time.fixedDeltaTime);
-            
-            rb.linearVelocity = newVelocity * speed;
-
-            // Optional: Rotate the sprite to face velocity
-            float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            return;
         }
+
+        Vector2 direction = ((Vector2)target.position - rb.position).normalized;
+        Vector2 newVelocity = Vector2.Lerp(rb.linearVelocity.normalized, direction, homingStrength * Time.fixedDeltaTime);
+        rb.linearVelocity = newVelocity * speed;
+
+        float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        EnemyBase enemy = collision.GetComponent<EnemyBase>() ?? collision.GetComponentInParent<EnemyBase>();
+        if (enemy == null || weaponData == null || owner == null)
         {
-            Debug.Log($"Magic Hit {collision.name} for {damage}");
-            // collision.GetComponent<EnemyHealth>().TakeDamage(damage, knockback);
-            Destroy(gameObject);
+            return;
         }
+
+        int enemyId = enemy.GetInstanceID();
+        if (hitTargets.Contains(enemyId))
+        {
+            return;
+        }
+
+        hitTargets.Add(enemyId);
+        DamageInfo info = weaponData.GetDamageInfoOnHit(owner, enemy);
+        enemy.ReceiveDamage(info);
+        owner.NotifyWeaponHit(enemy, info);
+
+        if (remainingPierces > 0)
+        {
+            remainingPierces--;
+            return;
+        }
+
+        Destroy(gameObject);
     }
 }

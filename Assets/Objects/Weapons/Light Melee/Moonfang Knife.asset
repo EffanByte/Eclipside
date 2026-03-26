@@ -12,18 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f9958919a8e0254990a8d6125902c77, type: 3}
   m_Name: Moonfang Knife
   m_EditorClassIdentifier: Assembly-CSharp::LightMeleeWeapon
-  itemName: Hunter's Kukri
+  itemName: Moonfang Knife
   icon: {fileID: 0}
-  description: 
+  description: +10% attack speed when hitting frozen enemies.
   rarity: 1
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 0
-  cooldown: 0
-  knockbackForce: 0
-  hitDuration: 0.2
-  criticalChance: 0
+  damage: 6.7
+  cooldown: 0.43
+  knockbackForce: 3.1
+  hitDuration: 0.17
+  criticalChance: 6
   projectileSpeed: 0
-  element: 0
+  element: 3
   style: 0
-  effects: []
+  effects:
+  - {fileID: 614571271166814880}
+--- !u!114 &614571271166814880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ac557601a84e24a88b4cb379906e79, type: 3}
+  m_Name: Conditional
+  m_EditorClassIdentifier: Assembly-CSharp::ConditionalDamageEffect
+  condition: 2
+  damageMultiplier: 0
+  critChanceBonus: 0
+  speedMultiplier: 0.1
+  knockbackMultiplier: 0
+  speedBuffDuration: 0.9

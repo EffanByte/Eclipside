@@ -8,6 +8,8 @@ public class MagicWeapon : WeaponData
     {
         if (player.anim != null) player.anim.SetTrigger("Attack");
 
+        MagicProjectile.Spawn(player, this);
+
         yield return new WaitForSeconds(hitDuration);
 
         if (activeHitbox != null)

@@ -7,6 +7,11 @@ public class LightMeleeWeapon : WeaponData
 {
     public override IEnumerator OnAttack(PlayerController player, WeaponHitbox activeHitbox)
     {
+        if (activeHitbox != null)
+        {
+            activeHitbox.EnableHitbox();
+        }
+
         yield return new WaitForSeconds(hitDuration);
 
         if (activeHitbox != null)

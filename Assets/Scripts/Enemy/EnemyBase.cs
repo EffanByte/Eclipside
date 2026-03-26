@@ -130,8 +130,23 @@ public abstract class EnemyBase : MonoBehaviour
     private Coroutine temporaryMoveSpeedRoutine;
     private Coroutine temporaryAttackSpeedRoutine;
 
+    private static float globalMoveSpeedMultiplier = 1f;
+    private static float globalAttackSpeedMultiplier = 1f;
+
     public static event Action<EnemyBase> OnEnemyKilled;
     protected Collider2D mainCollider;      
+
+    public static void SetGlobalTempoMultipliers(float moveSpeedMultiplier, float attackSpeedMultiplier)
+    {
+        globalMoveSpeedMultiplier = Mathf.Clamp(moveSpeedMultiplier, 0.1f, 2f);
+        globalAttackSpeedMultiplier = Mathf.Clamp(attackSpeedMultiplier, 0.1f, 2f);
+    }
+
+    public static void ResetGlobalTempoMultipliers()
+    {
+        globalMoveSpeedMultiplier = 1f;
+        globalAttackSpeedMultiplier = 1f;
+    }
 
     // --- WANDER STATE TRACKING ---
     protected float idleTimer = 0f;
@@ -307,7 +322,7 @@ public abstract class EnemyBase : MonoBehaviour
         protected virtual void MoveTowardsTarget(Vector2 direction)
     {
         // Include any aura speed buffs in the calculation
-        float finalSpeed = stats.moveSpeed * speedMultiplier;
+        float finalSpeed = stats.moveSpeed * speedMultiplier * globalMoveSpeedMultiplier;
         rb.linearVelocity = direction * finalSpeed;
     }
 
@@ -408,7 +423,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected IEnumerator AttackCooldownRoutine()
     {
         isAttackReady = false; 
-        yield return new WaitForSeconds(stats.attackCooldown / Mathf.Max(0.01f, attackSpeedMultiplier)); 
+        yield return new WaitForSeconds(stats.attackCooldown / Mathf.Max(0.01f, attackSpeedMultiplier * globalAttackSpeedMultiplier)); 
         isAttackReady = true; 
     }
 
@@ -502,7 +517,7 @@ protected virtual void LogicIdle()
         if (isWandering && !statusMgr.HasStatus(StatusType.Freeze))
         {
             // Calculate a slower speed for wandering
-            float currentSpeed = stats.moveSpeed * wanderSpeedMultiplier * speedMultiplier;
+            float currentSpeed = stats.moveSpeed * wanderSpeedMultiplier * speedMultiplier * globalMoveSpeedMultiplier;
             
             // Apply confusion if active
             Vector2 finalDir = statusMgr.HasStatus(StatusType.Confusion) ? -wanderDirection : wanderDirection;

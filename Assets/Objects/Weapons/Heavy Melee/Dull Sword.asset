@@ -14,16 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LightMeleeWeapon
   itemName: Dull Sword
   icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
-  description: 
+  description: +3% attack speed.
   rarity: 0
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 8
-  cooldown: 0.5
-  knockbackForce: 3
-  hitDuration: 0.2
+  damage: 6
+  cooldown: 0.48
+  knockbackForce: 3.2
+  hitDuration: 0.18
   criticalChance: 5
-  element: 1
+  projectileSpeed: 0
+  element: 3
   style: 0
   effects:
-  - {fileID: 11400000, guid: d64e915fb536ad544be7293dffb2826e, type: 2}
+  - {fileID: 3291189292505690351}
+--- !u!114 &3291189292505690351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 0
+  amount: 0.03

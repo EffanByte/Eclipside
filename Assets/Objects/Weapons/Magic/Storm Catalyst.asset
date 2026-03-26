@@ -12,18 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 079e84266a42bfd4288d8d81efec9f19, type: 3}
   m_Name: Storm Catalyst
   m_EditorClassIdentifier: Assembly-CSharp::MagicWeapon
-  itemName: Arcane Sling
+  itemName: Storm Catalyst
   icon: {fileID: 0}
-  description: 
+  description: +15% projectile speed if the target is already burning.
   rarity: 1
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 0
-  cooldown: 0
-  knockbackForce: 0
-  hitDuration: 0.2
-  criticalChance: 0
-  projectileSpeed: 0
-  element: 0
-  style: 0
-  effects: []
+  damage: 6.9
+  cooldown: 0.49
+  knockbackForce: 2.1
+  hitDuration: 0.14
+  criticalChance: 5
+  projectileSpeed: 9.5
+  element: 2
+  style: 2
+  effects:
+  - {fileID: 5751559082892350832}
+--- !u!114 &5751559082892350832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0620737b664726f4da8b55cc25b2cfe1, type: 3}
+  m_Name: TargetStatusProjectileSpeed
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponTargetStatusProjectileSpeedEffect
+  requiredStatus: 1
+  speedMultiplier: 1.15

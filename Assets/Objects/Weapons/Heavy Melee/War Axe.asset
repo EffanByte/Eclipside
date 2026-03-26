@@ -12,18 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fac84221be31d4590c6227b8cb4368, type: 3}
   m_Name: War Axe
   m_EditorClassIdentifier: Assembly-CSharp::HeavyMelee
-  itemName: 
+  itemName: War Axe
   icon: {fileID: 0}
-  description: 
-  rarity: 0
+  description: +12% max health.
+  rarity: 1
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
-  damage: 0
-  cooldown: 0
-  knockbackForce: 0
-  hitDuration: 0.2
-  criticalChance: 0
+  damage: 11.3
+  cooldown: 0.71
+  knockbackForce: 6.7
+  hitDuration: 0.22
+  criticalChance: 5
   projectileSpeed: 0
-  element: 0
-  style: 0
-  effects: []
+  element: 3
+  style: 1
+  effects:
+  - {fileID: 4497168612867238973}
+--- !u!114 &4497168612867238973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9c5c476b3660747ade54cb5f5fe989, type: 3}
+  m_Name: PercentMaxHealth
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPercentMaxHealthBoostEffect
+  percent: 0.12

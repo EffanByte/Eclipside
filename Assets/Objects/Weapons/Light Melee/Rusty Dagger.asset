@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Rusty Dagger
   icon: {fileID: 6657205154130263698, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
-  description: 
+  description: Basic light melee dagger with no effects.
   rarity: 0
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 5
-  cooldown: 0.5
-  knockbackForce: 3
-  hitDuration: 0.2
+  cooldown: 0.42
+  knockbackForce: 2.8
+  hitDuration: 0.16
   criticalChance: 5
+  projectileSpeed: 0
   element: 3
   style: 0
   effects: []
