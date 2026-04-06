@@ -1,0 +1,2093 @@
+fileFormatVersion: 2
+guid: ad59932c97170e44d93d76840e49e288
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 44535004781670035
+    second: Samurai_Archer_Spritelist_0
+  - first:
+      213: 5273875994317813788
+    second: Samurai_Archer_Spritelist_1
+  - first:
+      213: -2564739711183990596
+    second: Samurai_Archer_Spritelist_2
+  - first:
+      213: 1829803733139038656
+    second: Samurai_Archer_Spritelist_3
+  - first:
+      213: 572830244622930323
+    second: Samurai_Archer_Spritelist_4
+  - first:
+      213: 6910082046040943631
+    second: Samurai_Archer_Spritelist_5
+  - first:
+      213: -3230552237190112725
+    second: Samurai_Archer_Spritelist_6
+  - first:
+      213: -3584027427745468564
+    second: Samurai_Archer_Spritelist_7
+  - first:
+      213: 925361580083924773
+    second: Samurai_Archer_Spritelist_8
+  - first:
+      213: 5723724060191848637
+    second: Samurai_Archer_Spritelist_9
+  - first:
+      213: -2983332851373586379
+    second: Samurai_Archer_Spritelist_10
+  - first:
+      213: -4904636811558536748
+    second: Samurai_Archer_Spritelist_11
+  - first:
+      213: -6275167429859898831
+    second: Samurai_Archer_Spritelist_12
+  - first:
+      213: 6243287058097032653
+    second: Samurai_Archer_Spritelist_13
+  - first:
+      213: -8535036595571731469
+    second: Samurai_Archer_Spritelist_14
+  - first:
+      213: 8209747501183141936
+    second: Samurai_Archer_Spritelist_15
+  - first:
+      213: 6434180233154481856
+    second: Samurai_Archer_Spritelist_16
+  - first:
+      213: -636392939115919064
+    second: Samurai_Archer_Spritelist_17
+  - first:
+      213: 6558982178780306790
+    second: Samurai_Archer_Spritelist_18
+  - first:
+      213: 7551375997815414495
+    second: Samurai_Archer_Spritelist_19
+  - first:
+      213: -6524304968588203724
+    second: Samurai_Archer_Spritelist_20
+  - first:
+      213: -8518279189144846477
+    second: Samurai_Archer_Spritelist_21
+  - first:
+      213: 1565559374041704875
+    second: Samurai_Archer_Spritelist_22
+  - first:
+      213: -2119399186731505067
+    second: Samurai_Archer_Spritelist_23
+  - first:
+      213: 2118802787459428157
+    second: Samurai_Archer_Spritelist_24
+  - first:
+      213: 9007552615384114357
+    second: Samurai_Archer_Spritelist_25
+  - first:
+      213: 1107353399127306725
+    second: Samurai_Archer_Spritelist_26
+  - first:
+      213: 1833583007401412264
+    second: Samurai_Archer_Spritelist_27
+  - first:
+      213: -6076480459550328171
+    second: Samurai_Archer_Spritelist_28
+  - first:
+      213: 4159898793791346122
+    second: Samurai_Archer_Spritelist_29
+  - first:
+      213: -7559012477888900642
+    second: Samurai_Archer_Spritelist_30
+  - first:
+      213: 4974154646862432957
+    second: Samurai_Archer_Spritelist_31
+  - first:
+      213: 7017181437375168002
+    second: Samurai_Archer_Spritelist_32
+  - first:
+      213: 9134974307407171028
+    second: Samurai_Archer_Spritelist_33
+  - first:
+      213: -7877023093320358329
+    second: Samurai_Archer_Spritelist_34
+  - first:
+      213: 6429786578316824849
+    second: Samurai_Archer_Spritelist_35
+  - first:
+      213: -5580589885679427259
+    second: Samurai_Archer_Spritelist_36
+  - first:
+      213: 2242819920967280095
+    second: Samurai_Archer_Spritelist_37
+  - first:
+      213: 1261282697550811963
+    second: Samurai_Archer_Spritelist_38
+  - first:
+      213: 7332755950126994525
+    second: Samurai_Archer_Spritelist_39
+  - first:
+      213: -3295955325909513420
+    second: Samurai_Archer_Spritelist_40
+  - first:
+      213: 2315889853062782137
+    second: Samurai_Archer_Spritelist_41
+  - first:
+      213: 8972560763124830801
+    second: Samurai_Archer_Spritelist_42
+  - first:
+      213: 8570956084589845361
+    second: Samurai_Archer_Spritelist_43
+  - first:
+      213: -6864633219248101106
+    second: Samurai_Archer_Spritelist_44
+  - first:
+      213: -8063915599121617321
+    second: Samurai_Archer_Spritelist_45
+  - first:
+      213: 4885922897657643814
+    second: Samurai_Archer_Spritelist_46
+  - first:
+      213: -6154742174022035467
+    second: Samurai_Archer_Spritelist_47
+  - first:
+      213: 1263912043699199514
+    second: Samurai_Archer_Spritelist_48
+  - first:
+      213: -3270521432756709734
+    second: Samurai_Archer_Spritelist_49
+  - first:
+      213: -7661453492186586923
+    second: Samurai_Archer_Spritelist_50
+  - first:
+      213: 3907274707952800700
+    second: Samurai_Archer_Spritelist_51
+  - first:
+      213: 6305650524126401457
+    second: Samurai_Archer_Spritelist_52
+  - first:
+      213: 7839774078622714499
+    second: Samurai_Archer_Spritelist_53
+  - first:
+      213: -3400864329489025088
+    second: Samurai_Archer_Spritelist_54
+  - first:
+      213: 8544103346651084463
+    second: Samurai_Archer_Spritelist_55
+  - first:
+      213: -3876824524043216347
+    second: Samurai_Archer_Spritelist_56
+  - first:
+      213: 2187498187017863235
+    second: Samurai_Archer_Spritelist_57
+  - first:
+      213: -8324429425703686583
+    second: Samurai_Archer_Spritelist_58
+  - first:
+      213: -237238342018259767
+    second: Samurai_Archer_Spritelist_59
+  - first:
+      213: -5038122153919795158
+    second: Samurai_Archer_Spritelist_60
+  - first:
+      213: 1558316272731339492
+    second: Samurai_Archer_Spritelist_61
+  - first:
+      213: 6598986480163829412
+    second: Samurai_Archer_Spritelist_62
+  - first:
+      213: -2087696663557018933
+    second: Samurai_Archer_Spritelist_63
+  - first:
+      213: -921130160895358602
+    second: Samurai_Archer_Spritelist_64
+  - first:
+      213: -592672489688894605
+    second: Samurai_Archer_Spritelist_65
+  - first:
+      213: -3999809168851925837
+    second: Samurai_Archer_Spritelist_66
+  - first:
+      213: -5180151106114883773
+    second: Samurai_Archer_Spritelist_67
+  - first:
+      213: -508354864915310133
+    second: Samurai_Archer_Spritelist_68
+  - first:
+      213: 1104074574325636865
+    second: Samurai_Archer_Spritelist_69
+  - first:
+      213: 3122827570191580851
+    second: Samurai_Archer_Spritelist_70
+  - first:
+      213: -1348897589471115851
+    second: Samurai_Archer_Spritelist_71
+  - first:
+      213: 5482428745276252816
+    second: Samurai_Archer_Spritelist_72
+  - first:
+      213: 4077111270029078387
+    second: Samurai_Archer_Spritelist_73
+  - first:
+      213: 551023692606210456
+    second: Samurai_Archer_Spritelist_74
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_0
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39ee414d9583e9000800000000000000
+      internalID: 44535004781670035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_1
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c18f5ce4642903940800000000000000
+      internalID: 5273875994317813788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_2
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb05a8d32d6386cd0800000000000000
+      internalID: -2564739711183990596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_3
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c1af62fcc4c46910800000000000000
+      internalID: 1829803733139038656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_4
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 391995f821a13f700800000000000000
+      internalID: 572830244622930323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_5
+      rect:
+        serializedVersion: 2
+        x: 669
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0c231b720b85ef50800000000000000
+      internalID: 6910082046040943631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_6
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2a90f14bd5ca23d0800000000000000
+      internalID: -3230552237190112725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_7
+      rect:
+        serializedVersion: 2
+        x: 925
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6f69ff1b0af24ec0800000000000000
+      internalID: -3584027427745468564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_8
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 1153
+        width: 49
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52f42bd447b87dc00800000000000000
+      internalID: 925361580083924773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_9
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 1023
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db8771805b0ce6f40800000000000000
+      internalID: 5723724060191848637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_10
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 1023
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 538cf1bf3921996d0800000000000000
+      internalID: -2983332851373586379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_11
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1023
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d9bfb64eca3febb0800000000000000
+      internalID: -4904636811558536748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_12
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 1023
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13a891548702ae8a0800000000000000
+      internalID: -6275167429859898831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_13
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 1023
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcdcaa0408c94a650800000000000000
+      internalID: 6243287058097032653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_14
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 1023
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f3dcf7df657d8980800000000000000
+      internalID: -8535036595571731469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_15
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 1023
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0380cafead1eee170800000000000000
+      internalID: 8209747501183141936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_16
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 1023
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce430215dcca4950800000000000000
+      internalID: 6434180233154481856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_1
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 894
+        width: 105
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 829cd6e5ef31b27f0800000000000000
+      internalID: -636392939115919064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 895
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66d51566a8f260b50800000000000000
+      internalID: 6558982178780306790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_3
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 895
+        width: 105
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fded23b0670ebc860800000000000000
+      internalID: 7551375997815414495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_4
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 894
+        width: 105
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 439ebf4c2330575a0800000000000000
+      internalID: -6524304968588203724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_5
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 895
+        width: 104
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37f3b61953ef8c980800000000000000
+      internalID: -8518279189144846477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_6
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 895
+        width: 105
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba9e98cb4fbf9b510800000000000000
+      internalID: 1565559374041704875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_7
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 895
+        width: 105
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55aed913ba16692e0800000000000000
+      internalID: -2119399186731505067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Running_8
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 895
+        width: 105
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3f60a7c8ef776d10800000000000000
+      internalID: 2118802787459428157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_25
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 767
+        width: 44
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b46c9f2161410d70800000000000000
+      internalID: 9007552615384114357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_26
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 767
+        width: 44
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e1fdcbac0c1e5f00800000000000000
+      internalID: 1107353399127306725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_27
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 767
+        width: 51
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a68a5ec702327910800000000000000
+      internalID: 1833583007401412264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_28
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 767
+        width: 92
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59a76e377310caba0800000000000000
+      internalID: -6076480459550328171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_29
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 795
+        width: 13
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac55281b9edeab930800000000000000
+      internalID: 4159898793791346122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_30
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 767
+        width: 67
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed1dfa2633ef81790800000000000000
+      internalID: -7559012477888900642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_31
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 639
+        width: 67
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dba08101c4fb70540800000000000000
+      internalID: 4974154646862432957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_32
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 639
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20e3633b659026160800000000000000
+      internalID: 7017181437375168002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_33
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 639
+        width: 67
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd0351cbb2f5ce70800000000000000
+      internalID: 9134974307407171028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_34
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 639
+        width: 98
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 746671b1b313fa290800000000000000
+      internalID: -7877023093320358329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_35
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 668
+        width: 12
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 111162693d03b3950800000000000000
+      internalID: 6429786578316824849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_36
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 639
+        width: 98
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 541a0f2f013cd82b0800000000000000
+      internalID: -5580589885679427259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_37
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 511
+        width: 77
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd5ac6cc5d8102f10800000000000000
+      internalID: 2242819920967280095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_38
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 511
+        width: 60
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b33dcdc4ee9f08110800000000000000
+      internalID: 1261282697550811963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_39
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 511
+        width: 59
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5493ff9fae23c560800000000000000
+      internalID: 7332755950126994525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_40
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 511
+        width: 80
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43b4b93081a6242d0800000000000000
+      internalID: -3295955325909513420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_41
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 511
+        width: 101
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bc1dbe1d81b32020800000000000000
+      internalID: 2315889853062782137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_42
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 511
+        width: 102
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 152d9a3b970f48c70800000000000000
+      internalID: 8972560763124830801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_43
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17b5377e52722f670800000000000000
+      internalID: 8570956084589845361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_44
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e09ee5d157cebb0a0800000000000000
+      internalID: -6864633219248101106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_45
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75eef9fac77371090800000000000000
+      internalID: -8063915599121617321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_46
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 623c4da1df84ec340800000000000000
+      internalID: 4885922897657643814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_47
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f71d491a96f59aa0800000000000000
+      internalID: -6154742174022035467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_48
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1e5708ae415a8110800000000000000
+      internalID: 1263912043699199514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_49
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 383
+        width: 90
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a961c3ab516cc92d0800000000000000
+      internalID: -3270521432756709734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_50
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 383
+        width: 95
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d0ea0714ac0da590800000000000000
+      internalID: -7661453492186586923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_51
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 383
+        width: 95
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb3156f25ad693630800000000000000
+      internalID: 3907274707952800700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_52
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 383
+        width: 75
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b35f403ebb228750800000000000000
+      internalID: 6305650524126401457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_53
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 383
+        width: 71
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38a4f93dcf87ccc60800000000000000
+      internalID: 7839774078622714499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_54
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c7728f29e3bdc0d0800000000000000
+      internalID: -3400864329489025088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_55
+      rect:
+        serializedVersion: 2
+        x: 1567
+        y: 383
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa63d55a9b0c29670800000000000000
+      internalID: 8544103346651084463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_56
+      rect:
+        serializedVersion: 2
+        x: 1695
+        y: 384
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52a91ebb2a0c23ac0800000000000000
+      internalID: -3876824524043216347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_57
+      rect:
+        serializedVersion: 2
+        x: 1827
+        y: 431
+        width: 52
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 340c200e20e8b5e10800000000000000
+      internalID: 2187498187017863235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_58
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 255
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94e6f13ca8fa97c80800000000000000
+      internalID: -8324429425703686583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_59
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 255
+        width: 105
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c426e02cf825bcf0800000000000000
+      internalID: -237238342018259767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_60
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 255
+        width: 105
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a20b598189ef41ab0800000000000000
+      internalID: -5038122153919795158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_61
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 265
+        width: 105
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eabcdbc46040a510800000000000000
+      internalID: 1558316272731339492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_62
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 261
+        width: 105
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a635c3ad3f449b50800000000000000
+      internalID: 6598986480163829412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_63
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 260
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bca6ae112f20703e0800000000000000
+      internalID: -2087696663557018933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_64
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 255
+        width: 105
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6790fefbffc7733f0800000000000000
+      internalID: -921130160895358602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_65
+      rect:
+        serializedVersion: 2
+        x: 905
+        y: 255
+        width: 105
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37372ffb28766c7f0800000000000000
+      internalID: -592672489688894605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_66
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 255
+        width: 105
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b40b39b0c2dd78c0800000000000000
+      internalID: -3999809168851925837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_67
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 127
+        width: 105
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34fec2db3086c18b0800000000000000
+      internalID: -5180151106114883773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_68
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 127
+        width: 105
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc991e891f5f1f8f0800000000000000
+      internalID: -508354864915310133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_69
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 127
+        width: 105
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10f5838c9f5725f00800000000000000
+      internalID: 1104074574325636865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_70
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 0
+        width: 105
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3beb0103123865b20800000000000000
+      internalID: 3122827570191580851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_71
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 106
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b581350ac0c74de0800000000000000
+      internalID: -1348897589471115851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_72
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 0
+        width: 106
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 092e49c85ef751c40800000000000000
+      internalID: 5482428745276252816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_73
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 0
+        width: 106
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37f23df391fc49830800000000000000
+      internalID: 4077111270029078387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Samurai_Archer_Spritelist_74
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 0
+        width: 109
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8910e940121a5a700800000000000000
+      internalID: 551023692606210456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8033f60ec0ba9e04ba3503e919f1666d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Running_1: -636392939115919064
+      Running_2: 6558982178780306790
+      Running_3: 7551375997815414495
+      Running_4: -6524304968588203724
+      Running_5: -8518279189144846477
+      Running_6: 1565559374041704875
+      Running_7: -2119399186731505067
+      Running_8: 2118802787459428157
+      Samurai_Archer_Spritelist_0: 44535004781670035
+      Samurai_Archer_Spritelist_1: 5273875994317813788
+      Samurai_Archer_Spritelist_10: -2983332851373586379
+      Samurai_Archer_Spritelist_11: -4904636811558536748
+      Samurai_Archer_Spritelist_12: -6275167429859898831
+      Samurai_Archer_Spritelist_13: 6243287058097032653
+      Samurai_Archer_Spritelist_14: -8535036595571731469
+      Samurai_Archer_Spritelist_15: 8209747501183141936
+      Samurai_Archer_Spritelist_16: 6434180233154481856
+      Samurai_Archer_Spritelist_2: -2564739711183990596
+      Samurai_Archer_Spritelist_25: 9007552615384114357
+      Samurai_Archer_Spritelist_26: 1107353399127306725
+      Samurai_Archer_Spritelist_27: 1833583007401412264
+      Samurai_Archer_Spritelist_28: -6076480459550328171
+      Samurai_Archer_Spritelist_29: 4159898793791346122
+      Samurai_Archer_Spritelist_3: 1829803733139038656
+      Samurai_Archer_Spritelist_30: -7559012477888900642
+      Samurai_Archer_Spritelist_31: 4974154646862432957
+      Samurai_Archer_Spritelist_32: 7017181437375168002
+      Samurai_Archer_Spritelist_33: 9134974307407171028
+      Samurai_Archer_Spritelist_34: -7877023093320358329
+      Samurai_Archer_Spritelist_35: 6429786578316824849
+      Samurai_Archer_Spritelist_36: -5580589885679427259
+      Samurai_Archer_Spritelist_37: 2242819920967280095
+      Samurai_Archer_Spritelist_38: 1261282697550811963
+      Samurai_Archer_Spritelist_39: 7332755950126994525
+      Samurai_Archer_Spritelist_4: 572830244622930323
+      Samurai_Archer_Spritelist_40: -3295955325909513420
+      Samurai_Archer_Spritelist_41: 2315889853062782137
+      Samurai_Archer_Spritelist_42: 8972560763124830801
+      Samurai_Archer_Spritelist_43: 8570956084589845361
+      Samurai_Archer_Spritelist_44: -6864633219248101106
+      Samurai_Archer_Spritelist_45: -8063915599121617321
+      Samurai_Archer_Spritelist_46: 4885922897657643814
+      Samurai_Archer_Spritelist_47: -6154742174022035467
+      Samurai_Archer_Spritelist_48: 1263912043699199514
+      Samurai_Archer_Spritelist_49: -3270521432756709734
+      Samurai_Archer_Spritelist_5: 6910082046040943631
+      Samurai_Archer_Spritelist_50: -7661453492186586923
+      Samurai_Archer_Spritelist_51: 3907274707952800700
+      Samurai_Archer_Spritelist_52: 6305650524126401457
+      Samurai_Archer_Spritelist_53: 7839774078622714499
+      Samurai_Archer_Spritelist_54: -3400864329489025088
+      Samurai_Archer_Spritelist_55: 8544103346651084463
+      Samurai_Archer_Spritelist_56: -3876824524043216347
+      Samurai_Archer_Spritelist_57: 2187498187017863235
+      Samurai_Archer_Spritelist_58: -8324429425703686583
+      Samurai_Archer_Spritelist_59: -237238342018259767
+      Samurai_Archer_Spritelist_6: -3230552237190112725
+      Samurai_Archer_Spritelist_60: -5038122153919795158
+      Samurai_Archer_Spritelist_61: 1558316272731339492
+      Samurai_Archer_Spritelist_62: 6598986480163829412
+      Samurai_Archer_Spritelist_63: -2087696663557018933
+      Samurai_Archer_Spritelist_64: -921130160895358602
+      Samurai_Archer_Spritelist_65: -592672489688894605
+      Samurai_Archer_Spritelist_66: -3999809168851925837
+      Samurai_Archer_Spritelist_67: -5180151106114883773
+      Samurai_Archer_Spritelist_68: -508354864915310133
+      Samurai_Archer_Spritelist_69: 1104074574325636865
+      Samurai_Archer_Spritelist_7: -3584027427745468564
+      Samurai_Archer_Spritelist_70: 3122827570191580851
+      Samurai_Archer_Spritelist_71: -1348897589471115851
+      Samurai_Archer_Spritelist_72: 5482428745276252816
+      Samurai_Archer_Spritelist_73: 4077111270029078387
+      Samurai_Archer_Spritelist_74: 551023692606210456
+      Samurai_Archer_Spritelist_8: 925361580083924773
+      Samurai_Archer_Spritelist_9: 5723724060191848637
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -92,6 +92,10 @@ public static class BackendApiClient
         user.remote_profile_id = string.Empty;
         user.account_id = string.Empty;
         user.account_email = string.Empty;
+        user.auth_provider = string.Empty;
+        user.firebase_id_token = string.Empty;
+        user.firebase_refresh_token = string.Empty;
+        user.firebase_token_expiry_unix = 0;
         user.is_guest = true;
         user.last_sync_unix = 0;
         user.last_synced_profile_version = 0;
@@ -107,8 +111,53 @@ public static class BackendApiClient
         string mode = string.IsNullOrWhiteSpace(user.account_id) ? "Guest" : "Account";
         string email = string.IsNullOrWhiteSpace(user.account_email) ? "none" : user.account_email;
         string remote = string.IsNullOrWhiteSpace(user.remote_profile_id) ? "none" : user.remote_profile_id;
+        string provider = string.IsNullOrWhiteSpace(user.auth_provider) ? "none" : user.auth_provider;
 
-        return $"Mode: {mode}\nUserId: {user.user_id}\nDeviceId: {user.device_profile_id}\nAccountId: {user.account_id}\nEmail: {email}\nRemoteProfileId: {remote}\nProfileVersion: {user.last_synced_profile_version}\nPendingSync: {user.has_pending_sync}";
+        return $"Mode: {mode}\nProvider: {provider}\nUserId: {user.user_id}\nDeviceId: {user.device_profile_id}\nAccountId: {user.account_id}\nEmail: {email}\nRemoteProfileId: {remote}\nProfileVersion: {user.last_synced_profile_version}\nPendingSync: {user.has_pending_sync}";
+    }
+
+    public static void ApplyFirebaseAuthSession(FirebaseAuthSession session, string fallbackDisplayName = null)
+    {
+        if (session == null)
+        {
+            return;
+        }
+
+        EnsureLocalProfileIdentity();
+
+        var user = SaveManager.Profile.user_profile;
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        user.account_id = session.localId ?? string.Empty;
+        user.account_email = session.email ?? string.Empty;
+        user.auth_provider = "firebase";
+        user.firebase_id_token = session.idToken ?? string.Empty;
+        user.firebase_refresh_token = session.refreshToken ?? string.Empty;
+        user.firebase_token_expiry_unix = now + session.GetExpiresInSeconds();
+        user.is_guest = false;
+        user.last_login_timestamp = now;
+
+        if (!string.IsNullOrWhiteSpace(session.displayName))
+        {
+            user.username = session.displayName;
+        }
+        else if (!string.IsNullOrWhiteSpace(fallbackDisplayName))
+        {
+            user.username = fallbackDisplayName;
+        }
+        else if (string.IsNullOrWhiteSpace(user.username) && !string.IsNullOrWhiteSpace(session.email))
+        {
+            int atIndex = session.email.IndexOf('@');
+            user.username = atIndex > 0 ? session.email.Substring(0, atIndex) : session.email;
+        }
+
+        user.has_pending_sync = true;
+        SaveManager.SaveProfile();
+    }
+
+    public static string GetFirebaseIdToken()
+    {
+        return SaveManager.Profile.user_profile.firebase_id_token;
     }
 
     public static void ApplyWalletToProfile(BackendWalletState wallet)
@@ -442,6 +491,7 @@ public static class BackendApiClient
     {
         using (var request = UnityWebRequest.Get(BaseUrl + relativePath))
         {
+            AttachAuthHeaders(request);
             Debug.Log($"[BackendApi] GET {request.url}");
             yield return request.SendWebRequest();
             HandleResponse(request, onSuccess, onError);
@@ -458,10 +508,20 @@ public static class BackendApiClient
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            AttachAuthHeaders(request);
 
             Debug.Log($"[BackendApi] POST {request.url} {json}");
             yield return request.SendWebRequest();
             HandleResponse(request, onSuccess, onError);
+        }
+    }
+
+    private static void AttachAuthHeaders(UnityWebRequest request)
+    {
+        string idToken = GetFirebaseIdToken();
+        if (!string.IsNullOrWhiteSpace(idToken))
+        {
+            request.SetRequestHeader("Authorization", $"Bearer {idToken}");
         }
     }
 

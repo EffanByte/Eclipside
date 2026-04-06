@@ -24,7 +24,7 @@ public class DevAccountAuthManager : MonoBehaviour
 
     [SerializeField] private bool verboseLogging = true;
 
-    public event Action<BackendAccountAuthResponse> OnAuthSucceeded;
+    public event Action<FirebaseAuthSession> OnAuthSucceeded;
     public event Action<string> OnAuthFailed;
     public event Action<string> OnStatusChanged;
 
@@ -90,14 +90,13 @@ public class DevAccountAuthManager : MonoBehaviour
 
     private IEnumerator RegisterRoutine(string email, string password, string displayName, bool linkCurrentPlayer)
     {
-        BackendAccountAuthResponse response = null;
+        FirebaseAuthSession response = null;
         string error = null;
 
-        yield return BackendApiClient.RegisterDevAccount(
+        yield return FirebaseAuthApiClient.RegisterEmailPassword(
             email,
             password,
             displayName,
-            linkCurrentPlayer,
             value => response = value,
             message => error = message);
 
@@ -107,18 +106,17 @@ public class DevAccountAuthManager : MonoBehaviour
             yield break;
         }
 
-        HandleSuccess(response, $"Register succeeded. AccountId={response?.account?.accountId}");
+        HandleSuccess(response, displayName, linkCurrentPlayer, $"Register succeeded. FirebaseUid={response?.localId} LinkCurrentPlayer={linkCurrentPlayer}");
     }
 
     private IEnumerator LoginRoutine(string email, string password, bool linkCurrentPlayer)
     {
-        BackendAccountAuthResponse response = null;
+        FirebaseAuthSession response = null;
         string error = null;
 
-        yield return BackendApiClient.LoginDevAccount(
+        yield return FirebaseAuthApiClient.LoginEmailPassword(
             email,
             password,
-            linkCurrentPlayer,
             value => response = value,
             message => error = message);
 
@@ -128,32 +126,17 @@ public class DevAccountAuthManager : MonoBehaviour
             yield break;
         }
 
-        HandleSuccess(response, $"Login succeeded. AccountId={response?.account?.accountId} LinkedPlayerId={response?.account?.linkedPlayerId}");
+        HandleSuccess(response, SaveManager.Profile.user_profile.username, linkCurrentPlayer, $"Login succeeded. FirebaseUid={response?.localId} LinkCurrentPlayer={linkCurrentPlayer}");
     }
 
     private IEnumerator LinkRoutine(string email, string password)
     {
-        BackendAccountAuthResponse response = null;
-        string error = null;
-
-        yield return BackendApiClient.LinkCurrentProfileToAccount(
-            email,
-            password,
-            value => response = value,
-            message => error = message);
-
-        if (!string.IsNullOrWhiteSpace(error))
-        {
-            Fail($"Link failed. {error}");
-            yield break;
-        }
-
-        HandleSuccess(response, $"Link succeeded. AccountId={response?.account?.accountId}");
+        yield return LoginRoutine(email, password, true);
     }
 
-    private void HandleSuccess(BackendAccountAuthResponse response, string logMessage)
+    private void HandleSuccess(FirebaseAuthSession response, string fallbackDisplayName, bool linkCurrentPlayer, string logMessage)
     {
-        BackendApiClient.ApplyAccountAuthResponse(response);
+        BackendApiClient.ApplyFirebaseAuthSession(response, fallbackDisplayName);
         Log(logMessage);
         OnAuthSucceeded?.Invoke(response);
         PublishStatus();
@@ -161,13 +144,13 @@ public class DevAccountAuthManager : MonoBehaviour
         ProfileSyncBootstrap.EnsureExists();
         if (ProfileSyncManager.Instance != null)
         {
-            ProfileSyncManager.Instance.SyncNow(false);
+            ProfileSyncManager.Instance.BootstrapNow(linkCurrentPlayer);
         }
     }
 
     private void Fail(string message)
     {
-        Debug.LogWarning($"[DevAuth] {message}");
+        Debug.LogWarning($"[FirebaseAuth] {message}");
         OnAuthFailed?.Invoke(message);
         PublishStatus();
     }
@@ -176,7 +159,7 @@ public class DevAccountAuthManager : MonoBehaviour
     {
         if (verboseLogging)
         {
-            Debug.Log($"[DevAuth] {message}");
+            Debug.Log($"[FirebaseAuth] {message}");
         }
     }
 

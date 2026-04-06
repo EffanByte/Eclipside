@@ -89,9 +89,9 @@ public class ProfileSyncManager : MonoBehaviour
         }
     }
 
-    public void BootstrapNow()
+    public void BootstrapNow(bool syncPendingChangesAfterBootstrap = true)
     {
-        StartCoroutine(BootstrapRoutine(true));
+        StartCoroutine(BootstrapRoutine(syncPendingChangesAfterBootstrap));
     }
 
     public void SyncNow(bool pushLocalChanges = true)

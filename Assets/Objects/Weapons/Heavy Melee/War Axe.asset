@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3812310885106676716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9c5c476b3660747ade54cb5f5fe989, type: 3}
+  m_Name: PercentMaxHealth
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPercentMaxHealthBoostEffect
+  percent: 0.12
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,17 +40,4 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: 4497168612867238973}
---- !u!114 &4497168612867238973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9c5c476b3660747ade54cb5f5fe989, type: 3}
-  m_Name: PercentMaxHealth
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponPercentMaxHealthBoostEffect
-  percent: 0.12
+  - {fileID: -3812310885106676716}

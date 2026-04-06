@@ -276,48 +276,48 @@
         "consumables": {}
       },
       "missionCycles": {
-        "dayIndex": 20536,
-        "weekIndex": 20535,
-        "dailySeed": "e80eeaf56dfbd8b9802b633fe65fe86148b80fb47f819b6f5e9df33397fba5f5",
-        "weeklySeed": "76764db3a3379b3f89cb846b59830bf5939743e27bafa72d29f241b0350b2c36",
+        "dayIndex": 20549,
+        "weekIndex": 20549,
+        "dailySeed": "187c5ce5ff28cef924dea4f1682864116997e7600779cb3513e8fa31b536e1c7",
+        "weeklySeed": "5386e5118516d34c54e6834b0c026019a74aa422dca23cd166428c7ca8d3a363",
         "dailyRerollUsed": false,
         "dailyBonusClaimed": false,
         "weeklyBonusClaimed": false,
         "dailyMissions": [
           {
-            "missionId": "daily_easy_buy_3_items",
-            "title": "Purchase 3 items",
-            "statKey": "ITEMS_PURCHASED",
-            "targetValue": 3,
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
             "reward": {
               "type": "Gold",
-              "amount": 220
+              "amount": 200
+            },
+            "currentProgress": 3,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
             },
             "currentProgress": 0,
             "isCompleted": false,
             "isClaimed": false
           },
           {
-            "missionId": "daily_medium_open_3_chests",
-            "title": "Open 3 chests",
-            "statKey": "CHESTS_OPENED",
-            "targetValue": 3,
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
             "reward": {
               "type": "Gold",
-              "amount": 300
-            },
-            "currentProgress": 3,
-            "isCompleted": true,
-            "isClaimed": true
-          },
-          {
-            "missionId": "daily_hard_run_time_900",
-            "title": "Reach 15 minutes in a run",
-            "statKey": "RUN_TIME",
-            "targetValue": 900,
-            "reward": {
-              "type": "Ticket",
-              "amount": 1
+              "amount": 500
             },
             "currentProgress": 0,
             "isCompleted": false,
@@ -326,15 +326,15 @@
         ],
         "weeklyMissions": [
           {
-            "missionId": "weekly_miniboss_12",
-            "title": "Defeat 12 portal minibosses",
-            "statKey": "KILLS_MINIBOSS",
-            "targetValue": 12,
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
             "reward": {
-              "type": "Gold",
-              "amount": 800
+              "type": "Orbs",
+              "amount": 75
             },
-            "currentProgress": 0,
+            "currentProgress": 4,
             "isCompleted": false,
             "isClaimed": false
           }
@@ -342,6 +342,94 @@
         "statTotals": {
           "CHESTS_OPENED": 4,
           "KILLS_REGULAR": 3
+        }
+      },
+      "profile": {
+        "remoteProfileId": "remote_b49138a9436d42f08db0e3d568bb8a8c",
+        "deviceProfileId": "b49138a9436d42f08db0e3d568bb8a8c",
+        "accountId": "Ksja2EMem9WpYZ9P3XdwouoBCVQ2",
+        "displayName": "Guest-b49138a9",
+        "isGuest": false,
+        "profileVersion": 4,
+        "lastSyncUnix": 1775500671,
+        "data": {
+          "username": "Guest-b49138a9",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [
+              "D_Eryndor"
+            ],
+            "equipped_character_id": "D_Eryndor",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Storm Catalyst",
+              "Inferno Orb",
+              "luminous_meteorite_epic_reward"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": [
+              {
+                "item_id": "glass_orb",
+                "count": 2
+              },
+              {
+                "item_id": "large_potion",
+                "count": 1
+              },
+              {
+                "item_id": "Glass Orb",
+                "count": 1
+              },
+              {
+                "item_id": "Glass Orb",
+                "count": 1
+              },
+              {
+                "item_id": "Quick Berry",
+                "count": 2
+              },
+              {
+                "item_id": "Glass Orb",
+                "count": 1
+              },
+              {
+                "item_id": "Glass Orb",
+                "count": 300
+              },
+              {
+                "item_id": "Glass Orb",
+                "count": 300
+              }
+            ]
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
         }
       }
     },

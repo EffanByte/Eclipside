@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_es
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 99f33cb512973404ca0c1422d65f2c8c, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 2067010985984
+    m_Localized: ECLIPSIDE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067115843584
+    m_Localized: Desciende por biomas fracturados, define tu equipamiento y sobrevive
+      al eclipse.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232192
+    m_Localized: Elige Tu Camino
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232193
+    m_Localized: Una gran aventura empieza con una eleccion consciente.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426496
+    m_Localized: Iniciar Partida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426497
+    m_Localized: Elige tu personaje y entra en la siguiente partida.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426498
+    m_Localized: Gacha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426499
+    m_Localized: Gasta meteoritos y amplia tu plantel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426500
+    m_Localized: Misiones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426501
+    m_Localized: Sigue objetivos diarios y reclama recompensas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426502
+    m_Localized: Logros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426503
+    m_Localized: Revisa el progreso a largo plazo y tus hitos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426504
+    m_Localized: Desafios
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426505
+    m_Localized: Activa modificadores de partida y gana prestigio.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426506
+    m_Localized: Ajustes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426507
+    m_Localized: Ajusta el idioma y las preferencias del menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426508
+    m_Localized: Seleccionar Personaje
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426509
+    m_Localized: 'Seleccionado: Ninguno'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426510
+    m_Localized: 'Seleccionado: {0} ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426511
+    m_Localized: Atras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426512
+    m_Localized: Cerrar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426513
+    m_Localized: Desbloqueado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426514
+    m_Localized: Bloqueado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426515
+    m_Localized: Ajustes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426516
+    m_Localized: Define como se presenta el juego antes de empezar la siguiente partida.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426517
+    m_Localized: Idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426518
+    m_Localized: 'Idioma actual: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426519
+    m_Localized: Bienvenido a Eclipside
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426520
+    m_Localized: Crea una cuenta para mantener tu progreso sincronizado o continua
+      como invitado y decide mas tarde.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426521
+    m_Localized: Iniciar Sesion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426522
+    m_Localized: Registrarse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426523
+    m_Localized: Nombre Visible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426524
+    m_Localized: Correo Electronico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426525
+    m_Localized: Contrasena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426526
+    m_Localized: Crear Cuenta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426527
+    m_Localized: Entrar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426528
+    m_Localized: Continuar como Invitado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426529
+    m_Localized: Creando tu cuenta...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426530
+    m_Localized: Iniciando sesion...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426531
+    m_Localized: Elige un nombre visible y luego crea tu cuenta.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426532
+    m_Localized: Inicia sesion para cargar tu perfil vinculado.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426533
+    m_Localized: Introduce el correo y la contrasena.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426534
+    m_Localized: El gestor de autenticacion no esta disponible.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

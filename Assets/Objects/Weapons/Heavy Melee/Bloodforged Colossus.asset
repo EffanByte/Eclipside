@@ -27,23 +27,9 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: 2299759137765367737}
-  - {fileID: 1207129295184178366}
---- !u!114 &1207129295184178366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e0cc4a2b33cdf42a5c12387843cfb9, type: 3}
-  m_Name: SelfDamageOnKill
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponSelfDamageOnKillEffect
-  killThreshold: 3
-  selfDamageAmount: 2
---- !u!114 &2299759137765367737
+  - {fileID: 3254888908172672598}
+  - {fileID: 4409971083723164356}
+--- !u!114 &3254888908172672598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,3 +43,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
   statToBuff: 1
   amount: 0.5
+--- !u!114 &4409971083723164356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e0cc4a2b33cdf42a5c12387843cfb9, type: 3}
+  m_Name: SelfDamageOnKill
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSelfDamageOnKillEffect
+  killThreshold: 3
+  selfDamageAmount: 2

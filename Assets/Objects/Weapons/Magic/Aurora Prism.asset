@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7460370790748321022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 0
-  amount: 0.15
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,24 +28,10 @@ MonoBehaviour:
   element: 2
   style: 2
   effects:
-  - {fileID: -7460370790748321022}
-  - {fileID: 4357307747356718337}
-  - {fileID: 6832456148883741646}
---- !u!114 &4357307747356718337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 2
-  amount: 0.15
---- !u!114 &6832456148883741646
+  - {fileID: 8602896354173970879}
+  - {fileID: 8574400619833037267}
+  - {fileID: 4224392495327567164}
+--- !u!114 &4224392495327567164
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,3 +47,31 @@ MonoBehaviour:
   additionalPierces: 6
   colliderRadiusMultiplier: 1.8
   lifetime: 3
+--- !u!114 &8574400619833037267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 2
+  amount: 0.15
+--- !u!114 &8602896354173970879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 0
+  amount: 0.15

@@ -29,6 +29,32 @@ function log(message, payload) {
   }
 }
 
+function initializeFirebaseAdmin() {
+  try {
+    const { initializeApp, applicationDefault, getApps } = require("firebase-admin/app");
+    const { getAuth } = require("firebase-admin/auth");
+
+    const existingApps = getApps();
+    const app = existingApps.length > 0
+      ? existingApps[0]
+      : initializeApp({
+          credential: applicationDefault(),
+          projectId: process.env.FIREBASE_PROJECT_ID
+        });
+
+    log("Firebase Admin initialized", {
+      projectId: process.env.FIREBASE_PROJECT_ID || "(default credentials project)"
+    });
+
+    return getAuth(app);
+  } catch (error) {
+    log("Firebase Admin unavailable; continuing without token verification", { error: error.message });
+    return null;
+  }
+}
+
+const firebaseAuth = initializeFirebaseAdmin();
+
 const DAILY_MISSIONS = {
   Easy: [
     { id: "daily_easy_kill_120", title: "Defeat 120 enemies", statKey: "KILLS_REGULAR", targetValue: 120, reward: { type: "Gold", amount: 200 } },
@@ -522,6 +548,131 @@ function getPlayer(playerId) {
   return store.players[playerId];
 }
 
+function findPlayerByAccountId(accountId) {
+  if (!accountId) {
+    return null;
+  }
+
+  const players = Object.values(store.players || {});
+  for (const player of players) {
+    const profile = ensureProfileState(player);
+    if (profile.accountId === accountId) {
+      return player;
+    }
+  }
+
+  return null;
+}
+
+function getFirebaseDisplayName(firebaseUser) {
+  if (!firebaseUser) {
+    return "";
+  }
+
+  if (typeof firebaseUser.name === "string" && firebaseUser.name.trim()) {
+    return firebaseUser.name.trim();
+  }
+
+  if (typeof firebaseUser.email === "string" && firebaseUser.email.trim()) {
+    return firebaseUser.email.trim().split("@")[0];
+  }
+
+  return "";
+}
+
+function attachFirebaseAccountToPlayer(player, firebaseUser, requestedDisplayName = "") {
+  if (!player || !firebaseUser || !firebaseUser.uid) {
+    return;
+  }
+
+  const profile = ensureProfileState(player);
+  if (profile.accountId && profile.accountId !== firebaseUser.uid) {
+    throw new Error("Profile is already linked to another account");
+  }
+
+  profile.accountId = firebaseUser.uid;
+  profile.isGuest = false;
+
+  const preferredName = String(requestedDisplayName || "").trim() || getFirebaseDisplayName(firebaseUser);
+  if (preferredName) {
+    profile.displayName = preferredName;
+    profile.data = normalizeSyncableProfile(profile.data, player.playerId, preferredName);
+    profile.data.username = preferredName;
+  }
+
+  profile.lastSyncUnix = Math.floor(Date.now() / 1000);
+}
+
+function resolvePlayerForProfileRequest(body, firebaseUser, allowCreate = false) {
+  const requestedPlayerId = body.playerId || body.deviceProfileId || "";
+
+  if (firebaseUser && firebaseUser.uid) {
+    const linkedPlayer = findPlayerByAccountId(firebaseUser.uid);
+    if (linkedPlayer) {
+      if (requestedPlayerId && linkedPlayer.playerId !== requestedPlayerId) {
+        log("Resolved profile request to linked Firebase player", {
+          firebaseUid: firebaseUser.uid,
+          requestedPlayerId,
+          resolvedPlayerId: linkedPlayer.playerId
+        });
+      }
+
+      attachFirebaseAccountToPlayer(linkedPlayer, firebaseUser, body.displayName);
+      return linkedPlayer;
+    }
+  }
+
+  let player = null;
+  if (requestedPlayerId) {
+    player = getPlayer(requestedPlayerId);
+  } else if (allowCreate) {
+    const generatedPlayerId = `player-${Date.now()}`;
+    if (!store.players[generatedPlayerId]) {
+      store.players[generatedPlayerId] = defaultPlayer(generatedPlayerId, {
+        wallet: body.seedWallet,
+        gacha: body.seedGacha,
+        displayName: body.displayName
+      });
+      log("Created player for profile request", { playerId: generatedPlayerId });
+    }
+    player = getPlayer(generatedPlayerId);
+  }
+
+  if (player && firebaseUser && firebaseUser.uid) {
+    attachFirebaseAccountToPlayer(player, firebaseUser, body.displayName);
+  }
+
+  return player;
+}
+
+async function verifyFirebaseTokenFromRequest(req) {
+  const authHeader = req.headers.authorization || "";
+  if (!authHeader.startsWith("Bearer ")) {
+    return { firebaseUser: null, error: null };
+  }
+
+  if (!firebaseAuth) {
+    return { firebaseUser: null, error: "Firebase Admin is not configured on the backend." };
+  }
+
+  const idToken = authHeader.slice("Bearer ".length).trim();
+  if (!idToken) {
+    return { firebaseUser: null, error: "Authorization header did not contain a Firebase token." };
+  }
+
+  try {
+    const firebaseUser = await firebaseAuth.verifyIdToken(idToken);
+    log("Verified Firebase token", {
+      firebaseUid: firebaseUser.uid,
+      email: firebaseUser.email || ""
+    });
+    return { firebaseUser, error: null };
+  } catch (error) {
+    log("Firebase token verification failed", { error: error.message });
+    return { firebaseUser: null, error: "Invalid Firebase token." };
+  }
+}
+
 function assignReward(player, reward) {
   if (!reward || !reward.type) {
     log("Skipped reward assignment because reward was empty", { playerId: player?.playerId });
@@ -679,6 +830,13 @@ const server = http.createServer(async (req, res) => {
     const pathname = url.pathname;
     log("Incoming request", { method: req.method, pathname, query: Object.fromEntries(url.searchParams.entries()) });
 
+    const authState = await verifyFirebaseTokenFromRequest(req);
+    if (authState.error) {
+      sendJson(res, 401, { error: authState.error });
+      return;
+    }
+    const firebaseUser = authState.firebaseUser;
+
     if (req.method === "GET" && pathname === "/health") {
       sendJson(res, 200, { ok: true, service: "eclipside-backend-quick" });
       return;
@@ -776,7 +934,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const player = getPlayer(body.playerId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
       ensureMissionCycles(player);
       const profile = ensureProfileState(player);
       const auth = validateAccountCredentials(body.email, body.password);
@@ -810,19 +968,16 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/profile/bootstrap") {
       const body = await readJsonBody(req);
       log("Profile bootstrap body", body);
-      const playerId = body.playerId || body.deviceProfileId || `player-${Date.now()}`;
-
-      if (!store.players[playerId]) {
-        store.players[playerId] = defaultPlayer(playerId, {
-          wallet: body.seedWallet,
-          gacha: body.seedGacha,
-          displayName: body.displayName
-        });
-        log("Created seeded player during profile bootstrap", { playerId, seedWallet: body.seedWallet, seedGacha: body.seedGacha });
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, true);
+      if (!player) {
+        sendJson(res, 400, { error: "Unable to resolve player profile" });
+        return;
       }
 
-      const player = getPlayer(playerId);
       ensureMissionCycles(player);
+      if (firebaseUser) {
+        body.accountId = firebaseUser.uid;
+      }
       updateProfileMetadata(player, body);
       const profile = ensureProfileState(player);
 
@@ -846,7 +1001,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/profile/sync") {
       const body = await readJsonBody(req);
       log("Profile sync body", body);
-      const player = getPlayer(body.playerId || body.deviceProfileId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
 
       if (!player) {
         sendJson(res, 400, { error: "playerId or deviceProfileId is required" });
@@ -854,6 +1009,9 @@ const server = http.createServer(async (req, res) => {
       }
 
       ensureMissionCycles(player);
+      if (firebaseUser) {
+        body.accountId = firebaseUser.uid;
+      }
       updateProfileMetadata(player, body);
       const profile = ensureProfileState(player);
       const clientVersion = Number.isFinite(Number(body.lastKnownProfileVersion))
@@ -885,7 +1043,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && pathname === "/time-sync") {
-      const player = getPlayer(url.searchParams.get("playerId"));
+      const player = resolvePlayerForProfileRequest({ playerId: url.searchParams.get("playerId") }, firebaseUser, false);
       if (!player) {
         sendJson(res, 400, { error: "playerId is required" });
         return;
@@ -906,7 +1064,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && pathname === "/missions/state") {
-      const player = getPlayer(url.searchParams.get("playerId"));
+      const player = resolvePlayerForProfileRequest({ playerId: url.searchParams.get("playerId") }, firebaseUser, false);
       if (!player) {
         sendJson(res, 400, { error: "playerId is required" });
         return;
@@ -931,7 +1089,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/missions/progress") {
       const body = await readJsonBody(req);
       log("Mission progress body", body);
-      const player = getPlayer(body.playerId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
       const statKey = body.statKey;
       const amount = Number(body.amount || 0);
 
@@ -957,7 +1115,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/missions/claim") {
       const body = await readJsonBody(req);
       log("Mission claim body", body);
-      const player = getPlayer(body.playerId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
       const missionId = body.missionId;
 
       if (!player || !missionId) {
@@ -1004,7 +1162,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/missions/reroll") {
       const body = await readJsonBody(req);
       log("Mission reroll body", body);
-      const player = getPlayer(body.playerId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
       const missionId = body.missionId;
 
       if (!player || !missionId) {
@@ -1050,7 +1208,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/gacha/pull") {
       const body = await readJsonBody(req);
       log("Gacha pull body", body);
-      const player = getPlayer(body.playerId);
+      const player = resolvePlayerForProfileRequest(body, firebaseUser, false);
       const banner = BANNERS[body.bannerId];
       const pullCount = Number(body.pullCount || 1);
 

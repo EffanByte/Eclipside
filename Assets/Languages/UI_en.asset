@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 99f33cb512973404ca0c1422d65f2c8c, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 2067010985984
+    m_Localized: ECLIPSIDE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067115843584
+    m_Localized: Descend through fractured biomes, shape your loadout, and survive
+      the eclipse.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232192
+    m_Localized: Choose Your Path
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232193
+    m_Localized: A bold run begins with a deliberate choice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426496
+    m_Localized: Start Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426497
+    m_Localized: Select your character and enter the next run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426498
+    m_Localized: Gacha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426499
+    m_Localized: Spend meteorites and expand your roster.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426500
+    m_Localized: Missions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426501
+    m_Localized: Track daily goals and collect rewards.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426502
+    m_Localized: Achievements
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426503
+    m_Localized: Review long-term progress and milestones.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426504
+    m_Localized: Challenges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426505
+    m_Localized: Enable run modifiers and earn bragging rights.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426506
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426507
+    m_Localized: Adjust language and menu preferences.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426508
+    m_Localized: Select Character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426509
+    m_Localized: 'Selected: None'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426510
+    m_Localized: 'Selected: {0} ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426511
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426512
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426513
+    m_Localized: Unlocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426514
+    m_Localized: Locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426515
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426516
+    m_Localized: Adjust how the game presents itself before you begin the next run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426517
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426518
+    m_Localized: 'Current language: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426519
+    m_Localized: Welcome to Eclipside
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426520
+    m_Localized: Create an account to keep your progress synced, or continue as a
+      guest and decide later.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426521
+    m_Localized: Sign In
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426522
+    m_Localized: Sign Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426523
+    m_Localized: Display Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426524
+    m_Localized: Email
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426525
+    m_Localized: Password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426526
+    m_Localized: Create Account
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426527
+    m_Localized: Log In
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426528
+    m_Localized: Continue as Guest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426529
+    m_Localized: Creating your account...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426530
+    m_Localized: Signing you in...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426531
+    m_Localized: Choose a display name, then create your account.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426532
+    m_Localized: Sign in to load your account-linked profile.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426533
+    m_Localized: Enter both email and password.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426534
+    m_Localized: Authentication manager is unavailable.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

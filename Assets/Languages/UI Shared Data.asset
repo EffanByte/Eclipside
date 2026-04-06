@@ -1,0 +1,200 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: 99f33cb512973404ca0c1422d65f2c8c
+  m_Entries:
+  - m_Id: 2067010985984
+    m_Key: menu.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067115843584
+    m_Key: menu.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232192
+    m_Key: menu.section.play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067124232193
+    m_Key: menu.footer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426496
+    m_Key: menu.start_run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426497
+    m_Key: menu.start_run.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426498
+    m_Key: menu.gacha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426499
+    m_Key: menu.gacha.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426500
+    m_Key: menu.missions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426501
+    m_Key: menu.missions.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426502
+    m_Key: menu.achievements
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426503
+    m_Key: menu.achievements.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426504
+    m_Key: menu.challenges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426505
+    m_Key: menu.challenges.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426506
+    m_Key: menu.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426507
+    m_Key: menu.settings.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426508
+    m_Key: menu.character_select.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426509
+    m_Key: menu.character_select.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426510
+    m_Key: menu.character_select.selected_format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426511
+    m_Key: common.back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426512
+    m_Key: common.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426513
+    m_Key: common.status.unlocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426514
+    m_Key: common.status.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426515
+    m_Key: settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426516
+    m_Key: settings.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426517
+    m_Key: settings.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426518
+    m_Key: settings.language.current_format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426519
+    m_Key: auth.onboarding.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426520
+    m_Key: auth.onboarding.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426521
+    m_Key: auth.sign_in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426522
+    m_Key: auth.sign_up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426523
+    m_Key: auth.display_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426524
+    m_Key: auth.email
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426525
+    m_Key: auth.password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426526
+    m_Key: auth.create_account
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426527
+    m_Key: auth.login_action
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426528
+    m_Key: auth.continue_guest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426529
+    m_Key: auth.status.signing_up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426530
+    m_Key: auth.status.signing_in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426531
+    m_Key: auth.status.idle_signup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426532
+    m_Key: auth.status.idle_signin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426533
+    m_Key: auth.error.missing_credentials
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2067128426534
+    m_Key: auth.error.manager_missing
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536490858610767
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536490858610767
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1775496542732

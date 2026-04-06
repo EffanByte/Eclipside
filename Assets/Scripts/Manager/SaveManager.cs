@@ -28,6 +28,10 @@ public class UserProfile
     public string remote_profile_id;
     public string account_id;
     public string account_email;
+    public string auth_provider;
+    public string firebase_id_token;
+    public string firebase_refresh_token;
+    public long firebase_token_expiry_unix;
     public string username;
     public long date_created;           // timestamp
     public long last_login_timestamp;   // timestamp
@@ -268,7 +272,10 @@ public class ControlSettings
 [Serializable]
 public class GeneralSettings
 {
-    public string language; // "en", "es", etc.
+    public string language = "en"; // "en", "es", etc.
+    public string cached_auth_email;
+    public string cached_auth_display_name;
+    public bool has_completed_auth_onboarding;
 }
 
 // Unity Vector2 is not serializable by default in all JSON libraries, 
@@ -295,6 +302,7 @@ public static class SaveManager
 
     // --- NEW: THE CACHE ---
     private static SaveFile_Profile _cachedProfile;
+    private static SaveFile_Settings _cachedSettings;
 
     // Accessor: Always returns the live object in memory
     public static SaveFile_Profile Profile
@@ -319,10 +327,57 @@ public static class SaveManager
         }
     }
 
+    public static SaveFile_Settings Settings
+    {
+        get
+        {
+            if (_cachedSettings == null)
+            {
+                _cachedSettings = Load<SaveFile_Settings>("Save_Settings");
+                if (_cachedSettings.general == null)
+                {
+                    _cachedSettings.general = new GeneralSettings();
+                }
+
+                if (string.IsNullOrWhiteSpace(_cachedSettings.general.language))
+                {
+                    _cachedSettings.general.language = "en";
+                }
+            }
+
+            return _cachedSettings;
+        }
+    }
+
     public static void ReplaceProfile(SaveFile_Profile profile)
     {
         _cachedProfile = profile ?? new SaveFile_Profile();
         SaveProfile();
+    }
+
+    public static void SaveSettings()
+    {
+        if (_cachedSettings != null)
+        {
+            Save("Save_Settings", _cachedSettings);
+        }
+    }
+
+    public static void ReplaceSettings(SaveFile_Settings settings)
+    {
+        _cachedSettings = settings ?? new SaveFile_Settings();
+
+        if (_cachedSettings.general == null)
+        {
+            _cachedSettings.general = new GeneralSettings();
+        }
+
+        if (string.IsNullOrWhiteSpace(_cachedSettings.general.language))
+        {
+            _cachedSettings.general.language = "en";
+        }
+
+        SaveSettings();
     }
 
     // --- Existing Methods (Keep these) ---
@@ -350,5 +405,6 @@ public static class SaveManager
     public static void RefreshCache()
     {
         _cachedProfile = null;
+        _cachedSettings = null;
     }
 }

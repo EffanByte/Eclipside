@@ -71,7 +71,7 @@ public class DevAccountAuthPanel : MonoBehaviour
         RefreshStatus();
     }
 
-    private void HandleAuthSucceeded(BackendAccountAuthResponse response)
+    private void HandleAuthSucceeded(FirebaseAuthSession response)
     {
         RefreshStatus();
     }
