@@ -10,6 +10,8 @@ public class MissionMenuUI : MonoBehaviour
 
     private void OnEnable()
     {
+        LocalizationManager.EnsureExists();
+        LocalizationManager.LanguageChanged += RefreshList;
         if (MissionManager.Instance != null)
         {
             MissionManager.Instance.OnMissionStateChanged += RefreshList;
@@ -20,6 +22,7 @@ public class MissionMenuUI : MonoBehaviour
 
     private void OnDisable()
     {
+        LocalizationManager.LanguageChanged -= RefreshList;
         if (MissionManager.Instance != null)
         {
             MissionManager.Instance.OnMissionStateChanged -= RefreshList;

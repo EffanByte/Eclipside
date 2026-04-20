@@ -1,0 +1,252 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Weapons Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Weapons
+  m_TableCollectionNameGuidString: efe72017f571423498e1a8ac29c39e09
+  m_Entries:
+  - m_Id: 1551147008
+    m_Key: weapons.bloodforged_colossus.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1593090048
+    m_Key: weapons.bloodforged_colossus.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284352
+    m_Key: weapons.dull_sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284353
+    m_Key: weapons.dull_sword.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284354
+    m_Key: weapons.infernal_maul.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284355
+    m_Key: weapons.infernal_maul.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284356
+    m_Key: weapons.skull_splitter.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284357
+    m_Key: weapons.skull_splitter.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284358
+    m_Key: weapons.titan_maul.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284359
+    m_Key: weapons.titan_maul.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284360
+    m_Key: weapons.venom_axe.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284361
+    m_Key: weapons.venom_axe.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284362
+    m_Key: weapons.venomfang_greatsword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284363
+    m_Key: weapons.venomfang_greatsword.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284364
+    m_Key: weapons.war_axe.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284365
+    m_Key: weapons.war_axe.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284366
+    m_Key: weapons.worn_mace.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284367
+    m_Key: weapons.worn_mace.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284368
+    m_Key: weapons.chrono_daggers.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284369
+    m_Key: weapons.chrono_daggers.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284370
+    m_Key: weapons.flamefang_daggers.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284371
+    m_Key: weapons.flamefang_daggers.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284372
+    m_Key: weapons.hunters_kukri.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284373
+    m_Key: weapons.hunters_kukri.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284374
+    m_Key: weapons.moonfang_knife.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284375
+    m_Key: weapons.moonfang_knife.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284376
+    m_Key: weapons.predators_dagger.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284377
+    m_Key: weapons.predators_dagger.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284378
+    m_Key: weapons.rusty_dagger.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284379
+    m_Key: weapons.rusty_dagger.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284380
+    m_Key: weapons.shadow_claws.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284381
+    m_Key: weapons.shadow_claws.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284382
+    m_Key: weapons.twin_fang_daggers.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284383
+    m_Key: weapons.twin_fang_daggers.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284384
+    m_Key: weapons.vampiric_dagger.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284385
+    m_Key: weapons.vampiric_dagger.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284386
+    m_Key: weapons.apprentices_staff.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284387
+    m_Key: weapons.apprentices_staff.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284388
+    m_Key: weapons.arcane_sling.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284389
+    m_Key: weapons.arcane_sling.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284390
+    m_Key: weapons.aurora_prism.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284391
+    m_Key: weapons.aurora_prism.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284392
+    m_Key: weapons.cracked_scepter.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284393
+    m_Key: weapons.cracked_scepter.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284394
+    m_Key: weapons.crystal_wand.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284395
+    m_Key: weapons.crystal_wand.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284396
+    m_Key: weapons.frostbinder_tome.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284397
+    m_Key: weapons.frostbinder_tome.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284398
+    m_Key: weapons.hex_scepter.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284399
+    m_Key: weapons.hex_scepter.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284400
+    m_Key: weapons.inferno_orb.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284401
+    m_Key: weapons.inferno_orb.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284402
+    m_Key: weapons.storm_catalyst.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284403
+    m_Key: weapons.storm_catalyst.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284404
+    m_Key: weapons.stormcaller_tome.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284405
+    m_Key: weapons.stormcaller_tome.description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536800478461953
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536800478461953
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776676834502

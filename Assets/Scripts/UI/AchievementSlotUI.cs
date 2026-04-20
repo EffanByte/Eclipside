@@ -18,8 +18,8 @@ public class AchievementSlotUI : MonoBehaviour
     public void Initialize(AchievementData data, int currentProgress)
     {
         // 1. Text & Icon
-        titleText.text = data.title;
-        descriptionText.text = data.description;
+        titleText.text = data.GetTitle();
+        descriptionText.text = data.GetDescription();
         
         if (data.rewardItem != null && data.rewardItem.icon != null)
         {

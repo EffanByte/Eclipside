@@ -1,0 +1,248 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Weapons_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: efe72017f571423498e1a8ac29c39e09, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1551147008
+    m_Localized: Bloodforged Colossus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1593090048
+    m_Localized: +50% damage. Every 3 kills, take 0.2 heart true damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284352
+    m_Localized: Dull Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284353
+    m_Localized: +3% attack speed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284354
+    m_Localized: Infernal Maul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284355
+    m_Localized: +7% knockback and 15% burn chance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284356
+    m_Localized: Skull Splitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284357
+    m_Localized: +10% critical damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284358
+    m_Localized: Titan Maul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284359
+    m_Localized: +10% knockback and +8% confusion chance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284360
+    m_Localized: Venom Axe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284361
+    m_Localized: +10% damage against poisoned enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284362
+    m_Localized: Venomfang Greatsword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284363
+    m_Localized: Applies poison and +5% base damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284364
+    m_Localized: War Axe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284365
+    m_Localized: +12% max health.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284366
+    m_Localized: Worn Mace
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284367
+    m_Localized: +3% base damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284368
+    m_Localized: Chrono Daggers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284369
+    m_Localized: +25% attack speed. Kills slowly drag down enemy tempo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284370
+    m_Localized: Flamefang Daggers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284371
+    m_Localized: 20% burn chance and +5% attack speed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284372
+    m_Localized: Hunter's Kukri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284373
+    m_Localized: +8% damage to enemies below 30% HP.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284374
+    m_Localized: Moonfang Knife
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284375
+    m_Localized: +10% attack speed when hitting frozen enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284376
+    m_Localized: Predator's Dagger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284377
+    m_Localized: +15% crit chance against poisoned enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284378
+    m_Localized: Rusty Dagger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284379
+    m_Localized: Basic light melee dagger with no effects.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284380
+    m_Localized: Shadow Claws
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284381
+    m_Localized: 20% chance to confuse and +5% crit chance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284382
+    m_Localized: Twin Fang Daggers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284383
+    m_Localized: +10% attack speed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284384
+    m_Localized: Vampiric Dagger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284385
+    m_Localized: Restores 0.1 hearts every 15 hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284386
+    m_Localized: Apprentice's Staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284387
+    m_Localized: Basic magic projectile.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284388
+    m_Localized: Arcane Sling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284389
+    m_Localized: +7% projectile speed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284390
+    m_Localized: Aurora Prism
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284391
+    m_Localized: +15% attack speed and magic damage. Projectiles pierce through enemies
+      like beams.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284392
+    m_Localized: Cracked Scepter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284393
+    m_Localized: +3% magic damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284394
+    m_Localized: Crystal Wand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284395
+    m_Localized: +10% magic damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284396
+    m_Localized: Frostbinder Tome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284397
+    m_Localized: 15% chance to freeze for 2 seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284398
+    m_Localized: Hex Scepter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284399
+    m_Localized: +20% magic damage against confused enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284400
+    m_Localized: Inferno Orb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284401
+    m_Localized: Burning projectiles and +5% attack speed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284402
+    m_Localized: Storm Catalyst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284403
+    m_Localized: +15% projectile speed if the target is already burning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284404
+    m_Localized: Stormcaller Tome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1597284405
+    m_Localized: 5% chance to summon lightning per projectile.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

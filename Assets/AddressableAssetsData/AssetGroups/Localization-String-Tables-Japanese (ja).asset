@@ -15,8 +15,44 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Japanese (ja)
   m_GUID: 82ee8f89b36b59341af090f03e97dd0b
   m_SerializeEntries:
+  - m_GUID: 5a5d1e9c94518884da6ede8a0cd86915
+    m_Address: Achievements_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a78d2d9758ab0cd429df4722531e0c7c
     m_Address: UI_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b3417f52431f488478e1beabcdfdb7b0
+    m_Address: Biomes_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c48e68d6b8e78eb4fb52a25c5e187c6e
+    m_Address: Weapons_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc6b6e1d49ad26d45b046e202ec1ccab
+    m_Address: Items_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0cd77f14b03f2c4b8ae42eb46f3e829
+    m_Address: Characters_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fae6c3c2b93e76845bc67560bcf5f5d7
+    m_Address: Missions_ja
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ja

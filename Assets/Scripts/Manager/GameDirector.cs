@@ -148,8 +148,8 @@ public class GameDirector : MonoBehaviour
         PrepareSceneForBiomeLoad();
         ApplyBiomeTileTint(currentBiome);
 
-        Debug.Log($"=== ENTERING BIOME: {currentBiome.biomeName} ===");
-        BiomeTitleOverlay.Show(currentBiome.biomeName);
+        Debug.Log($"=== ENTERING BIOME: {currentBiome.GetDisplayName()} ===");
+        BiomeTitleOverlay.Show(currentBiome);
 
         // Tell WaveManager what enemies to use
         waveManager.InitializeBiome(currentBiome);
@@ -255,15 +255,15 @@ public class GameDirector : MonoBehaviour
     {
         if (bossDefeatedForBiome)
         {
-            return "Enter Portal";
+            return L("portal.enter", "Enter Portal");
         }
 
         if (bossEncounterTriggered)
         {
-            return "Boss Active";
+            return L("portal.boss_active", "Boss Active");
         }
 
-        return "Challenge Boss";
+        return L("portal.challenge_boss", "Challenge Boss");
     }
 
     // Called by the BiomePortal.cs script when the player interacts with it
@@ -424,5 +424,10 @@ public class GameDirector : MonoBehaviour
                 Destroy(enemy.gameObject);
             }
         }
+    }
+
+    private string L(string key, string fallback, params object[] args)
+    {
+        return LocalizationManager.GetString(LocalizationManager.DefaultTable, key, fallback, args);
     }
 }

@@ -638,7 +638,7 @@ public class MainMenu : MonoBehaviour
             CharacterData equippedCharacter = GameDatabase.Instance.GetCharacterByID(profile.characters.equipped_character_id);
             if (equippedCharacter != null)
             {
-                equippedCharacterName = equippedCharacter.characterName;
+                equippedCharacterName = equippedCharacter.GetDisplayName();
             }
 
             menuStatusText.text = L("menu.status_equipped", "Equipped: {0}", equippedCharacterName);
@@ -1941,12 +1941,12 @@ public class MainMenu : MonoBehaviour
 
         if (reward.type == RewardType.Character && reward.characterReference != null)
         {
-            return reward.characterReference.characterName;
+            return reward.characterReference.GetDisplayName();
         }
 
         if ((reward.type == RewardType.Weapon || reward.type == RewardType.Consumable) && reward.itemReference != null)
         {
-            return reward.itemReference.itemName;
+            return reward.itemReference.GetDisplayName();
         }
 
         CurrencyType? rewardCurrencyType = GetGachaRewardCurrencyType(reward);
@@ -2755,7 +2755,7 @@ public class MainMenu : MonoBehaviour
 
         CharacterData selectedCharacter = GameDatabase.Instance.GetCharacterByID(pendingCharacterSelectionId);
         selectedCharacterLabel.text = selectedCharacter != null
-            ? L("menu.character_select.selected_format", "Selected: {0} ({1})", selectedCharacter.characterName, selectedCharacter.rarity.ToString())
+            ? L("menu.character_select.selected_format", "Selected: {0} ({1})", selectedCharacter.GetDisplayName(), selectedCharacter.rarity.ToString())
             : L("menu.character_select.none", "Selected: None");
 
         if (startRunButton != null)
@@ -2794,7 +2794,7 @@ public class MainMenu : MonoBehaviour
             return 0;
         }
 
-        return string.Compare(a.characterName, b.characterName, System.StringComparison.OrdinalIgnoreCase);
+        return string.Compare(a.GetDisplayName(), b.GetDisplayName(), System.StringComparison.OrdinalIgnoreCase);
     }
 
     private string BuildCharacterLabel(CharacterData character, bool isUnlocked)
@@ -2802,7 +2802,7 @@ public class MainMenu : MonoBehaviour
         string status = isUnlocked
             ? L("common.status.unlocked", "Unlocked")
             : L("common.status.locked", "Locked");
-        return $"{character.characterName}  [{character.rarity}]  -  {status}";
+        return $"{character.GetDisplayName()}  [{character.rarity}]  -  {status}";
     }
 
     private void RefreshLocalizedUi()

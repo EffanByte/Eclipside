@@ -168,6 +168,7 @@ private void RollNewItems()
 
         if (PlayerController.Instance.DeductCurrency(CurrencyType.Rupee, price))
         {
+            bool granted = false;
 
             // NOTE: Ideally, Key and XP are just ConsumableItems with "EffectAddKey" or "EffectAddXP"
             // But if you handle them specially:
@@ -175,11 +176,20 @@ private void RollNewItems()
             {
                 Debug.Log("Bought key");
                 PlayerController.Instance.AddCurrency(currencyItem.currencyType, currencyItem.amount);
+                granted = true;
             }
             else
             {
                 // Try add to inventory
-                PlayerController.Instance.GetComponent<InventoryManager>().AddItem(item);
+                InventoryManager inventoryManager = PlayerController.Instance.GetComponent<InventoryManager>();
+                granted = inventoryManager != null && inventoryManager.AddItem(item);
+            }
+
+            if (!granted)
+            {
+                PlayerController.Instance.AddCurrency(CurrencyType.Rupee, price);
+                OnTransactionFailed?.Invoke("Inventory full!");
+                return false;
             }
 
             // 3. Finalize Transaction

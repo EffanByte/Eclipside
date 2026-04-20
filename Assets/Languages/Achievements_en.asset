@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Achievements_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 8ca4739d057f9e841b551951422c7dfd, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 871669760
+    m_Localized: Big Spender
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390016
+    m_Localized: Spent 5000 Gold in Shops.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390017
+    m_Localized: Boss Slayer I
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390018
+    m_Localized: "Kill your First Boss.\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390019
+    m_Localized: Boss Slayer Ii
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390020
+    m_Localized: "Kill 10 Bosses.\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390021
+    m_Localized: Endless Challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390022
+    m_Localized: Reach Wave 20 in the Arena.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390023
+    m_Localized: First Challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390024
+    m_Localized: Defeat Your First Miniboss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390025
+    m_Localized: First Steps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390026
+    m_Localized: Complete your First Run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390027
+    m_Localized: Hunter of Shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390028
+    m_Localized: Defeat 10 mini-bosses.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390029
+    m_Localized: Pest Control
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390030
+    m_Localized: Defeat 100 Regular Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390031
+    m_Localized: Slayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390032
+    m_Localized: Defeat 1000 Regular Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390033
+    m_Localized: Survivor I
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390034
+    m_Localized: Complete 5 runs.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390035
+    m_Localized: Survivor II
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390036
+    m_Localized: Complete 20 runs.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390037
+    m_Localized: Treasure Hunter I
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390038
+    m_Localized: Open 10 Chests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390039
+    m_Localized: Treasure Hunter II
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390040
+    m_Localized: Open 50 Chests
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

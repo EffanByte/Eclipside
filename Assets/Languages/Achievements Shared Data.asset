@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Achievements Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Achievements
+  m_TableCollectionNameGuidString: 8ca4739d057f9e841b551951422c7dfd
+  m_Entries:
+  - m_Id: 871669760
+    m_Key: achievement.gold_spent_5000.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390016
+    m_Key: achievement.gold_spent_5000.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390017
+    m_Key: achievement.kills_boss_1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390018
+    m_Key: achievement.kills_boss_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390019
+    m_Key: achievement.kills_boss_10.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390020
+    m_Key: achievement.kills_boss_10.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390021
+    m_Key: achievement.arena_wave_20.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390022
+    m_Key: achievement.arena_wave_20.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390023
+    m_Key: achievement.kills_miniboss_1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390024
+    m_Key: achievement.kills_miniboss_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390025
+    m_Key: achievement.total_runs_1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390026
+    m_Key: achievement.total_runs_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390027
+    m_Key: achievement.kills_miniboss_10.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390028
+    m_Key: achievement.kills_miniboss_10.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390029
+    m_Key: achievement.total_kills_100.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390030
+    m_Key: achievement.total_kills_100.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390031
+    m_Key: achievement.total_kills_1000.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390032
+    m_Key: achievement.total_kills_1000.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390033
+    m_Key: achievement.total_runs_5.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390034
+    m_Key: achievement.total_runs_5.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390035
+    m_Key: achievement.total_runs_20.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390036
+    m_Key: achievement.total_runs_20.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390037
+    m_Key: achievement.chests_opened_10.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390038
+    m_Key: achievement.chests_opened_10.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390039
+    m_Key: achievement.chests_opened_50.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 930390040
+    m_Key: achievement.chests_opened_50.description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536800478461957
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536800478461957
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776676837230

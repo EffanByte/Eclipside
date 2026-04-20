@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
+  m_Name: Biomes
+  m_EditorClassIdentifier: Unity.Localization.Editor::UnityEditor.Localization.StringTableCollection
+  m_SharedTableData: {fileID: 11400000, guid: 32db7557bc40d924088ced26fa8ab180, type: 2}
+  m_Tables:
+  - {fileID: 11400000, guid: e4d060c1401c58643a4bbb75e692794c, type: 2}
+  - {fileID: 11400000, guid: b3417f52431f488478e1beabcdfdb7b0, type: 2}
+  - {fileID: 11400000, guid: fea693d85eb3f994f9d0336194e9d16e, type: 2}
+  - {fileID: 11400000, guid: 18e483711d90988409c91fd67e691c5c, type: 2}
+  m_Extensions: []
+  m_Group: String Table
+  references:
+    version: 2
+    RefIds: []

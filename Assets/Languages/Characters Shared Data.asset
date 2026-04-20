@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Characters Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Characters
+  m_TableCollectionNameGuidString: 77be205d1eecb3344bf735a80ea8ce21
+  m_Entries:
+  - m_Id: 838115328
+    m_Key: character.m_astrid.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475456
+    m_Key: character.m_aylith.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475457
+    m_Key: character.e_calyra.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475458
+    m_Key: character.e_draven.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475459
+    m_Key: character.d_eryndor.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475460
+    m_Key: character.e_kaelric.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475461
+    m_Key: character.e_lunaria.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475462
+    m_Key: character.m_maelira.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475463
+    m_Key: character.m_veyloria.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475464
+    m_Key: character.e_zoryn.name
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536800478461954
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536800478461954
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776676835085

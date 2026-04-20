@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Missions Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Missions
+  m_TableCollectionNameGuidString: 7d1642985538fb0478170ce37a5d91d1
+  m_Entries:
+  - m_Id: 561291264
+    m_Key: mission.arena_wave_20.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651392
+    m_Key: mission.chests_opened_3.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651393
+    m_Key: mission.chests_opened_25.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651394
+    m_Key: mission.chests_opened_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651395
+    m_Key: mission.daily_e_run_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651396
+    m_Key: mission.defeat_enemy_120.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651397
+    m_Key: mission.kills_status_25.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651398
+    m_Key: mission.kills_miniboss_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651399
+    m_Key: mission.kills_miniboss_2.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651400
+    m_Key: mission.kills_miniboss_12.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651401
+    m_Key: mission.boss_nodeath.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651402
+    m_Key: mission.daily_h_nodeath.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651403
+    m_Key: mission.portals_opened_1.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651404
+    m_Key: mission.items_purchased_3.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651405
+    m_Key: mission.rupee_spent_250.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651406
+    m_Key: mission.rupee_spent_2500.description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536800478461955
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536800478461955
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776676835620

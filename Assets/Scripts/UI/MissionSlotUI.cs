@@ -39,7 +39,8 @@ public class MissionSlotUI : MonoBehaviour
         currentEntry = entry;
 
         progressText.text = $"{entry.current_progress} / {entry.target_value}";
-        descriptionText.text = !string.IsNullOrWhiteSpace(staticData.description) ? staticData.description : entry.description;
+        string localizedDescription = staticData != null ? staticData.GetDescription() : null;
+        descriptionText.text = !string.IsNullOrWhiteSpace(localizedDescription) ? localizedDescription : entry.description;
 
         float pct = entry.target_value > 0 ? (float)entry.current_progress / entry.target_value : 0f;
         progressBar.value = pct;

@@ -21,11 +21,17 @@ public class LootPedestal : MonoBehaviour, IInteractable
     {
         if (isCollected || content == null) return;
 
+        bool collected = false;
+
         // --- GIVE ITEM LOGIC ---
         // Reuse your standard acquisition logic
         if (content is WeaponData w) 
         {
-            player.EquipWeapon(w);
+            if (player.EquipWeapon(w))
+            {
+                ItemAcquisitionToast.Show(w);
+                collected = true;
+            }
         }
         // not using currency in chests
         // else if (content is CurrencyItem c) 
@@ -34,7 +40,12 @@ public class LootPedestal : MonoBehaviour, IInteractable
         // }
         else if (content is ConsumableItem con)
         {
-            PlayerController.Instance.GetComponent<InventoryManager>().AddItem(con);
+            collected = PlayerController.Instance.GetComponent<InventoryManager>().AddItem(con);
+        }
+
+        if (!collected)
+        {
+            return;
         }
 
         isCollected = true;
@@ -44,6 +55,6 @@ public class LootPedestal : MonoBehaviour, IInteractable
 
     public string GetInteractionPrompt()
     {
-        return content != null ? $"Pick up {content.itemName}" : "";
+        return content != null ? $"Pick up {content.GetDisplayName()}" : "";
     }
 }

@@ -196,6 +196,94 @@ MonoBehaviour:
     m_Localized: 'Equipped: {0}    Gold: {1}    Orbs: {2}'
     m_Metadata:
       m_Items: []
+  - m_Id: 4950506572390400
+    m_Localized: 'Equipped: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750528
+    m_Localized: Paused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750529
+    m_Localized: Take a breath, adjust your plan, and jump back in when you're ready.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750530
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750531
+    m_Localized: Quick reference for the current build while you're paused.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750532
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750533
+    m_Localized: Retry Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750534
+    m_Localized: Return to Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750535
+    m_Localized: Quit Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750536
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750537
+    m_Localized: Attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750538
+    m_Localized: Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750539
+    m_Localized: Special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750540
+    m_Localized: Interact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750541
+    m_Localized: Items
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750542
+    m_Localized: Pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750543
+    m_Localized: Item Acquired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750544
+    m_Localized: Weapon Acquired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750545
+    m_Localized: No description is available for this item yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750546
+    m_Localized: Enter Portal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750547
+    m_Localized: Boss Active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750548
+    m_Localized: Challenge Boss
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

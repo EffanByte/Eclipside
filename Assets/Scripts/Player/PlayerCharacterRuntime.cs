@@ -92,7 +92,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
             player.EquipWeapon(activeCharacter.startingWeapon);
         }
 
-        Debug.Log($"[Character] Applied {activeCharacter.characterName} ({activeCharacter.characterID}).");
+        Debug.Log($"[Character] Applied {activeCharacter.GetDisplayName()} ({activeCharacter.characterID}).");
     }
 
     public void ManualUpdate(float deltaTime)
@@ -133,7 +133,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
 
         specialCooldownRemaining = Mathf.Max(0f, activeCharacter.specialCooldownSeconds);
         player.SetSpecialMeterNormalized(0f);
-        Debug.Log($"[Character] {activeCharacter.characterName} used {GetSpecialName(activeCharacter.characterID)}.");
+        Debug.Log($"[Character] {activeCharacter.GetDisplayName()} used {GetSpecialName(activeCharacter.characterID)}.");
     }
 
     public void NotifyDamageDealt(float damageAmount)
@@ -225,7 +225,7 @@ public class PlayerCharacterRuntime : MonoBehaviour
 
     public string GetActiveCharacterName()
     {
-        return activeCharacter != null ? activeCharacter.characterName : "Unknown";
+        return activeCharacter != null ? activeCharacter.GetDisplayName() : "Unknown";
     }
 
     public float GetCharacterDamageMultiplierForWeapon(WeaponData weapon)

@@ -25,6 +25,7 @@ public class BiomeTitleOverlay : MonoBehaviour
     private TextMeshProUGUI shadowText;
     private TextMeshProUGUI mainText;
     private Coroutine activeRoutine;
+    private BiomeData activeBiome;
 
     public static void Show(string biomeName)
     {
@@ -36,7 +37,23 @@ public class BiomeTitleOverlay : MonoBehaviour
         EnsureInstance();
         if (instance != null)
         {
+            instance.activeBiome = null;
             instance.PlayTitle(biomeName);
+        }
+    }
+
+    public static void Show(BiomeData biome)
+    {
+        if (biome == null || string.IsNullOrWhiteSpace(biome.biomeName))
+        {
+            return;
+        }
+
+        EnsureInstance();
+        if (instance != null)
+        {
+            instance.activeBiome = biome;
+            instance.PlayTitle(biome.GetDisplayName());
         }
     }
 
@@ -77,6 +94,17 @@ public class BiomeTitleOverlay : MonoBehaviour
         {
             instance = null;
         }
+    }
+
+    private void OnEnable()
+    {
+        LocalizationManager.EnsureExists();
+        LocalizationManager.LanguageChanged += HandleLanguageChanged;
+    }
+
+    private void OnDisable()
+    {
+        LocalizationManager.LanguageChanged -= HandleLanguageChanged;
     }
 
     private void EnsureUiBuilt()
@@ -153,6 +181,23 @@ public class BiomeTitleOverlay : MonoBehaviour
         }
 
         activeRoutine = StartCoroutine(AnimateTitle());
+    }
+
+    private void HandleLanguageChanged()
+    {
+        if (activeBiome == null || mainText == null || shadowText == null)
+        {
+            return;
+        }
+
+        string localizedName = activeBiome.GetDisplayName();
+        if (string.IsNullOrWhiteSpace(localizedName))
+        {
+            return;
+        }
+
+        mainText.text = localizedName.ToUpperInvariant();
+        shadowText.text = mainText.text;
     }
 
     private IEnumerator AnimateTitle()

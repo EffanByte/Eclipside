@@ -422,18 +422,18 @@ public class PlayerController : MonoBehaviour
         return transform.localScale.x < 0 ? Vector2.left : Vector2.right; 
     }
 
-    public void EquipWeapon(WeaponData newWeapon)
+    public bool EquipWeapon(WeaponData newWeapon)
     {
         if (ChallengeManager.theGladiator && newWeapon is MagicWeapon)
         {
             Debug.Log("Can't equip weapon due to gladiator");
-            return;
+            return false;
         }
 
         if (characterRuntime != null && !characterRuntime.CanEquipWeapon(newWeapon))
         {
             Debug.Log($"[Character] {characterRuntime.GetActiveCharacterName()} cannot equip {newWeapon?.name ?? "null"}.");
-            return;
+            return false;
         }
 
         if (currentWeapon != null)
@@ -469,6 +469,7 @@ public class PlayerController : MonoBehaviour
         }
 
         characterRuntime?.NotifyWeaponEquipped(currentWeapon);
+        return true;
     }
 
     private WeaponHitbox CreateFallbackWeaponHitbox(WeaponData weapon)

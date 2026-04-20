@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Characters_ja
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ja
+  m_SharedData: {fileID: 11400000, guid: 77be205d1eecb3344bf735a80ea8ce21, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 838115328
+    m_Localized: Astrid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475456
+    m_Localized: Aylith
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475457
+    m_Localized: Calyra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475458
+    m_Localized: Draven
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475459
+    m_Localized: Eryndor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475460
+    m_Localized: Kaelric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475461
+    m_Localized: Lunaria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475462
+    m_Localized: Maelria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475463
+    m_Localized: Veyloria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867475464
+    m_Localized: Zoryn
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

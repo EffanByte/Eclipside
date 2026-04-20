@@ -196,6 +196,95 @@ MonoBehaviour:
     m_Localized: 'Equipado: {0}    Oro: {1}    Orbes: {2}'
     m_Metadata:
       m_Items: []
+  - m_Id: 4950506572390400
+    m_Localized: 'Equipado: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750528
+    m_Localized: Pausa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750529
+    m_Localized: Respira, ajusta tu plan y vuelve cuando estes listo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750530
+    m_Localized: Controles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750531
+    m_Localized: Referencia rapida para la compilacion actual mientras el juego esta
+      en pausa.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750532
+    m_Localized: Continuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750533
+    m_Localized: Reintentar Partida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750534
+    m_Localized: Volver al Menu Principal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750535
+    m_Localized: Salir del Juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750536
+    m_Localized: Moverse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750537
+    m_Localized: Atacar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750538
+    m_Localized: Esquivar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750539
+    m_Localized: Especial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750540
+    m_Localized: Interactuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750541
+    m_Localized: Objetos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750542
+    m_Localized: Pausa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750543
+    m_Localized: Objeto Obtenido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750544
+    m_Localized: Arma Obtenida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750545
+    m_Localized: Todavia no hay una descripcion disponible para este objeto.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750546
+    m_Localized: Entrar al Portal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750547
+    m_Localized: Jefe Activo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750548
+    m_Localized: Desafiar al Jefe
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

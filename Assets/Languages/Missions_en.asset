@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Missions_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 7d1642985538fb0478170ce37a5d91d1, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 561291264
+    m_Localized: Reach Wave 20 In The Arena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651392
+    m_Localized: Open 3 Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651393
+    m_Localized: Open 25 Chests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651394
+    m_Localized: Open 1 Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651395
+    m_Localized: Complete One Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651396
+    m_Localized: Defeat 120 Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651397
+    m_Localized: Defeat 25 enemies affected by a status effect.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651398
+    m_Localized: Defeat 1 Portal Miniboss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651399
+    m_Localized: Defeat 2 Portal Minibosses.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651400
+    m_Localized: Defeat 12 Portal Minibosses.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651401
+    m_Localized: Defeat a Miniboss Without Dying
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651402
+    m_Localized: Complete a Run Without Dying
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651403
+    m_Localized: Activate 1 Portal.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651404
+    m_Localized: Purchase 3 items from the shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651405
+    m_Localized: Spent 250 Gold Total In the Shop.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 590651406
+    m_Localized: Spent 2500 Rupees Total In the Shop.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

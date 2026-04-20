@@ -16,6 +16,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: Basic magic projectile.
   rarity: 0
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 6

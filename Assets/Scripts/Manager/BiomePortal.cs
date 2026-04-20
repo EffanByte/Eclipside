@@ -18,7 +18,7 @@ public class BiomePortal : MonoBehaviour, IInteractable
     {
         if (GameDirector.Instance == null)
         {
-            return "Enter Portal";
+            return LocalizationManager.GetString(LocalizationManager.DefaultTable, "portal.enter", "Enter Portal");
         }
 
         return GameDirector.Instance.GetPortalPrompt();

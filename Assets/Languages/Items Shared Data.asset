@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Items Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Items
+  m_TableCollectionNameGuidString: 67daba5e70ea83f4199ff585a0d6d449
+  m_Entries:
+  - m_Id: 2230624256
+    m_Key: items.blessed_roots.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955904
+    m_Key: items.cursed_orb.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955905
+    m_Key: items.cursed_orb.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955906
+    m_Key: items.cursed_roots.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150208
+    m_Key: items.fortune_cookie.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150209
+    m_Key: items.fortune_cookie.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150210
+    m_Key: items.glass_orb.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150211
+    m_Key: items.glass_orb.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150212
+    m_Key: items.herbal_tea.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150213
+    m_Key: items.herbal_tea.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150214
+    m_Key: items.key.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150215
+    m_Key: items.large_potion.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150216
+    m_Key: items.large_potion.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150217
+    m_Key: items.leviathan_heart.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150218
+    m_Key: items.leviathan_heart.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150219
+    m_Key: items.quick_berry.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150220
+    m_Key: items.rupee.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150221
+    m_Key: items.small_potion.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150222
+    m_Key: items.small_potion.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150223
+    m_Key: items.spirit_nectar.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150224
+    m_Key: items.spirit_nectar.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150225
+    m_Key: items.thunder_stone.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150226
+    m_Key: items.thunder_stone.description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150227
+    m_Key: items.xp.name
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2321536800478461952
+  references:
+    version: 2
+    RefIds:
+    - rid: 2321536800478461952
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776676833779

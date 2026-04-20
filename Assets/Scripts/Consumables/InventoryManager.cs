@@ -43,13 +43,13 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"Selected item slot: {currentItemIndex + 1}");
     }
 
-    public void AddItem(ItemData newItem)
+    public bool AddItem(ItemData newItem)
     {
         ConsumableItem consumable = newItem as ConsumableItem;
         if (consumable == null)
         {
             Debug.LogWarning($"InventoryManager could not add non-consumable item: {newItem?.itemName}");
-            return;
+            return false;
         }
 
         for (int i = 0; i < slots.Length; i++)
@@ -58,11 +58,12 @@ public class InventoryManager : MonoBehaviour
             {
                 slots[i] = consumable;
                 Debug.Log($"Added item: {newItem.itemName} to slot {i + 1}");
+                ItemAcquisitionToast.Show(consumable);
                 OnInventoryUpdated?.Invoke();
-                return;
+                return true;
             }
         }   
         Debug.Log("Inventory full! Could not add item: " + newItem.itemName);
-        
+        return false;
     }
 }

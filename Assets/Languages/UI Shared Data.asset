@@ -191,6 +191,94 @@ MonoBehaviour:
     m_Key: menu.status
     m_Metadata:
       m_Items: []
+  - m_Id: 4950506572390400
+    m_Key: menu.status_equipped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750528
+    m_Key: pause.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750529
+    m_Key: pause.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750530
+    m_Key: pause.controls.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750531
+    m_Key: pause.controls.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750532
+    m_Key: pause.resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750533
+    m_Key: pause.retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750534
+    m_Key: pause.main_menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750535
+    m_Key: pause.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750536
+    m_Key: controls.move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750537
+    m_Key: controls.attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750538
+    m_Key: controls.dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750539
+    m_Key: controls.special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750540
+    m_Key: controls.interact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750541
+    m_Key: controls.items
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750542
+    m_Key: controls.pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750543
+    m_Key: pickup.item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750544
+    m_Key: pickup.weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750545
+    m_Key: pickup.no_description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750546
+    m_Key: portal.enter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750547
+    m_Key: portal.boss_active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4950506601750548
+    m_Key: portal.challenge_boss
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

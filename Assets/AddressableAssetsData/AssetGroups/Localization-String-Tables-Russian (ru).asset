@@ -21,6 +21,42 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ru
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1449c249271cc8d4ca5a5dd0d9dfaf1d
+    m_Address: Achievements_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4fecbb5e00cc40541addd8ad6afce6be
+    m_Address: Weapons_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 905748a9b5c69b74c95b43f13c8406e5
+    m_Address: Characters_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b53c3a08f8fe3b24faafda720ccc62ec
+    m_Address: Missions_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc299bdc64940ca46ae166c04959b038
+    m_Address: Items_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fea693d85eb3f994f9d0336194e9d16e
+    m_Address: Biomes_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: e8b67c47df8535d44bd30c7dccea4e6e, type: 2}
   m_SchemaSet:

@@ -16,6 +16,9 @@ MonoBehaviour:
   icon: {fileID: 4816236785699132433, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: +3% attack speed.
   rarity: 0
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 6
@@ -27,8 +30,8 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: 3618622654215982168}
---- !u!114 &3618622654215982168
+  - {fileID: 613731626362761063}
+--- !u!114 &613731626362761063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

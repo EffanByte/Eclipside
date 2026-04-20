@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7768808213062183890
+--- !u!114 &-5560350741401904911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29,6 +29,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: +12% max health.
   rarity: 1
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 11.3
@@ -40,4 +43,4 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: -7768808213062183890}
+  - {fileID: -5560350741401904911}

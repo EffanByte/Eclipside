@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-75549338297289606
+--- !u!114 &-3567432621120308786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -34,6 +34,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: +10% damage against poisoned enemies.
   rarity: 1
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 11.2
@@ -45,4 +48,4 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: -75549338297289606}
+  - {fileID: -3567432621120308786}

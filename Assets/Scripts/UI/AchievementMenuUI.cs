@@ -18,7 +18,14 @@ public class AchievementMenuUI : MonoBehaviour
 
     private void OnEnable()
     {
+        LocalizationManager.EnsureExists();
+        LocalizationManager.LanguageChanged += RenderAchievements;
         RenderAchievements();
+    }
+
+    private void OnDisable()
+    {
+        LocalizationManager.LanguageChanged -= RenderAchievements;
     }
 
     private void RenderAchievements()

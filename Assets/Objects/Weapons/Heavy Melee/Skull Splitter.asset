@@ -16,6 +16,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: +10% critical damage.
   rarity: 1
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 11.4
@@ -27,8 +30,8 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: 3020930961188446723}
---- !u!114 &3020930961188446723
+  - {fileID: 6910656896257204978}
+--- !u!114 &6910656896257204978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

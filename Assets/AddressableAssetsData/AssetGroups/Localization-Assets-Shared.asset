@@ -15,8 +15,38 @@ MonoBehaviour:
   m_GroupName: Localization-Assets-Shared
   m_GUID: 8ca6b10d98a411742b28c0c457ed11b8
   m_SerializeEntries:
+  - m_GUID: 32db7557bc40d924088ced26fa8ab180
+    m_Address: Assets/Languages/Biomes Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 67daba5e70ea83f4199ff585a0d6d449
+    m_Address: Assets/Languages/Items Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 77be205d1eecb3344bf735a80ea8ce21
+    m_Address: Assets/Languages/Characters Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d1642985538fb0478170ce37a5d91d1
+    m_Address: Assets/Languages/Missions Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8ca4739d057f9e841b551951422c7dfd
+    m_Address: Assets/Languages/Achievements Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 99f33cb512973404ca0c1422d65f2c8c
     m_Address: Assets/Languages/UI Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efe72017f571423498e1a8ac29c39e09
+    m_Address: Assets/Languages/Weapons Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

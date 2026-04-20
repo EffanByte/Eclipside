@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1041263711701792350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c2c510f1c2b92b48a0756f2756b1140, type: 3}
+  m_Name: LightningProc
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponLightningProcEffect
+  chance: 0.05
+  damageAmount: 15
+  damageElement: 2
+  attackStyle: 3
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16,6 +32,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 5% chance to summon lightning per projectile.
   rarity: 2
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 8.1
@@ -27,20 +46,4 @@ MonoBehaviour:
   element: 2
   style: 2
   effects:
-  - {fileID: 1089065877867372532}
---- !u!114 &1089065877867372532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2c510f1c2b92b48a0756f2756b1140, type: 3}
-  m_Name: LightningProc
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponLightningProcEffect
-  chance: 0.05
-  damageAmount: 15
-  damageElement: 2
-  attackStyle: 3
+  - {fileID: -1041263711701792350}

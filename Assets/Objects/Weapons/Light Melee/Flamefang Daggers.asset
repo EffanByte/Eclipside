@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3773039022422852199
+--- !u!114 &-1691405198619567377
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -30,6 +30,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 20% burn chance and +5% attack speed.
   rarity: 2
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 7.2
@@ -41,9 +44,9 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: 7433011225898850095}
-  - {fileID: -3773039022422852199}
---- !u!114 &7433011225898850095
+  - {fileID: 7614664003469502812}
+  - {fileID: -1691405198619567377}
+--- !u!114 &7614664003469502812
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

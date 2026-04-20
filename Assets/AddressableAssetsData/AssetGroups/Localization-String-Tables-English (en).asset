@@ -15,8 +15,44 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-English (en)
   m_GUID: b500c9839f9fbb645a1747278817aa90
   m_SerializeEntries:
+  - m_GUID: 33b1e2ad5fcb3e4419fb4b7eb0e4493a
+    m_Address: Items_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60022468fbfc0ee45a39ad8d52505a34
+    m_Address: Achievements_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7b96e7ffd08ddbb4e8aa5d79728b7767
     m_Address: UI_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 812cb3e8e4cd0074fb0b0de2366af54e
+    m_Address: Weapons_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab29b6c281b916a4f8aad4dfe8d7370c
+    m_Address: Missions_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4d060c1401c58643a4bbb75e692794c
+    m_Address: Biomes_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb2fd4dfc9238414ba04e45ef0a20104
+    m_Address: Characters_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

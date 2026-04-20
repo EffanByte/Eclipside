@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2007081202636947654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 5
+  amount: 5
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16,6 +30,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 20% chance to confuse and +5% crit chance.
   rarity: 2
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 7.3
@@ -27,9 +44,9 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: 1781817643580326068}
-  - {fileID: 3630085197985945174}
---- !u!114 &1781817643580326068
+  - {fileID: 690822421703456115}
+  - {fileID: -2007081202636947654}
+--- !u!114 &690822421703456115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,17 +61,3 @@ MonoBehaviour:
   statusToApply: 4
   chance: 0.2
   durationOverride: -1
---- !u!114 &3630085197985945174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 5
-  amount: 5

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public abstract class WeaponData : ItemData
 {
+    protected override string DefaultLocalizationTable => "Weapons";
+
     [Header("Core Info")]
     
     public AnimatorOverrideController animatorOverride;

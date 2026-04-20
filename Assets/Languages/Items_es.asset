@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Items_es
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 67daba5e70ea83f4199ff585a0d6d449, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 2230624256
+    m_Localized: Blessed Roots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955904
+    m_Localized: Cursed Orb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955905
+    m_Localized: Lose 0.5 hearts to gain 30% damage for 1 wave.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2280955906
+    m_Localized: Cursed Roots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150208
+    m_Localized: Large Potion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150209
+    m_Localized: Heals Half a Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150210
+    m_Localized: Glass Orb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150211
+    m_Localized: Heals Half a Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150212
+    m_Localized: Herbal Tea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150213
+    m_Localized: Heals Half a Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150214
+    m_Localized: Key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150215
+    m_Localized: Large Potion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150216
+    m_Localized: Heals Half a Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150217
+    m_Localized: Leviathan Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150218
+    m_Localized: Revive at your death spot with 1/4 total health and 5s invulnerability.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150219
+    m_Localized: Quick Berry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150220
+    m_Localized: Rupee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150221
+    m_Localized: Small Potion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150222
+    m_Localized: Heals Half a Heart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150223
+    m_Localized: Spirit Nectar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150224
+    m_Localized: Gain 2 temporary hearts for 1 wave.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150225
+    m_Localized: Thunder Stone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150226
+    m_Localized: Summon lightning on a random enemy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285150227
+    m_Localized: XP
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

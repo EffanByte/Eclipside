@@ -4,11 +4,16 @@ using System.Collections.Generic;
 [CreateAssetMenu(menuName = "Eclipside/Character Data")]
 public class CharacterData : ScriptableObject
 {
+    private const string DefaultLocalizationTable = "Characters";
+
     [Header("Identity")]
     public string characterID; // Must match ID in SaveFile (e.g. "char_knight")
     public string characterName;
     [TextArea] public string lore;
     public CharacterRarity rarity;
+    [SerializeField] private string localizationTable = DefaultLocalizationTable;
+    [SerializeField] private string nameLocalizationKey;
+    [SerializeField] private string loreLocalizationKey;
     
     [Header("Visuals")]
     public Sprite portrait; // For Character Select / UI
@@ -101,5 +106,76 @@ public class CharacterData : ScriptableObject
             case "Hard": return Color.red;     // Gold/Red
             default: return Color.clear;
         }
+    }
+
+    public string GetDisplayName()
+    {
+        return ResolveLocalizedValue(nameLocalizationKey, characterName, ".name");
+    }
+
+    public string GetLocalizedLore()
+    {
+        return ResolveLocalizedValue(loreLocalizationKey, lore, ".description");
+    }
+
+    public string GetNameLocalizationKey()
+    {
+        return !string.IsNullOrWhiteSpace(nameLocalizationKey) ? nameLocalizationKey.Trim() : BuildDefaultKey(".name");
+    }
+
+    public string GetLoreLocalizationKey()
+    {
+        return !string.IsNullOrWhiteSpace(loreLocalizationKey) ? loreLocalizationKey.Trim() : BuildDefaultKey(".description");
+    }
+
+    public string GetLocalizationTable()
+    {
+        return string.IsNullOrWhiteSpace(localizationTable) ? DefaultLocalizationTable : localizationTable;
+    }
+
+    private string ResolveLocalizedValue(string explicitKey, string fallback, string suffix)
+    {
+        string key = !string.IsNullOrWhiteSpace(explicitKey) ? explicitKey.Trim() : BuildDefaultKey(suffix);
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return fallback;
+        }
+
+        return LocalizationManager.GetString(GetLocalizationTable(), key, fallback);
+    }
+
+    private string BuildDefaultKey(string suffix)
+    {
+        string baseValue = !string.IsNullOrWhiteSpace(characterID) ? characterID : characterName;
+        if (string.IsNullOrWhiteSpace(baseValue))
+        {
+            return string.Empty;
+        }
+
+        return $"character.{SanitizeForKey(baseValue)}{suffix}";
+    }
+
+    private static string SanitizeForKey(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        System.Text.StringBuilder builder = new System.Text.StringBuilder(value.Length);
+        for (int i = 0; i < value.Length; i++)
+        {
+            char character = char.ToLowerInvariant(value[i]);
+            if (char.IsLetterOrDigit(character))
+            {
+                builder.Append(character);
+            }
+            else if (character == ' ' || character == '-' || character == '_')
+            {
+                builder.Append('_');
+            }
+        }
+
+        return builder.ToString().Trim('_');
     }
 }

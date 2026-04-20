@@ -16,6 +16,9 @@ MonoBehaviour:
   icon: {fileID: 6657205154130263698, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
   description: Basic light melee dagger with no effects.
   rarity: 0
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 0}
   damage: 5

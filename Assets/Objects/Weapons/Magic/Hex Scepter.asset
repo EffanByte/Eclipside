@@ -1,34 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 079e84266a42bfd4288d8d81efec9f19, type: 3}
-  m_Name: Hex Scepter
-  m_EditorClassIdentifier: Assembly-CSharp::MagicWeapon
-  itemName: Hex Scepter
-  icon: {fileID: 0}
-  description: +20% magic damage against confused enemies.
-  rarity: 1
-  animatorOverride: {fileID: 0}
-  weaponPrefab: {fileID: 0}
-  damage: 7.1
-  cooldown: 0.49
-  knockbackForce: 2.1
-  hitDuration: 0.14
-  criticalChance: 5
-  projectileSpeed: 9.2
-  element: 2
-  style: 2
-  effects:
-  - {fileID: 5984601358357708187}
---- !u!114 &5984601358357708187
+--- !u!114 &-4796323610421443037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,3 +18,34 @@ MonoBehaviour:
   speedMultiplier: 0
   knockbackMultiplier: 0
   speedBuffDuration: 0.9
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 079e84266a42bfd4288d8d81efec9f19, type: 3}
+  m_Name: Hex Scepter
+  m_EditorClassIdentifier: Assembly-CSharp::MagicWeapon
+  itemName: Hex Scepter
+  icon: {fileID: 0}
+  description: +20% magic damage against confused enemies.
+  rarity: 1
+  localizationTable: 
+  nameLocalizationKey: 
+  descriptionLocalizationKey: 
+  animatorOverride: {fileID: 0}
+  weaponPrefab: {fileID: 0}
+  damage: 7.1
+  cooldown: 0.49
+  knockbackForce: 2.1
+  hitDuration: 0.14
+  criticalChance: 5
+  projectileSpeed: 9.2
+  element: 2
+  style: 2
+  effects:
+  - {fileID: -4796323610421443037}
