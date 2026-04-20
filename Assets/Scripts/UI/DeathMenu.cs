@@ -36,7 +36,10 @@ public class DeathMenu : MonoBehaviour
         PlayerController.Instance.ResetPlayer();
         if (GameDirector.Instance != null)
         {
-            RunSceneTransitionState.SetBiomeState(GameDirector.Instance.CurrentBiomeIndex, GameDirector.Instance.CurrentDifficultyValue);
+            RunSceneTransitionState.SetBiomeState(
+                GameDirector.Instance.CurrentBiomeIndex,
+                GameDirector.Instance.CurrentDifficultyValue,
+                GameDirector.Instance.GetTimer());
         }
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); // Reload current scene
     }

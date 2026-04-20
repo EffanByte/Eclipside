@@ -9,7 +9,10 @@ public class AddCurrency : MonoBehaviour, IInteractable
     {
         CurrencyManager.AddCurrency(CurrencyType.Gold, 1000);
         CurrencyManager.AddCurrency(CurrencyType.Orb, 50);
-        debugOutput.text = $"Added 1000 Gold and 50 Orbs!";
+        if (debugOutput != null)
+        {
+            debugOutput.text = "Added test currency.";
+        }
     }
     public string GetInteractionPrompt()
     {

@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7946411021166012111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 1
+  amount: 0.5
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,23 +41,9 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: 3254888908172672598}
-  - {fileID: 4409971083723164356}
---- !u!114 &3254888908172672598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 1
-  amount: 0.5
---- !u!114 &4409971083723164356
+  - {fileID: -7946411021166012111}
+  - {fileID: 1734577780724338516}
+--- !u!114 &1734577780724338516
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

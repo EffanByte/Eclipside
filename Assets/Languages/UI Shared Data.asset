@@ -187,6 +187,10 @@ MonoBehaviour:
     m_Key: auth.error.manager_missing
     m_Metadata:
       m_Items: []
+  - m_Id: 1090690645008384
+    m_Key: menu.status
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

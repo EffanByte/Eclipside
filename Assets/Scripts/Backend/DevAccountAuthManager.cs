@@ -7,6 +7,11 @@ public static class DevAccountAuthBootstrap
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void EnsureExists()
     {
+        if (!BackendRuntimeSettings.IsEnabled)
+        {
+            return;
+        }
+
         if (DevAccountAuthManager.Instance != null)
         {
             return;

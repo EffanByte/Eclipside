@@ -223,6 +223,10 @@ MonoBehaviour:
       \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D."
     m_Metadata:
       m_Items: []
+  - m_Id: 1090690645008384
+    m_Localized: 'Equipped: {0}    Gold: {1}    Orbs: {2}'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

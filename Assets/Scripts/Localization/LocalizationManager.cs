@@ -86,12 +86,12 @@ public class LocalizationManager : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(entryKey))
         {
-            return fallback ?? string.Empty;
+            return FormatTemplate(fallback ?? string.Empty, arguments);
         }
 
         if (!LocalizationSettings.HasSettings)
         {
-            return fallback ?? entryKey;
+            return FormatTemplate(fallback ?? entryKey, arguments);
         }
 
         try
@@ -103,16 +103,33 @@ public class LocalizationManager : MonoBehaviour
             }
 
             string value = localizedString.GetLocalizedString();
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value) || value.StartsWith("No translation found for '", StringComparison.Ordinal))
             {
-                return fallback ?? entryKey;
+                return FormatTemplate(fallback ?? entryKey, arguments);
             }
 
-            return value;
+            return FormatTemplate(value, arguments);
         }
         catch
         {
-            return fallback ?? entryKey;
+            return FormatTemplate(fallback ?? entryKey, arguments);
+        }
+    }
+
+    private static string FormatTemplate(string template, params object[] arguments)
+    {
+        if (string.IsNullOrEmpty(template) || arguments == null || arguments.Length == 0)
+        {
+            return template ?? string.Empty;
+        }
+
+        try
+        {
+            return string.Format(template, arguments);
+        }
+        catch
+        {
+            return template;
         }
     }
 

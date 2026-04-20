@@ -1,0 +1,12 @@
+{
+  "name": "eclipside-backend-quick",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zero-dependency prototype backend for Eclipside mission and gacha testing.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.7.0"
+  }
+}

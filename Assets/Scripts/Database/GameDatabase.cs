@@ -26,6 +26,7 @@ public class GameDatabase : ScriptableObject
     public List<WeaponData> allWeapons;
     public List<ConsumableItem> allConsumables;
     public List<CharacterData> allCharacters;
+    public List<MeteoriteBanner> allGachaBanners;
 
     // --- DICTIONARIES FOR FAST LOOKUP ---
     private Dictionary<string, WeaponData> weaponMap = new Dictionary<string, WeaponData>();

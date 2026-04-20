@@ -273,6 +273,7 @@ public class ControlSettings
 public class GeneralSettings
 {
     public string language = "en"; // "en", "es", etc.
+    public bool windowed_mode;
     public string cached_auth_email;
     public string cached_auth_display_name;
     public bool has_completed_auth_onboarding;

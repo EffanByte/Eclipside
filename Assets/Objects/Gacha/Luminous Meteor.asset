@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5651567725d568b4d88597113ad2681a, type: 3}
   m_Name: Luminous Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
-  bannerName: 
+  bannerName: Luminous Meteorite
   backendBannerId: luminous_meteorite
   currencyType: 4
   singlePullCost: 100
-  tenPullCost: 0
+  tenPullCost: 1000
   probCommon: 25
   probRare: 50
   probEpic: 23

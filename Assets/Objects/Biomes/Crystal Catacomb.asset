@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Crystal Catacomb
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Crystal Catacombs
+  tileTint: {r: 0.18422915, g: 0.55294263, b: 0.8490566, a: 1}
+  sceneName: 
   wavesToClear: 10
   commonEnemies:
   - {fileID: 1433850337741783130, guid: 5f45f82053990cb448bb181de432a53f, type: 3}

@@ -41,9 +41,9 @@ public class CrystalStag : EnemyBase
         if (playerTarget == null || statusMgr.HasStatus(StatusType.Freeze)) return;
 
         float dist = Vector2.Distance(transform.position, playerTarget.position);
+        float chargeTriggerDistance = 0.3f * 14f;
 
-
-        if (dist <= 0.3*14 && isAttackReady && !isCharging) // fix hard coded values later
+        if (dist <= chargeTriggerDistance && isAttackReady && !isCharging) // fix hard coded values later
         {
             // Raycast to check Line of Sight
             Vector2 dirToPlayer = (playerTarget.position - transform.position).normalized;
@@ -55,8 +55,15 @@ public class CrystalStag : EnemyBase
                 return;
             }
         }
-        else
-            ChangeState(EnemyState.Idle);
+
+        Vector2 chaseDirection = CalculateMovementDirection(dist);
+        if (statusMgr.HasStatus(StatusType.Confusion))
+        {
+            chaseDirection = -chaseDirection;
+        }
+
+        MoveTowardsTarget(chaseDirection);
+        HandleSpriteRotation(chaseDirection);
     }
 
     // ---------------------------------------------------------

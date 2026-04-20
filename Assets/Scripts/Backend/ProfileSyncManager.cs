@@ -7,6 +7,11 @@ public static class ProfileSyncBootstrap
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void EnsureExists()
     {
+        if (!BackendRuntimeSettings.IsEnabled)
+        {
+            return;
+        }
+
         if (ProfileSyncManager.Instance != null)
         {
             return;

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 public class GameDirector : MonoBehaviour
 {
@@ -15,10 +16,11 @@ public class GameDirector : MonoBehaviour
     [Header("Progression Settings")]
     [SerializeField] private float timeBetweenWaves = 30f;
     [SerializeField] private float difficultyScaling = 0.1f; 
+    [SerializeField] private float difficultyCurveWeight = 0.05f;
     [SerializeField] private int maxWaveCount = 10; // Will be overridden by BiomeData
 
     [Header("Progression Objects")]
-    [Tooltip("The Portal prefab that spawns after the boss dies")]
+    [Tooltip("The Portal prefab that spawns when the biome loads")]
     [SerializeField] private GameObject biomePortalPrefab;
 
     [Header("Generation & Rewards")]
@@ -42,11 +44,20 @@ public class GameDirector : MonoBehaviour
     
     private WaveManager waveManager;
     private Transform playerTransform;
+    private BiomePortal activePortal;
+    private bool bossEncounterTriggered;
+    private bool bossDefeatedForBiome;
+    private readonly Dictionary<Tilemap, Color> baseTilemapColors = new Dictionary<Tilemap, Color>();
 
     private void Awake()
     {
         Instance = this;
         waveManager = gameObject.AddComponent<WaveManager>();
+
+        if (GetComponent<SceneBoundaryWalls>() == null)
+        {
+            gameObject.AddComponent<SceneBoundaryWalls>();
+        }
     }
 
     private void Start()
@@ -58,6 +69,7 @@ public class GameDirector : MonoBehaviour
 
         PlayerController.Instance.OnPlayerDeath += CompleteRun;
         waveManager.OnWaveFinished += WaveFinishedRoutine;
+        BossBase.OnBossDefeated += HandleBossDefeated;
         OnWaveAdvanced += TriggerWave;
 
         if (campaignBiomes == null || campaignBiomes.Count == 0)
@@ -71,8 +83,25 @@ public class GameDirector : MonoBehaviour
             RunSceneTransitionState.BeginNewRun();
         }
 
-        currentDifficultyVal = RunSceneTransitionState.CurrentDifficultyValue;
+        currentTimerValue = RunSceneTransitionState.CurrentRunTimeSeconds;
+        currentDifficultyVal = CalculateDifficultyFromTime(currentTimerValue);
         LoadBiome(RunSceneTransitionState.CurrentBiomeIndex);
+    }
+
+    private void Update()
+    {
+        if (IsPaused)
+        {
+            return;
+        }
+
+        currentTimerValue += Time.deltaTime;
+        currentDifficultyVal = CalculateDifficultyFromTime(currentTimerValue);
+
+        if (RunSceneTransitionState.HasActiveRun)
+        {
+            RunSceneTransitionState.SetBiomeState(currentBiomeIndex, currentDifficultyVal, currentTimerValue);
+        }
     }
 
     private void OnDestroy()
@@ -87,6 +116,7 @@ public class GameDirector : MonoBehaviour
             waveManager.OnWaveFinished -= WaveFinishedRoutine;
         }
 
+        BossBase.OnBossDefeated -= HandleBossDefeated;
         OnWaveAdvanced -= TriggerWave;
 
         if (Instance == this)
@@ -109,14 +139,14 @@ public class GameDirector : MonoBehaviour
 
         currentBiomeIndex = index;
         BiomeData currentBiome = campaignBiomes[index];
-        RunSceneTransitionState.SetBiomeState(currentBiomeIndex, currentDifficultyVal);
-
-        if (TryLoadBiomeScene(currentBiome))
-        {
-            return;
-        }
+        RunSceneTransitionState.SetBiomeState(currentBiomeIndex, currentDifficultyVal, currentTimerValue);
+        maxWaveCount = Mathf.Max(1, currentBiome.wavesToClear);
+        bossEncounterTriggered = false;
+        bossDefeatedForBiome = false;
+        playerTransform = PlayerController.Instance != null ? PlayerController.Instance.transform : null;
 
         PrepareSceneForBiomeLoad();
+        ApplyBiomeTileTint(currentBiome);
 
         Debug.Log($"=== ENTERING BIOME: {currentBiome.biomeName} ===");
         BiomeTitleOverlay.Show(currentBiome.biomeName);
@@ -125,7 +155,8 @@ public class GameDirector : MonoBehaviour
         waveManager.InitializeBiome(currentBiome);
 
         ZoneSpawner.SpawnZones();
-        
+
+        SpawnBiomePortal();
         SpawnChests();
         TriggerWave();  
     }
@@ -155,14 +186,17 @@ public class GameDirector : MonoBehaviour
     {
         IsWaveActive = false;
         OnCombatStateChanged?.Invoke(false);
-        currentDifficultyVal += difficultyScaling; 
+
+        if (bossEncounterTriggered)
+        {
+            return;
+        }
+
         if (waveManager.CurrentWave > maxWaveCount)
         {
-            Debug.Log($"BIOME {campaignBiomes[currentBiomeIndex].biomeName} COMPLETE!");
-            OnLevelCompleted?.Invoke();
+            Debug.Log($"All waves cleared in {campaignBiomes[currentBiomeIndex].biomeName}. Activate the portal to summon the boss.");
             StopAllCoroutines(); 
-            
-            SpawnBiomePortal();
+            return;
         }
         else
             OnWaveAdvanced?.Invoke();
@@ -170,18 +204,66 @@ public class GameDirector : MonoBehaviour
 
     private void SpawnBiomePortal()
     {
+        if (activePortal != null)
+        {
+            Destroy(activePortal.gameObject);
+            activePortal = null;
+        }
+
         if (biomePortalPrefab != null && playerTransform != null)
         {
             // Spawn the portal a few units away from the player
             Vector3 spawnPos = playerTransform.position + new Vector3(0, 3f, 0); 
-            Instantiate(biomePortalPrefab, spawnPos, Quaternion.identity);
+            GameObject portalObj = Instantiate(biomePortalPrefab, spawnPos, Quaternion.identity);
+            activePortal = portalObj.GetComponent<BiomePortal>();
         }
         else
         {
-            // Failsafe: If no portal prefab is assigned, just auto-advance
-            Debug.LogWarning("No Portal Prefab assigned! Auto-advancing...");
-            AdvanceToNextBiome();
+            Debug.LogWarning("No Portal Prefab assigned.");
         }
+    }
+
+    public void HandlePortalInteraction()
+    {
+        if (bossDefeatedForBiome)
+        {
+            AdvanceToNextBiome();
+            return;
+        }
+
+        if (bossEncounterTriggered)
+        {
+            Debug.Log("Boss encounter already active.");
+            return;
+        }
+
+        if (!waveManager.HasBossAvailable())
+        {
+            Debug.LogWarning("No boss configured for this biome. Advancing immediately.");
+            AdvanceToNextBiome();
+            return;
+        }
+
+        Debug.Log($"Summoning biome boss for {campaignBiomes[currentBiomeIndex].biomeName}.");
+        bossEncounterTriggered = true;
+        ClearActiveEnemies();
+        waveManager.ResetCombatTracking();
+        waveManager.StartBossEncounter(currentDifficultyVal);
+    }
+
+    public string GetPortalPrompt()
+    {
+        if (bossDefeatedForBiome)
+        {
+            return "Enter Portal";
+        }
+
+        if (bossEncounterTriggered)
+        {
+            return "Boss Active";
+        }
+
+        return "Challenge Boss";
     }
 
     // Called by the BiomePortal.cs script when the player interacts with it
@@ -232,6 +314,30 @@ public class GameDirector : MonoBehaviour
 
     public float GetTimer() => currentTimerValue;
 
+    private void HandleBossDefeated(BossBase boss)
+    {
+        if (!bossEncounterTriggered || bossDefeatedForBiome)
+        {
+            return;
+        }
+
+        bossEncounterTriggered = false;
+        bossDefeatedForBiome = true;
+        IsWaveActive = false;
+        OnCombatStateChanged?.Invoke(false);
+        OnLevelCompleted?.Invoke();
+
+        Debug.Log($"Boss defeated in {campaignBiomes[currentBiomeIndex].biomeName}. Portal is now ready.");
+    }
+
+    private float CalculateDifficultyFromTime(float elapsedSeconds)
+    {
+        float elapsedSteps = Mathf.Max(0f, elapsedSeconds / Mathf.Max(1f, timeBetweenWaves));
+        float linearRamp = elapsedSteps * difficultyScaling;
+        float curveRamp = Mathf.Pow(elapsedSteps, 1.35f) * difficultyCurveWeight;
+        return Mathf.Max(1f, 1f + linearRamp + curveRamp);
+    }
+
     private bool TryLoadBiomeScene(BiomeData biome)
     {
         if (biome == null || string.IsNullOrWhiteSpace(biome.sceneName))
@@ -250,19 +356,44 @@ public class GameDirector : MonoBehaviour
         return true;
     }
 
+    private void ApplyBiomeTileTint(BiomeData biome)
+    {
+        if (biome == null)
+        {
+            return;
+        }
+
+        Tilemap[] tilemaps = FindObjectsByType<Tilemap>(FindObjectsSortMode.None);
+        foreach (Tilemap tilemap in tilemaps)
+        {
+            if (tilemap == null)
+            {
+                continue;
+            }
+
+            if (!baseTilemapColors.ContainsKey(tilemap))
+            {
+                baseTilemapColors[tilemap] = tilemap.color;
+            }
+
+            Color baseColor = baseTilemapColors[tilemap];
+            Color tint = biome.tileTint;
+            tilemap.color = new Color(
+                baseColor.r * tint.r,
+                baseColor.g * tint.g,
+                baseColor.b * tint.b,
+                baseColor.a * tint.a);
+        }
+    }
+
     private void PrepareSceneForBiomeLoad()
     {
         StopAllCoroutines();
         ZoneSpawner.ClearZones();
+        waveManager.ResetCombatTracking();
+        activePortal = null;
 
-        EnemyBase[] enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.None);
-        foreach (EnemyBase enemy in enemies)
-        {
-            if (enemy != null)
-            {
-                Destroy(enemy.gameObject);
-            }
-        }
+        ClearActiveEnemies();
 
         TimedChest[] chests = FindObjectsByType<TimedChest>(FindObjectsSortMode.None);
         foreach (TimedChest chest in chests)
@@ -279,6 +410,18 @@ public class GameDirector : MonoBehaviour
             if (portal != null)
             {
                 Destroy(portal.gameObject);
+            }
+        }
+    }
+
+    private void ClearActiveEnemies()
+    {
+        EnemyBase[] enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.None);
+        foreach (EnemyBase enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
             }
         }
     }

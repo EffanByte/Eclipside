@@ -192,6 +192,10 @@ MonoBehaviour:
     m_Localized: El gestor de autenticacion no esta disponible.
     m_Metadata:
       m_Items: []
+  - m_Id: 1090690645008384
+    m_Localized: 'Equipado: {0}    Oro: {1}    Orbes: {2}'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

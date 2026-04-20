@@ -16,7 +16,7 @@ MonoBehaviour:
   backendBannerId: shiny_meteorite
   currencyType: 3
   singlePullCost: 700
-  tenPullCost: 0
+  tenPullCost: 7000
   probCommon: 50
   probRare: 35
   probEpic: 13

@@ -23,15 +23,38 @@ public class MainMenu : MonoBehaviour
     private readonly Dictionary<string, Button> landingButtons = new Dictionary<string, Button>();
     private GameObject modernMenuRoot;
     private GameObject settingsPanel;
+    private GameObject gachaPanel;
+    private GameObject gachaRewardsPanel;
     private GameObject authOnboardingPanel;
     private RectTransform settingsLanguageListContent;
+    private RectTransform gachaRewardsContent;
     private TextMeshProUGUI menuTitleText;
     private TextMeshProUGUI menuSubtitleText;
     private TextMeshProUGUI menuStatusText;
+    private TextMeshProUGUI menuGoldAmountText;
+    private TextMeshProUGUI menuOrbAmountText;
     private TextMeshProUGUI menuFooterText;
     private TextMeshProUGUI settingsTitleText;
     private TextMeshProUGUI settingsSubtitleText;
     private TextMeshProUGUI settingsCurrentLanguageText;
+    private TextMeshProUGUI settingsDisplayModeText;
+    private TextMeshProUGUI gachaTitleText;
+    private TextMeshProUGUI gachaSubtitleText;
+    private TextMeshProUGUI gachaGoldAmountText;
+    private TextMeshProUGUI gachaOrbAmountText;
+    private TextMeshProUGUI gachaRewardsTitleText;
+    private TextMeshProUGUI gachaMeteorNameText;
+    private TextMeshProUGUI gachaMeteorIndexText;
+    private TextMeshProUGUI gachaMeteorCostText;
+    private TextMeshProUGUI gachaMeteorRatesText;
+    private TextMeshProUGUI gachaMeteorPlaceholderText;
+    private TextMeshProUGUI gachaResultText;
+    private Image menuGoldIconImage;
+    private Image menuOrbIconImage;
+    private Image gachaGoldIconImage;
+    private Image gachaOrbIconImage;
+    private Image gachaMeteorImage;
+    private Image gachaMeteorPlaceholderImage;
     private TextMeshProUGUI authTitleText;
     private TextMeshProUGUI authSubtitleText;
     private TextMeshProUGUI authStatusText;
@@ -45,9 +68,19 @@ public class MainMenu : MonoBehaviour
     private TMP_InputField authPasswordInput;
     private TMP_InputField authDisplayNameInput;
     private readonly Dictionary<string, Button> settingsLanguageButtons = new Dictionary<string, Button>();
+    private Button settingsWindowedButton;
+    private Button settingsFullscreenButton;
+    private Button gachaCloseButton;
+    private Button gachaRewardsCloseButton;
+    private Button gachaPrevButton;
+    private Button gachaNextButton;
+    private Button gachaRewardsButton;
+    private Button gachaSinglePullButton;
+    private Button gachaTenPullButton;
     private TMP_FontAsset fallbackTmpFont;
     private Font fallbackFont;
     private string pendingCharacterSelectionId;
+    private int selectedGachaBannerIndex;
     private bool authSignUpMode;
     private bool achievementPanelStyled;
     private bool challengePanelStyled;
@@ -55,25 +88,68 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        DevAccountAuthBootstrap.EnsureExists();
+        ApplySavedDisplayMode();
+        EnsureMenuGachaManager();
         BuildModernLandingMenu();
-        EnsureAuthOnboardingPanel();
-        RefreshAuthOnboardingPanel();
-        TryShowAuthOnboarding();
+
+        if (BackendRuntimeSettings.IsEnabled)
+        {
+            DevAccountAuthBootstrap.EnsureExists();
+            EnsureAuthOnboardingPanel();
+            RefreshAuthOnboardingPanel();
+            TryShowAuthOnboarding();
+        }
     }
 
     private void OnEnable()
     {
         LocalizationManager.EnsureExists();
         LocalizationManager.LanguageChanged += RefreshLocalizedUi;
-        DevAccountAuthBootstrap.EnsureExists();
-        SubscribeAuthEvents();
+        GachaManager.PullSummaryUpdated += HandleGachaPullSummaryUpdated;
+
+        if (BackendRuntimeSettings.IsEnabled)
+        {
+            DevAccountAuthBootstrap.EnsureExists();
+            SubscribeAuthEvents();
+        }
     }
 
     private void OnDisable()
     {
         LocalizationManager.LanguageChanged -= RefreshLocalizedUi;
-        UnsubscribeAuthEvents();
+        GachaManager.PullSummaryUpdated -= HandleGachaPullSummaryUpdated;
+
+        if (BackendRuntimeSettings.IsEnabled)
+        {
+            UnsubscribeAuthEvents();
+        }
+    }
+
+    private void Update()
+    {
+        if (gachaPanel == null || !gachaPanel.activeSelf)
+        {
+            return;
+        }
+
+        float scroll = Input.mouseScrollDelta.y;
+        if (scroll > 0.05f)
+        {
+            SelectPreviousMeteor();
+        }
+        else if (scroll < -0.05f)
+        {
+            SelectNextMeteor();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            SelectPreviousMeteor();
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            SelectNextMeteor();
+        }
     }
 
     public void OnStartGameButtonPressed()
@@ -116,8 +192,14 @@ public class MainMenu : MonoBehaviour
 
     public void OnGachaButtonPressed()
     {
-        SceneManager.LoadScene("Demo");
-        SceneManager.LoadScene("GachaScene");
+        EnsureGachaPanel();
+        RefreshGachaPanel();
+
+        if (gachaPanel != null)
+        {
+            gachaPanel.transform.SetAsLastSibling();
+            gachaPanel.SetActive(true);
+        }
     }
 
     public void OnMissionButtonPressed()
@@ -160,6 +242,14 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    public void OnCloseGachaPressed()
+    {
+        if (gachaPanel != null)
+        {
+            gachaPanel.SetActive(false);
+        }
+    }
+
     public void OnAuthSignInTabPressed()
     {
         SetAuthMode(false);
@@ -172,6 +262,12 @@ public class MainMenu : MonoBehaviour
 
     public void OnAuthSubmitPressed()
     {
+        if (!BackendRuntimeSettings.IsEnabled)
+        {
+            SetAuthStatus("Backend auth is currently disabled.");
+            return;
+        }
+
         CacheAuthInputValues();
 
         string email = authEmailInput != null ? authEmailInput.text.Trim() : string.Empty;
@@ -263,7 +359,7 @@ public class MainMenu : MonoBehaviour
         cardRect.anchorMin = new Vector2(0.5f, 0.5f);
         cardRect.anchorMax = new Vector2(0.5f, 0.5f);
         cardRect.pivot = new Vector2(0.5f, 0.5f);
-        cardRect.sizeDelta = new Vector2(760f, 560f);
+        cardRect.sizeDelta = new Vector2(760f, 620f);
         cardRect.anchoredPosition = Vector2.zero;
 
         characterSelectTitleLabel = CreateText("Title", card.transform, L("menu.character_select.title", "Select Character"), 28, TextAnchor.MiddleCenter);
@@ -421,13 +517,42 @@ public class MainMenu : MonoBehaviour
         accentRect.sizeDelta = new Vector2(170f, 6f);
         accentRect.anchoredPosition = new Vector2(4f, -288f);
 
-        menuStatusText = CreateTmpText("Status", leftColumn.transform, string.Empty, 24f, FontStyles.Italic, TextAlignmentOptions.BottomLeft, new Color(0.87f, 0.88f, 0.90f, 0.96f));
-        RectTransform statusRect = menuStatusText.rectTransform;
-        statusRect.anchorMin = new Vector2(0f, 0f);
-        statusRect.anchorMax = new Vector2(1f, 0f);
-        statusRect.pivot = new Vector2(0f, 0f);
-        statusRect.sizeDelta = new Vector2(0f, 96f);
-        statusRect.anchoredPosition = new Vector2(0f, 76f);
+        GameObject statusPanel = CreateUIObject("StatusPanel", leftColumn.transform);
+        RectTransform statusPanelRect = statusPanel.GetComponent<RectTransform>();
+        statusPanelRect.anchorMin = new Vector2(0f, 0f);
+        statusPanelRect.anchorMax = new Vector2(1f, 0f);
+        statusPanelRect.pivot = new Vector2(0f, 0f);
+        statusPanelRect.sizeDelta = new Vector2(0f, 116f);
+        statusPanelRect.anchoredPosition = new Vector2(0f, 62f);
+
+        VerticalLayoutGroup statusLayout = statusPanel.AddComponent<VerticalLayoutGroup>();
+        statusLayout.padding = new RectOffset(0, 0, 0, 0);
+        statusLayout.spacing = 10f;
+        statusLayout.childControlHeight = true;
+        statusLayout.childControlWidth = true;
+        statusLayout.childForceExpandHeight = false;
+        statusLayout.childForceExpandWidth = false;
+
+        menuStatusText = CreateTmpText("EquippedStatus", statusPanel.transform, string.Empty, 24f, FontStyles.Italic, TextAlignmentOptions.MidlineLeft, new Color(0.87f, 0.88f, 0.90f, 0.96f));
+        menuStatusText.enableWordWrapping = false;
+        LayoutElement equippedLayout = menuStatusText.gameObject.AddComponent<LayoutElement>();
+        equippedLayout.preferredHeight = 34f;
+
+        GameObject currencyRow = CreateUIObject("CurrencyRow", statusPanel.transform);
+        HorizontalLayoutGroup currencyRowLayout = currencyRow.AddComponent<HorizontalLayoutGroup>();
+        currencyRowLayout.spacing = 18f;
+        currencyRowLayout.childAlignment = TextAnchor.MiddleLeft;
+        currencyRowLayout.childControlHeight = true;
+        currencyRowLayout.childControlWidth = false;
+        currencyRowLayout.childForceExpandHeight = false;
+        currencyRowLayout.childForceExpandWidth = false;
+        LayoutElement currencyRowSize = currencyRow.AddComponent<LayoutElement>();
+        currencyRowSize.preferredHeight = 42f;
+
+        GameObject menuGoldBadge = CreateCurrencyBadge("GoldStatusBadge", currencyRow.transform, 22f, new Color(0.94f, 0.86f, 0.55f, 1f), out menuGoldIconImage, out menuGoldAmountText);
+        GameObject menuOrbBadge = CreateCurrencyBadge("OrbStatusBadge", currencyRow.transform, 22f, new Color(0.94f, 0.86f, 0.55f, 1f), out menuOrbIconImage, out menuOrbAmountText);
+        SetCurrencyBadgeWidth(menuGoldBadge, 120f);
+        SetCurrencyBadgeWidth(menuOrbBadge, 104f);
 
         GameObject rightColumn = CreateUIObject("RightColumn", frame.transform);
         Image rightImage = rightColumn.AddComponent<Image>();
@@ -460,7 +585,7 @@ public class MainMenu : MonoBehaviour
         CreateLandingButton(rightColumn.transform, "MissionsButton", GetMissionsTitle(), L("menu.missions.subtitle", "Track daily goals and collect rewards."), OnMissionButtonPressed, false);
         CreateLandingButton(rightColumn.transform, "AchievementsButton", GetAchievementsTitle(), L("menu.achievements.subtitle", "Review long-term progress and milestones."), OnAchievementButtonPressed, false);
         CreateLandingButton(rightColumn.transform, "ChallengesButton", GetChallengesTitle(), L("menu.challenges.subtitle", "Enable run modifiers and earn bragging rights."), OnChallengeButtonPressed, false);
-        CreateLandingButton(rightColumn.transform, "SettingsButton", L("menu.settings", "Settings"), L("menu.settings.subtitle", "Adjust language and menu preferences."), OnSettingsButtonPressed, false);
+        CreateLandingButton(rightColumn.transform, "SettingsButton", L("menu.settings", "Settings"), L("menu.settings.subtitle", "Adjust language, display, and menu preferences."), OnSettingsButtonPressed, false);
 
         GameObject footer = CreateUIObject("Footer", frame.transform);
         RectTransform footerRect = footer.GetComponent<RectTransform>();
@@ -516,12 +641,9 @@ public class MainMenu : MonoBehaviour
                 equippedCharacterName = equippedCharacter.characterName;
             }
 
-            menuStatusText.text = L(
-                "menu.status",
-                "Equipped: {0}    Gold: {1}    Orbs: {2}",
-                equippedCharacterName,
-                profile.user_profile.gold,
-                profile.user_profile.orbs);
+            menuStatusText.text = L("menu.status_equipped", "Equipped: {0}", equippedCharacterName);
+            RefreshCurrencyBadge(menuGoldIconImage, menuGoldAmountText, CurrencyType.Gold, profile.user_profile.gold);
+            RefreshCurrencyBadge(menuOrbIconImage, menuOrbAmountText, CurrencyType.Orb, profile.user_profile.orbs);
         }
 
         if (menuFooterText != null)
@@ -539,7 +661,70 @@ public class MainMenu : MonoBehaviour
         SetLandingButtonTexts("MissionsButton", GetMissionsTitle(), L("menu.missions.subtitle", "Track daily goals and collect rewards."));
         SetLandingButtonTexts("AchievementsButton", GetAchievementsTitle(), L("menu.achievements.subtitle", "Review long-term progress and milestones."));
         SetLandingButtonTexts("ChallengesButton", GetChallengesTitle(), L("menu.challenges.subtitle", "Enable run modifiers and earn bragging rights."));
-        SetLandingButtonTexts("SettingsButton", L("menu.settings", "Settings"), L("menu.settings.subtitle", "Adjust language and menu preferences."));
+        SetLandingButtonTexts("SettingsButton", L("menu.settings", "Settings"), L("menu.settings.subtitle", "Adjust language, display, and menu preferences."));
+    }
+
+    private void ApplySavedDisplayMode()
+    {
+        ApplyDisplayMode(SaveManager.Settings.general.windowed_mode, false);
+    }
+
+    private void ApplyDisplayMode(bool windowedMode, bool persist)
+    {
+        Resolution currentResolution = Screen.currentResolution;
+        int width = Mathf.Max(1280, Screen.width > 0 ? Screen.width : currentResolution.width);
+        int height = Mathf.Max(720, Screen.height > 0 ? Screen.height : currentResolution.height);
+
+        if (windowedMode)
+        {
+            Screen.SetResolution(width, height, FullScreenMode.Windowed);
+        }
+        else
+        {
+            Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.FullScreenWindow);
+        }
+
+        if (persist)
+        {
+            SaveManager.Settings.general.windowed_mode = windowedMode;
+            SaveManager.SaveSettings();
+        }
+
+        RefreshSettingsPanel();
+    }
+
+    private void OnWindowedModePressed()
+    {
+        ApplyDisplayMode(true, true);
+    }
+
+    private void OnFullscreenModePressed()
+    {
+        ApplyDisplayMode(false, true);
+    }
+
+    private void EnsureMenuGachaManager()
+    {
+        if (GachaManager.Instance != null)
+        {
+            return;
+        }
+
+        GameObject gachaManagerObject = new GameObject("MenuGachaManager");
+        gachaManagerObject.AddComponent<GachaManager>();
+    }
+
+    private void HandleGachaPullSummaryUpdated(string summary)
+    {
+        if (gachaResultText != null)
+        {
+            gachaResultText.text = string.IsNullOrWhiteSpace(summary)
+                ? L("menu.gacha.result_default", "Choose a meteorite banner to view the pool and spend currency.")
+                : summary;
+        }
+
+        RefreshModernMenuContent();
+        RefreshGachaPanel();
     }
 
     private void EnsureSettingsPanel()
@@ -578,7 +763,7 @@ public class MainMenu : MonoBehaviour
         cardRect.anchorMin = new Vector2(0.5f, 0.5f);
         cardRect.anchorMax = new Vector2(0.5f, 0.5f);
         cardRect.pivot = new Vector2(0.5f, 0.5f);
-        cardRect.sizeDelta = new Vector2(760f, 560f);
+        cardRect.sizeDelta = new Vector2(760f, 620f);
         cardRect.anchoredPosition = Vector2.zero;
 
         settingsTitleText = CreateTmpText("Title", card.transform, string.Empty, 34f, FontStyles.Bold, TextAlignmentOptions.TopLeft, new Color(0.98f, 0.95f, 0.88f, 1f));
@@ -621,7 +806,7 @@ public class MainMenu : MonoBehaviour
         RectTransform languageAreaRect = languageArea.GetComponent<RectTransform>();
         languageAreaRect.anchorMin = new Vector2(0f, 0f);
         languageAreaRect.anchorMax = new Vector2(1f, 1f);
-        languageAreaRect.offsetMin = new Vector2(32f, 92f);
+        languageAreaRect.offsetMin = new Vector2(32f, 176f);
         languageAreaRect.offsetMax = new Vector2(-32f, -234f);
 
         GameObject languageHeader = CreateUIObject("LanguageHeader", languageArea.transform);
@@ -666,6 +851,32 @@ public class MainMenu : MonoBehaviour
             settingsLanguageButtons[capturedCode] = button;
         }
 
+        settingsDisplayModeText = CreateTmpText("DisplayModeLabel", card.transform, string.Empty, 22f, FontStyles.Bold, TextAlignmentOptions.TopLeft, new Color(0.92f, 0.75f, 0.28f, 1f));
+        RectTransform displayModeRect = settingsDisplayModeText.rectTransform;
+        displayModeRect.anchorMin = new Vector2(0f, 0f);
+        displayModeRect.anchorMax = new Vector2(1f, 0f);
+        displayModeRect.pivot = new Vector2(0f, 0f);
+        displayModeRect.sizeDelta = new Vector2(-64f, 32f);
+        displayModeRect.anchoredPosition = new Vector2(32f, 130f);
+
+        settingsWindowedButton = CreateButton("WindowedModeButton", card.transform, L("settings.display.windowed", "Windowed"));
+        RectTransform windowedRect = settingsWindowedButton.GetComponent<RectTransform>();
+        windowedRect.anchorMin = new Vector2(0f, 0f);
+        windowedRect.anchorMax = new Vector2(0f, 0f);
+        windowedRect.pivot = new Vector2(0f, 0f);
+        windowedRect.sizeDelta = new Vector2(180f, 48f);
+        windowedRect.anchoredPosition = new Vector2(32f, 74f);
+        settingsWindowedButton.onClick.AddListener(OnWindowedModePressed);
+
+        settingsFullscreenButton = CreateButton("FullscreenModeButton", card.transform, L("settings.display.fullscreen", "Fullscreen"));
+        RectTransform fullscreenRect = settingsFullscreenButton.GetComponent<RectTransform>();
+        fullscreenRect.anchorMin = new Vector2(0f, 0f);
+        fullscreenRect.anchorMax = new Vector2(0f, 0f);
+        fullscreenRect.pivot = new Vector2(0f, 0f);
+        fullscreenRect.sizeDelta = new Vector2(180f, 48f);
+        fullscreenRect.anchoredPosition = new Vector2(226f, 74f);
+        settingsFullscreenButton.onClick.AddListener(OnFullscreenModePressed);
+
         settingsCloseButton = CreateButton("SettingsCloseButton", card.transform, L("common.close", "Close"));
         RectTransform closeRect = settingsCloseButton.GetComponent<RectTransform>();
         closeRect.anchorMin = new Vector2(1f, 0f);
@@ -708,7 +919,19 @@ public class MainMenu : MonoBehaviour
                 LocalizationManager.GetDisplayNameForCode(currentCode));
         }
 
+        if (settingsDisplayModeText != null)
+        {
+            settingsDisplayModeText.text = L(
+                "settings.display.current_format",
+                "Display Mode: {0}",
+                SaveManager.Settings.general.windowed_mode
+                    ? L("settings.display.windowed", "Windowed")
+                    : L("settings.display.fullscreen", "Fullscreen"));
+        }
+
         SetButtonLabel(settingsCloseButton, L("common.close", "Close"));
+        SetButtonLabel(settingsWindowedButton, L("settings.display.windowed", "Windowed"));
+        SetButtonLabel(settingsFullscreenButton, L("settings.display.fullscreen", "Fullscreen"));
 
         string selectedCode = LocalizationManager.GetCurrentLanguageCode();
         foreach (KeyValuePair<string, Button> entry in settingsLanguageButtons)
@@ -728,6 +951,1060 @@ public class MainMenu : MonoBehaviour
                     ? new Color(0.92f, 0.75f, 0.28f, 1f)
                     : new Color(1f, 1f, 1f, 0.95f);
             }
+        }
+
+        RefreshDisplayModeButtonState(settingsWindowedButton, SaveManager.Settings.general.windowed_mode);
+        RefreshDisplayModeButtonState(settingsFullscreenButton, !SaveManager.Settings.general.windowed_mode);
+    }
+
+    private void RefreshDisplayModeButtonState(Button button, bool isSelected)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        Image image = button.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = isSelected
+                ? new Color(0.92f, 0.75f, 0.28f, 1f)
+                : new Color(1f, 1f, 1f, 0.95f);
+        }
+    }
+
+    private void EnsureGachaPanel()
+    {
+        if (gachaPanel != null)
+        {
+            return;
+        }
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            canvas = FindFirstObjectByType<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            Debug.LogError("[MainMenu] Could not create gacha panel because no Canvas was found.");
+            return;
+        }
+
+        gachaPanel = CreateUIObject("GachaPanel", canvas.transform);
+        Image overlay = gachaPanel.AddComponent<Image>();
+        overlay.color = new Color(0f, 0f, 0f, 0.86f);
+        StretchToParent(gachaPanel.GetComponent<RectTransform>());
+        gachaPanel.SetActive(false);
+
+        GameObject card = CreateUIObject("GachaCard", gachaPanel.transform);
+        Image cardImage = card.AddComponent<Image>();
+        cardImage.color = new Color(0.08f, 0.10f, 0.13f, 0.985f);
+        Outline cardOutline = card.AddComponent<Outline>();
+        cardOutline.effectColor = new Color(0.90f, 0.77f, 0.34f, 0.16f);
+        cardOutline.effectDistance = new Vector2(2f, -2f);
+        RectTransform cardRect = card.GetComponent<RectTransform>();
+        cardRect.anchorMin = new Vector2(0.5f, 0.5f);
+        cardRect.anchorMax = new Vector2(0.5f, 0.5f);
+        cardRect.pivot = new Vector2(0.5f, 0.5f);
+        cardRect.sizeDelta = new Vector2(1120f, 720f);
+        cardRect.anchoredPosition = Vector2.zero;
+
+        CreateDecorativeGlow("GachaGlowRight", card.transform, new Color(0.86f, 0.64f, 0.18f, 0.05f), new Vector2(170f, 230f), new Vector2(-18f, -12f), new Vector2(1f, 0.5f));
+
+        gachaTitleText = CreateTmpText("Title", card.transform, string.Empty, 34f, FontStyles.Bold, TextAlignmentOptions.TopLeft, new Color(0.98f, 0.95f, 0.88f, 1f));
+        RectTransform titleRect = gachaTitleText.rectTransform;
+        titleRect.anchorMin = new Vector2(0f, 1f);
+        titleRect.anchorMax = new Vector2(1f, 1f);
+        titleRect.pivot = new Vector2(0f, 1f);
+        titleRect.sizeDelta = new Vector2(-64f, 52f);
+        titleRect.anchoredPosition = new Vector2(32f, -28f);
+
+        gachaSubtitleText = CreateTmpText("Subtitle", card.transform, string.Empty, 20f, FontStyles.Normal, TextAlignmentOptions.TopLeft, new Color(0.73f, 0.82f, 0.84f, 1f));
+        RectTransform subtitleRect = gachaSubtitleText.rectTransform;
+        subtitleRect.anchorMin = new Vector2(0f, 1f);
+        subtitleRect.anchorMax = new Vector2(1f, 1f);
+        subtitleRect.pivot = new Vector2(0f, 1f);
+        subtitleRect.sizeDelta = new Vector2(520f, 78f);
+        subtitleRect.anchoredPosition = new Vector2(32f, -88f);
+
+        GameObject walletPanel = CreateUIObject("WalletPanel", card.transform);
+        Image walletPanelImage = walletPanel.AddComponent<Image>();
+        walletPanelImage.color = new Color(0.11f, 0.14f, 0.18f, 0.96f);
+        Outline walletPanelOutline = walletPanel.AddComponent<Outline>();
+        walletPanelOutline.effectColor = new Color(0.92f, 0.75f, 0.28f, 0.14f);
+        walletPanelOutline.effectDistance = new Vector2(1f, -1f);
+        RectTransform walletPanelRect = walletPanel.GetComponent<RectTransform>();
+        walletPanelRect.anchorMin = new Vector2(1f, 1f);
+        walletPanelRect.anchorMax = new Vector2(1f, 1f);
+        walletPanelRect.pivot = new Vector2(1f, 1f);
+        walletPanelRect.sizeDelta = new Vector2(320f, 48f);
+        walletPanelRect.anchoredPosition = new Vector2(-34f, -28f);
+
+        HorizontalLayoutGroup walletLayout = walletPanel.AddComponent<HorizontalLayoutGroup>();
+        walletLayout.padding = new RectOffset(14, 14, 8, 8);
+        walletLayout.spacing = 16f;
+        walletLayout.childAlignment = TextAnchor.MiddleLeft;
+        walletLayout.childControlHeight = true;
+        walletLayout.childControlWidth = false;
+        walletLayout.childForceExpandHeight = false;
+        walletLayout.childForceExpandWidth = false;
+
+        GameObject gachaGoldBadge = CreateCurrencyBadge("GoldWalletBadge", walletPanel.transform, 21f, new Color(0.94f, 0.86f, 0.55f, 1f), out gachaGoldIconImage, out gachaGoldAmountText);
+        GameObject gachaOrbBadge = CreateCurrencyBadge("OrbWalletBadge", walletPanel.transform, 21f, new Color(0.94f, 0.86f, 0.55f, 1f), out gachaOrbIconImage, out gachaOrbAmountText);
+        SetCurrencyBadgeWidth(gachaGoldBadge, 132f);
+        SetCurrencyBadgeWidth(gachaOrbBadge, 92f);
+
+        GameObject indexPanel = CreateUIObject("MeteorIndexPanel", card.transform);
+        Image indexPanelImage = indexPanel.AddComponent<Image>();
+        indexPanelImage.color = new Color(0.11f, 0.14f, 0.18f, 0.96f);
+        Outline indexPanelOutline = indexPanel.AddComponent<Outline>();
+        indexPanelOutline.effectColor = new Color(0.92f, 0.75f, 0.28f, 0.16f);
+        indexPanelOutline.effectDistance = new Vector2(1f, -1f);
+        RectTransform indexPanelRect = indexPanel.GetComponent<RectTransform>();
+        indexPanelRect.anchorMin = new Vector2(1f, 1f);
+        indexPanelRect.anchorMax = new Vector2(1f, 1f);
+        indexPanelRect.pivot = new Vector2(1f, 1f);
+        indexPanelRect.sizeDelta = new Vector2(84f, 40f);
+        indexPanelRect.anchoredPosition = new Vector2(-32f, -92f);
+
+        gachaMeteorIndexText = CreateTmpText("MeteorIndex", indexPanel.transform, string.Empty, 18f, FontStyles.Bold, TextAlignmentOptions.Center, new Color(0.92f, 0.75f, 0.28f, 1f));
+        StretchToParent(gachaMeteorIndexText.rectTransform, 8f, 8f);
+        indexPanel.SetActive(false);
+
+        gachaPrevButton = CreateButton("PrevMeteorButton", card.transform, "<");
+        RectTransform prevRect = gachaPrevButton.GetComponent<RectTransform>();
+        prevRect.anchorMin = new Vector2(0.5f, 0.5f);
+        prevRect.anchorMax = new Vector2(0.5f, 0.5f);
+        prevRect.pivot = new Vector2(0.5f, 0.5f);
+        prevRect.sizeDelta = new Vector2(58f, 58f);
+        prevRect.anchoredPosition = new Vector2(-435f, -8f);
+        gachaPrevButton.onClick.AddListener(SelectPreviousMeteor);
+
+        gachaNextButton = CreateButton("NextMeteorButton", card.transform, ">");
+        RectTransform nextRect = gachaNextButton.GetComponent<RectTransform>();
+        nextRect.anchorMin = new Vector2(0.5f, 0.5f);
+        nextRect.anchorMax = new Vector2(0.5f, 0.5f);
+        nextRect.pivot = new Vector2(0.5f, 0.5f);
+        nextRect.sizeDelta = new Vector2(58f, 58f);
+        nextRect.anchoredPosition = new Vector2(-65f, -8f);
+        gachaNextButton.onClick.AddListener(SelectNextMeteor);
+
+        GameObject meteorFrame = CreateUIObject("MeteorFrame", card.transform);
+        Image meteorFrameImage = meteorFrame.AddComponent<Image>();
+        meteorFrameImage.color = new Color(0.09f, 0.13f, 0.17f, 0.98f);
+        Outline meteorFrameOutline = meteorFrame.AddComponent<Outline>();
+        meteorFrameOutline.effectColor = new Color(0.92f, 0.75f, 0.28f, 0.14f);
+        meteorFrameOutline.effectDistance = new Vector2(2f, -2f);
+        RectTransform meteorFrameRect = meteorFrame.GetComponent<RectTransform>();
+        meteorFrameRect.anchorMin = new Vector2(0.5f, 0.5f);
+        meteorFrameRect.anchorMax = new Vector2(0.5f, 0.5f);
+        meteorFrameRect.pivot = new Vector2(0.5f, 0.5f);
+        meteorFrameRect.sizeDelta = new Vector2(300f, 380f);
+        meteorFrameRect.anchoredPosition = new Vector2(-250f, -8f);
+
+        GameObject meteorImagePanel = CreateUIObject("MeteorImagePanel", meteorFrame.transform);
+        gachaMeteorPlaceholderImage = meteorImagePanel.AddComponent<Image>();
+        Outline meteorImageOutline = meteorImagePanel.AddComponent<Outline>();
+        meteorImageOutline.effectColor = new Color(1f, 1f, 1f, 0.08f);
+        meteorImageOutline.effectDistance = new Vector2(1f, -1f);
+        RectTransform meteorImageRect = meteorImagePanel.GetComponent<RectTransform>();
+        meteorImageRect.anchorMin = new Vector2(0.5f, 1f);
+        meteorImageRect.anchorMax = new Vector2(0.5f, 1f);
+        meteorImageRect.pivot = new Vector2(0.5f, 1f);
+        meteorImageRect.sizeDelta = new Vector2(200f, 190f);
+        meteorImageRect.anchoredPosition = new Vector2(0f, -22f);
+
+        GameObject meteorSpriteObject = CreateUIObject("MeteorSprite", meteorImagePanel.transform);
+        gachaMeteorImage = meteorSpriteObject.AddComponent<Image>();
+        RectTransform meteorSpriteRect = gachaMeteorImage.rectTransform;
+        meteorSpriteRect.anchorMin = new Vector2(0.5f, 0.5f);
+        meteorSpriteRect.anchorMax = new Vector2(0.5f, 0.5f);
+        meteorSpriteRect.pivot = new Vector2(0.5f, 0.5f);
+        meteorSpriteRect.sizeDelta = new Vector2(168f, 150f);
+        meteorSpriteRect.anchoredPosition = Vector2.zero;
+        gachaMeteorImage.preserveAspect = true;
+
+        gachaMeteorPlaceholderText = CreateTmpText("MeteorPlaceholder", meteorImagePanel.transform, string.Empty, 58f, FontStyles.Bold, TextAlignmentOptions.Center, new Color(0.96f, 0.96f, 0.98f, 0.96f));
+        StretchToParent(gachaMeteorPlaceholderText.rectTransform, 0f, 0f);
+
+        GameObject infoBand = CreateUIObject("MeteorInfoBand", meteorFrame.transform);
+        Image infoBandImage = infoBand.AddComponent<Image>();
+        infoBandImage.color = new Color(0.08f, 0.10f, 0.13f, 0.92f);
+        RectTransform infoBandRect = infoBand.GetComponent<RectTransform>();
+        infoBandRect.anchorMin = new Vector2(0f, 0f);
+        infoBandRect.anchorMax = new Vector2(1f, 0f);
+        infoBandRect.pivot = new Vector2(0.5f, 0f);
+        infoBandRect.offsetMin = new Vector2(0f, 0f);
+        infoBandRect.offsetMax = new Vector2(0f, 116f);
+
+        GameObject infoDivider = CreateUIObject("MeteorInfoDivider", meteorFrame.transform);
+        Image infoDividerImage = infoDivider.AddComponent<Image>();
+        infoDividerImage.color = new Color(1f, 1f, 1f, 0.08f);
+        RectTransform infoDividerRect = infoDivider.GetComponent<RectTransform>();
+        infoDividerRect.anchorMin = new Vector2(0f, 0f);
+        infoDividerRect.anchorMax = new Vector2(1f, 0f);
+        infoDividerRect.pivot = new Vector2(0.5f, 0f);
+        infoDividerRect.offsetMin = new Vector2(18f, 116f);
+        infoDividerRect.offsetMax = new Vector2(-18f, 118f);
+
+        gachaMeteorNameText = CreateTmpText("MeteorName", meteorFrame.transform, string.Empty, 32f, FontStyles.Bold, TextAlignmentOptions.Center, new Color(0.98f, 0.95f, 0.88f, 1f));
+        RectTransform meteorNameRect = gachaMeteorNameText.rectTransform;
+        meteorNameRect.anchorMin = new Vector2(0f, 0f);
+        meteorNameRect.anchorMax = new Vector2(1f, 0f);
+        meteorNameRect.pivot = new Vector2(0.5f, 0f);
+        meteorNameRect.sizeDelta = new Vector2(-24f, 72f);
+        meteorNameRect.anchoredPosition = new Vector2(0f, 50f);
+
+        gachaMeteorCostText = CreateTmpText("MeteorCost", meteorFrame.transform, string.Empty, 18f, FontStyles.Normal, TextAlignmentOptions.Center, new Color(0.92f, 0.75f, 0.28f, 1f));
+        RectTransform meteorCostRect = gachaMeteorCostText.rectTransform;
+        meteorCostRect.anchorMin = new Vector2(0f, 0f);
+        meteorCostRect.anchorMax = new Vector2(1f, 0f);
+        meteorCostRect.pivot = new Vector2(0.5f, 0f);
+        meteorCostRect.sizeDelta = new Vector2(-32f, 24f);
+        meteorCostRect.anchoredPosition = new Vector2(0f, 26f);
+        gachaMeteorCostText.gameObject.SetActive(false);
+
+        gachaMeteorRatesText = CreateTmpText("MeteorRates", meteorFrame.transform, string.Empty, 15f, FontStyles.Normal, TextAlignmentOptions.Center, new Color(0.75f, 0.80f, 0.84f, 1f));
+        RectTransform meteorRatesRect = gachaMeteorRatesText.rectTransform;
+        meteorRatesRect.anchorMin = new Vector2(0f, 0f);
+        meteorRatesRect.anchorMax = new Vector2(1f, 0f);
+        meteorRatesRect.pivot = new Vector2(0.5f, 0f);
+        meteorRatesRect.sizeDelta = new Vector2(-32f, 22f);
+        meteorRatesRect.anchoredPosition = new Vector2(0f, 2f);
+        gachaMeteorRatesText.gameObject.SetActive(false);
+
+        gachaRewardsButton = CreateButton("RewardsButton", card.transform, string.Empty);
+        RectTransform rewardsButtonRect = gachaRewardsButton.GetComponent<RectTransform>();
+        rewardsButtonRect.anchorMin = new Vector2(0.5f, 0f);
+        rewardsButtonRect.anchorMax = new Vector2(0.5f, 0f);
+        rewardsButtonRect.pivot = new Vector2(0.5f, 0f);
+        rewardsButtonRect.sizeDelta = new Vector2(0f, 0f);
+        rewardsButtonRect.anchoredPosition = new Vector2(-9999f, -9999f);
+        gachaRewardsButton.onClick.AddListener(OnOpenGachaRewardsPressed);
+
+        GameObject pullButtonRow = CreateUIObject("PullButtonRow", card.transform);
+        RectTransform pullButtonRowRect = pullButtonRow.GetComponent<RectTransform>();
+        pullButtonRowRect.anchorMin = new Vector2(0.5f, 0f);
+        pullButtonRowRect.anchorMax = new Vector2(0.5f, 0f);
+        pullButtonRowRect.pivot = new Vector2(0.5f, 0f);
+        pullButtonRowRect.sizeDelta = new Vector2(360f, 44f);
+        pullButtonRowRect.anchoredPosition = new Vector2(-200f, 96f);
+
+        HorizontalLayoutGroup pullButtonLayout = pullButtonRow.AddComponent<HorizontalLayoutGroup>();
+        pullButtonLayout.spacing = 16f;
+        pullButtonLayout.childAlignment = TextAnchor.MiddleCenter;
+        pullButtonLayout.childControlWidth = false;
+        pullButtonLayout.childControlHeight = true;
+        pullButtonLayout.childForceExpandWidth = false;
+        pullButtonLayout.childForceExpandHeight = false;
+
+        gachaSinglePullButton = CreateButton("SinglePullButton", pullButtonRow.transform, string.Empty);
+        RectTransform singleRect = gachaSinglePullButton.GetComponent<RectTransform>();
+        singleRect.sizeDelta = new Vector2(172f, 44f);
+        LayoutElement singleLayout = gachaSinglePullButton.gameObject.AddComponent<LayoutElement>();
+        singleLayout.preferredWidth = 172f;
+        singleLayout.preferredHeight = 44f;
+        gachaSinglePullButton.onClick.AddListener(() => OnCurrentMeteorPullPressed(false));
+
+        gachaTenPullButton = CreateButton("TenPullButton", pullButtonRow.transform, string.Empty);
+        RectTransform tenRect = gachaTenPullButton.GetComponent<RectTransform>();
+        tenRect.sizeDelta = new Vector2(172f, 44f);
+        LayoutElement tenLayout = gachaTenPullButton.gameObject.AddComponent<LayoutElement>();
+        tenLayout.preferredWidth = 172f;
+        tenLayout.preferredHeight = 44f;
+        gachaTenPullButton.onClick.AddListener(() => OnCurrentMeteorPullPressed(true));
+
+        GameObject resultArea = CreateUIObject("ResultArea", card.transform);
+        Image resultImage = resultArea.AddComponent<Image>();
+        resultImage.color = new Color(0.11f, 0.14f, 0.18f, 0.96f);
+        Outline resultOutline = resultArea.AddComponent<Outline>();
+        resultOutline.effectColor = new Color(1f, 1f, 1f, 0.06f);
+        resultOutline.effectDistance = new Vector2(1f, -1f);
+        RectTransform resultRect = resultArea.GetComponent<RectTransform>();
+        resultRect.anchorMin = new Vector2(0f, 0f);
+        resultRect.anchorMax = new Vector2(1f, 0f);
+        resultRect.offsetMin = new Vector2(40f, 28f);
+        resultRect.offsetMax = new Vector2(-236f, 78f);
+
+        gachaResultText = CreateTmpText("ResultText", resultArea.transform, string.Empty, 18f, FontStyles.Normal, TextAlignmentOptions.TopLeft, new Color(0.92f, 0.92f, 0.94f, 1f));
+        gachaResultText.enableWordWrapping = true;
+        StretchToParent(gachaResultText.rectTransform, 18f, 18f);
+
+        gachaCloseButton = CreateButton("GachaCloseButton", card.transform, L("common.close", "Close"));
+        RectTransform closeRect = gachaCloseButton.GetComponent<RectTransform>();
+        closeRect.anchorMin = new Vector2(1f, 0f);
+        closeRect.anchorMax = new Vector2(1f, 0f);
+        closeRect.pivot = new Vector2(1f, 0f);
+        closeRect.sizeDelta = new Vector2(170f, 46f);
+        closeRect.anchoredPosition = new Vector2(-40f, 28f);
+        gachaCloseButton.onClick.AddListener(OnCloseGachaPressed);
+
+        gachaRewardsPanel = CreateUIObject("GachaRewardsPanel", card.transform);
+        Image rewardsPanelImage = gachaRewardsPanel.AddComponent<Image>();
+        rewardsPanelImage.color = new Color(0.09f, 0.12f, 0.16f, 0.98f);
+        Outline rewardsPanelOutline = gachaRewardsPanel.AddComponent<Outline>();
+        rewardsPanelOutline.effectColor = new Color(0.92f, 0.75f, 0.28f, 0.14f);
+        rewardsPanelOutline.effectDistance = new Vector2(2f, -2f);
+        RectTransform rewardsPanelRect = gachaRewardsPanel.GetComponent<RectTransform>();
+        rewardsPanelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        rewardsPanelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        rewardsPanelRect.pivot = new Vector2(0.5f, 0.5f);
+        rewardsPanelRect.sizeDelta = new Vector2(420f, 430f);
+        rewardsPanelRect.anchoredPosition = new Vector2(260f, -44f);
+        gachaRewardsPanel.SetActive(true);
+
+        gachaRewardsTitleText = CreateTmpText("RewardsPanelTitle", gachaRewardsPanel.transform, string.Empty, 24f, FontStyles.Bold, TextAlignmentOptions.TopLeft, new Color(0.98f, 0.95f, 0.88f, 1f));
+        RectTransform rewardsTitleRect = gachaRewardsTitleText.rectTransform;
+        rewardsTitleRect.anchorMin = new Vector2(0f, 1f);
+        rewardsTitleRect.anchorMax = new Vector2(1f, 1f);
+        rewardsTitleRect.pivot = new Vector2(0f, 1f);
+        rewardsTitleRect.sizeDelta = new Vector2(-32f, 34f);
+        rewardsTitleRect.anchoredPosition = new Vector2(16f, -14f);
+
+        GameObject rewardsDivider = CreateUIObject("RewardsDivider", gachaRewardsPanel.transform);
+        Image rewardsDividerImage = rewardsDivider.AddComponent<Image>();
+        rewardsDividerImage.color = new Color(1f, 1f, 1f, 0.08f);
+        RectTransform rewardsDividerRect = rewardsDivider.GetComponent<RectTransform>();
+        rewardsDividerRect.anchorMin = new Vector2(0f, 1f);
+        rewardsDividerRect.anchorMax = new Vector2(1f, 1f);
+        rewardsDividerRect.pivot = new Vector2(0.5f, 1f);
+        rewardsDividerRect.offsetMin = new Vector2(16f, -50f);
+        rewardsDividerRect.offsetMax = new Vector2(-16f, -48f);
+
+        GameObject rewardsViewport = CreateUIObject("RewardsViewport", gachaRewardsPanel.transform);
+        Image rewardsViewportImage = rewardsViewport.AddComponent<Image>();
+        rewardsViewportImage.color = new Color(0.07f, 0.09f, 0.12f, 0.96f);
+        Mask rewardsMask = rewardsViewport.AddComponent<Mask>();
+        rewardsMask.showMaskGraphic = true;
+        RectTransform rewardsViewportRect = rewardsViewport.GetComponent<RectTransform>();
+        rewardsViewportRect.anchorMin = new Vector2(0f, 0f);
+        rewardsViewportRect.anchorMax = new Vector2(1f, 1f);
+        rewardsViewportRect.offsetMin = new Vector2(14f, 14f);
+        rewardsViewportRect.offsetMax = new Vector2(-14f, -60f);
+
+        GameObject rewardsContent = CreateUIObject("RewardsContent", rewardsViewport.transform);
+        gachaRewardsContent = rewardsContent.GetComponent<RectTransform>();
+        gachaRewardsContent.anchorMin = new Vector2(0f, 1f);
+        gachaRewardsContent.anchorMax = new Vector2(1f, 1f);
+        gachaRewardsContent.pivot = new Vector2(0f, 1f);
+        gachaRewardsContent.sizeDelta = Vector2.zero;
+        gachaRewardsContent.anchoredPosition = Vector2.zero;
+
+        VerticalLayoutGroup rewardsLayout = rewardsContent.AddComponent<VerticalLayoutGroup>();
+        rewardsLayout.spacing = 8f;
+        rewardsLayout.padding = new RectOffset(8, 8, 8, 8);
+        rewardsLayout.childControlHeight = true;
+        rewardsLayout.childControlWidth = true;
+        rewardsLayout.childForceExpandHeight = false;
+        rewardsLayout.childForceExpandWidth = true;
+
+        ContentSizeFitter rewardsFitter = rewardsContent.AddComponent<ContentSizeFitter>();
+        rewardsFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        rewardsFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+        ScrollRect rewardsScroll = rewardsViewport.AddComponent<ScrollRect>();
+        rewardsScroll.viewport = rewardsViewportRect;
+        rewardsScroll.content = gachaRewardsContent;
+        rewardsScroll.horizontal = false;
+        rewardsScroll.vertical = true;
+
+        gachaRewardsCloseButton = CreateButton("RewardsCloseButton", gachaRewardsPanel.transform, L("common.close", "Close"));
+        RectTransform rewardsCloseRect = gachaRewardsCloseButton.GetComponent<RectTransform>();
+        rewardsCloseRect.anchorMin = new Vector2(1f, 0f);
+        rewardsCloseRect.anchorMax = new Vector2(1f, 0f);
+        rewardsCloseRect.pivot = new Vector2(1f, 0f);
+        rewardsCloseRect.sizeDelta = new Vector2(0f, 0f);
+        rewardsCloseRect.anchoredPosition = new Vector2(-9999f, -9999f);
+        gachaRewardsCloseButton.onClick.AddListener(OnCloseGachaRewardsPressed);
+
+        ApplyGachaButtonStyle(gachaPrevButton, new Color(0.12f, 0.15f, 0.19f, 0.95f), new Color(0.92f, 0.75f, 0.28f, 1f), 28, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaNextButton, new Color(0.12f, 0.15f, 0.19f, 0.95f), new Color(0.92f, 0.75f, 0.28f, 1f), 28, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaRewardsButton, new Color(0.17f, 0.20f, 0.24f, 0.98f), new Color(0.96f, 0.94f, 0.90f, 1f), 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaSinglePullButton, new Color(0.90f, 0.72f, 0.24f, 1f), new Color(0.08f, 0.09f, 0.11f, 1f), 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaTenPullButton, new Color(0.24f, 0.34f, 0.50f, 1f), new Color(0.96f, 0.97f, 0.98f, 1f), 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaCloseButton, new Color(0.16f, 0.18f, 0.22f, 0.98f), new Color(0.93f, 0.93f, 0.95f, 1f), 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaRewardsCloseButton, new Color(0.16f, 0.18f, 0.22f, 0.98f), new Color(0.93f, 0.93f, 0.95f, 1f), 18, FontStyle.Bold);
+        gachaRewardsButton.gameObject.SetActive(false);
+        gachaRewardsCloseButton.gameObject.SetActive(false);
+    }
+
+    private void RefreshGachaPanel()
+    {
+        if (gachaPanel == null)
+        {
+            return;
+        }
+
+        EnsureMenuGachaManager();
+
+        if (gachaTitleText != null)
+        {
+            gachaTitleText.text = L("menu.gacha", "Gacha");
+        }
+
+        if (gachaSubtitleText != null)
+        {
+            gachaSubtitleText.text = L("menu.gacha.panel_subtitle", "Browse meteorite banners, inspect the pool, and pull from the main menu.");
+        }
+
+        SaveFile_Profile profile = SaveManager.Profile;
+        if (profile != null)
+        {
+            RefreshCurrencyBadge(gachaGoldIconImage, gachaGoldAmountText, CurrencyType.Gold, profile.user_profile.gold);
+            RefreshCurrencyBadge(gachaOrbIconImage, gachaOrbAmountText, CurrencyType.Orb, profile.user_profile.orbs);
+        }
+
+        if (gachaResultText != null)
+        {
+            string summary = GachaManager.Instance != null ? GachaManager.Instance.LastPullSummary : string.Empty;
+            gachaResultText.text = string.IsNullOrWhiteSpace(summary)
+                ? L("menu.gacha.result_default", "Choose a meteor, inspect its rewards, and pull when you are ready.")
+                : summary;
+        }
+
+        SetButtonLabel(gachaCloseButton, L("common.close", "Close"));
+        SetButtonLabel(gachaRewardsCloseButton, L("common.close", "Close"));
+        SetButtonLabel(gachaRewardsButton, L("menu.gacha.meteor_rewards", "Meteor Rewards"));
+
+        List<MeteoriteBanner> banners = GetAvailableGachaBanners();
+        if (banners.Count == 0)
+        {
+            ShowEmptyGachaState();
+            return;
+        }
+
+        selectedGachaBannerIndex = Mathf.Clamp(selectedGachaBannerIndex, 0, banners.Count - 1);
+        MeteoriteBanner banner = banners[selectedGachaBannerIndex];
+        if (gachaMeteorIndexText != null)
+        {
+            gachaMeteorIndexText.text = $"{selectedGachaBannerIndex + 1} / {banners.Count}";
+        }
+
+        if (gachaMeteorNameText != null)
+        {
+            gachaMeteorNameText.text = GetBannerDisplayName(banner);
+        }
+
+        if (gachaMeteorCostText != null)
+        {
+            gachaMeteorCostText.text = string.Empty;
+        }
+
+        if (gachaMeteorRatesText != null)
+        {
+            gachaMeteorRatesText.text = string.Empty;
+        }
+
+        SetCurrencyButtonLabel(gachaSinglePullButton, "1 Pull", banner.singlePullCost, banner.currencyType);
+        SetPullButtonUnavailableState(
+            gachaTenPullButton,
+            banner.tenPullCost > 0,
+            banner.tenPullCost,
+            banner.currencyType,
+            "10 Pull");
+
+        if (gachaPrevButton != null)
+        {
+            gachaPrevButton.interactable = banners.Count > 1;
+        }
+
+        if (gachaNextButton != null)
+        {
+            gachaNextButton.interactable = banners.Count > 1;
+        }
+
+        if (gachaSinglePullButton != null)
+        {
+            gachaSinglePullButton.interactable = GachaManager.Instance != null && GachaManager.Instance.CanAfford(banner, false);
+        }
+
+        if (gachaTenPullButton != null)
+        {
+            gachaTenPullButton.interactable = banner.tenPullCost > 0 && GachaManager.Instance != null && GachaManager.Instance.CanAfford(banner, true);
+        }
+
+        if (gachaRewardsTitleText != null)
+        {
+            gachaRewardsTitleText.text = L("menu.gacha.rewards", "Rewards");
+        }
+
+        RefreshMeteorPlaceholderVisual(banner);
+        PopulateGachaRewardsPanel(banner);
+    }
+
+    private List<MeteoriteBanner> GetAvailableGachaBanners()
+    {
+        List<MeteoriteBanner> banners = new List<MeteoriteBanner>();
+        if (GameDatabase.Instance == null || GameDatabase.Instance.allGachaBanners == null)
+        {
+            return banners;
+        }
+
+        foreach (MeteoriteBanner banner in GameDatabase.Instance.allGachaBanners)
+        {
+            if (banner != null)
+            {
+                banners.Add(banner);
+            }
+        }
+
+        return banners;
+    }
+
+    private MeteoriteBanner GetCurrentGachaBanner()
+    {
+        List<MeteoriteBanner> banners = GetAvailableGachaBanners();
+        if (banners.Count == 0)
+        {
+            return null;
+        }
+
+        selectedGachaBannerIndex = Mathf.Clamp(selectedGachaBannerIndex, 0, banners.Count - 1);
+        return banners[selectedGachaBannerIndex];
+    }
+
+    private void SelectPreviousMeteor()
+    {
+        List<MeteoriteBanner> banners = GetAvailableGachaBanners();
+        if (banners.Count <= 1)
+        {
+            return;
+        }
+
+        selectedGachaBannerIndex = (selectedGachaBannerIndex - 1 + banners.Count) % banners.Count;
+        RefreshGachaPanel();
+    }
+
+    private void SelectNextMeteor()
+    {
+        List<MeteoriteBanner> banners = GetAvailableGachaBanners();
+        if (banners.Count <= 1)
+        {
+            return;
+        }
+
+        selectedGachaBannerIndex = (selectedGachaBannerIndex + 1) % banners.Count;
+        RefreshGachaPanel();
+    }
+
+    private void ShowEmptyGachaState()
+    {
+        if (gachaRewardsContent != null)
+        {
+            foreach (Transform child in gachaRewardsContent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        if (gachaMeteorIndexText != null)
+        {
+            gachaMeteorIndexText.text = "0 / 0";
+        }
+
+        if (gachaMeteorNameText != null)
+        {
+            gachaMeteorNameText.text = L("menu.gacha.empty", "No meteor banners configured.");
+        }
+
+        if (gachaMeteorCostText != null)
+        {
+            gachaMeteorCostText.text = string.Empty;
+        }
+
+        if (gachaMeteorRatesText != null)
+        {
+            gachaMeteorRatesText.text = string.Empty;
+        }
+
+        if (gachaMeteorImage != null)
+        {
+            gachaMeteorImage.enabled = false;
+            gachaMeteorImage.sprite = null;
+        }
+
+        if (gachaMeteorPlaceholderImage != null)
+        {
+            gachaMeteorPlaceholderImage.color = new Color(0.20f, 0.23f, 0.28f, 1f);
+        }
+
+        if (gachaMeteorPlaceholderText != null)
+        {
+            gachaMeteorPlaceholderText.text = "--";
+        }
+
+        if (gachaRewardsTitleText != null)
+        {
+            gachaRewardsTitleText.text = L("menu.gacha.rewards", "Rewards");
+        }
+
+        if (gachaResultText != null)
+        {
+            gachaResultText.text = L("menu.gacha.empty_result", "Add meteorite banners to the game database to enable pulls.");
+        }
+
+        if (gachaSinglePullButton != null)
+        {
+            gachaSinglePullButton.interactable = false;
+            SetButtonLabel(gachaSinglePullButton, L("menu.gacha.single_pull", "Single Pull"));
+            ConfigureButtonCurrencyIcon(gachaSinglePullButton, null);
+        }
+
+        if (gachaTenPullButton != null)
+        {
+            gachaTenPullButton.interactable = false;
+            SetButtonLabel(gachaTenPullButton, L("menu.gacha.ten_pull", "Ten Pull"));
+            ConfigureButtonCurrencyIcon(gachaTenPullButton, null);
+        }
+
+        if (gachaPrevButton != null)
+        {
+            gachaPrevButton.interactable = false;
+        }
+
+        if (gachaNextButton != null)
+        {
+            gachaNextButton.interactable = false;
+        }
+    }
+
+    private void RefreshMeteorPlaceholderVisual(MeteoriteBanner banner)
+    {
+        Color accentColor = GetMeteorAccentColor(banner);
+
+        if (gachaMeteorPlaceholderImage != null)
+        {
+            gachaMeteorPlaceholderImage.color = Color.Lerp(new Color(0.11f, 0.14f, 0.18f, 1f), accentColor, 0.82f);
+            Outline outline = gachaMeteorPlaceholderImage.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = new Color(accentColor.r, accentColor.g, accentColor.b, 0.28f);
+            }
+        }
+
+        if (gachaMeteorImage == null || gachaMeteorPlaceholderText == null)
+        {
+            return;
+        }
+
+        if (banner != null && banner.displaySprite != null)
+        {
+            gachaMeteorImage.sprite = banner.displaySprite;
+            gachaMeteorImage.enabled = true;
+            gachaMeteorPlaceholderText.text = string.Empty;
+        }
+        else
+        {
+            gachaMeteorImage.sprite = null;
+            gachaMeteorImage.enabled = false;
+            gachaMeteorPlaceholderText.text = GetMeteorPlaceholderLabel(banner);
+        }
+    }
+
+    private string GetMeteorPlaceholderLabel(MeteoriteBanner banner)
+    {
+        string displayName = GetBannerDisplayName(banner);
+        if (string.IsNullOrWhiteSpace(displayName))
+        {
+            return "M";
+        }
+
+        string[] words = displayName.Split(' ');
+        string label = string.Empty;
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(words[i]))
+            {
+                continue;
+            }
+
+            label += char.ToUpperInvariant(words[i][0]);
+            if (label.Length >= 2)
+            {
+                break;
+            }
+        }
+
+        return string.IsNullOrWhiteSpace(label) ? "M" : label;
+    }
+
+    private string GetBannerDisplayName(MeteoriteBanner banner)
+    {
+        if (banner == null)
+        {
+            return L("menu.gacha.reward_unknown", "Unknown reward");
+        }
+
+        if (!string.IsNullOrWhiteSpace(banner.bannerName))
+        {
+            return banner.bannerName.Trim();
+        }
+
+        return banner.name.Replace('_', ' ').Trim();
+    }
+
+    private Color GetMeteorAccentColor(MeteoriteBanner banner)
+    {
+        string id = banner != null ? banner.GetBackendBannerId() : string.Empty;
+        id = id.ToLowerInvariant();
+
+        if (id.Contains("arcane"))
+        {
+            return new Color(0.42f, 0.26f, 0.62f, 1f);
+        }
+
+        if (id.Contains("dust"))
+        {
+            return new Color(0.53f, 0.39f, 0.24f, 1f);
+        }
+
+        if (id.Contains("eth"))
+        {
+            return new Color(0.42f, 0.62f, 0.78f, 1f);
+        }
+
+        if (id.Contains("luminous"))
+        {
+            return new Color(0.70f, 0.63f, 0.26f, 1f);
+        }
+
+        if (id.Contains("radiant"))
+        {
+            return new Color(0.75f, 0.44f, 0.22f, 1f);
+        }
+
+        if (id.Contains("runic"))
+        {
+            return new Color(0.22f, 0.54f, 0.58f, 1f);
+        }
+
+        if (id.Contains("shiny"))
+        {
+            return new Color(0.58f, 0.60f, 0.70f, 1f);
+        }
+
+        return new Color(0.25f, 0.35f, 0.55f, 1f);
+    }
+
+    private void OnOpenGachaRewardsPressed()
+    {
+        MeteoriteBanner banner = GetCurrentGachaBanner();
+        if (banner != null)
+        {
+            PopulateGachaRewardsPanel(banner);
+        }
+    }
+
+    private void OnCloseGachaRewardsPressed()
+    {
+        // Rewards are embedded in the main gacha layout now.
+    }
+
+    private void PopulateGachaRewardsPanel(MeteoriteBanner banner)
+    {
+        if (gachaRewardsContent == null)
+        {
+            return;
+        }
+
+        foreach (Transform child in gachaRewardsContent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (gachaRewardsTitleText != null)
+        {
+            gachaRewardsTitleText.text = L("menu.gacha.rewards", "Rewards");
+        }
+
+        SaveFile_Profile profile = SaveManager.Profile;
+        bool addedAnySection = false;
+        addedAnySection |= CreateGachaRewardSection(L("menu.gacha.rarity.common", "Common"), banner.commonPool, profile, new Color(0.46f, 0.51f, 0.58f, 0.22f));
+        addedAnySection |= CreateGachaRewardSection(L("menu.gacha.rarity.rare", "Rare"), banner.rarePool, profile, new Color(0.20f, 0.44f, 0.69f, 0.22f));
+        addedAnySection |= CreateGachaRewardSection(L("menu.gacha.rarity.epic", "Epic"), banner.epicPool, profile, new Color(0.49f, 0.26f, 0.63f, 0.22f));
+        addedAnySection |= CreateGachaRewardSection(L("menu.gacha.rarity.mythic", "Mythic"), banner.mythicPool, profile, new Color(0.78f, 0.58f, 0.18f, 0.22f));
+
+        if (!addedAnySection)
+        {
+            TextMeshProUGUI emptyText = CreateTmpText("NoRewards", gachaRewardsContent, L("menu.gacha.no_rewards", "No rewards configured."), 18f, FontStyles.Italic, TextAlignmentOptions.MidlineLeft, new Color(0.80f, 0.82f, 0.85f, 1f));
+            LayoutElement layout = emptyText.gameObject.AddComponent<LayoutElement>();
+            layout.preferredHeight = 42f;
+        }
+
+        ScrollRect rewardsScroll = gachaRewardsPanel != null ? gachaRewardsPanel.GetComponentInChildren<ScrollRect>(true) : null;
+        if (rewardsScroll != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            rewardsScroll.horizontalNormalizedPosition = 0f;
+            rewardsScroll.verticalNormalizedPosition = 1f;
+        }
+    }
+
+    private bool CreateGachaRewardSection(string title, List<GachaRewardEntry> pool, SaveFile_Profile profile, Color accentColor)
+    {
+        if (pool == null || pool.Count == 0 || gachaRewardsContent == null)
+        {
+            return false;
+        }
+
+        GameObject section = CreateUIObject(title + "_Section", gachaRewardsContent);
+        Image sectionImage = section.AddComponent<Image>();
+        sectionImage.color = new Color(0.12f, 0.15f, 0.19f, 0.98f);
+        Outline sectionOutline = section.AddComponent<Outline>();
+        sectionOutline.effectColor = accentColor;
+        sectionOutline.effectDistance = new Vector2(1f, -1f);
+        VerticalLayoutGroup sectionLayout = section.AddComponent<VerticalLayoutGroup>();
+        sectionLayout.padding = new RectOffset(10, 10, 10, 10);
+        sectionLayout.spacing = 6f;
+        sectionLayout.childControlHeight = true;
+        sectionLayout.childControlWidth = true;
+        sectionLayout.childForceExpandHeight = false;
+        sectionLayout.childForceExpandWidth = true;
+        ContentSizeFitter sectionFitter = section.AddComponent<ContentSizeFitter>();
+        sectionFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        sectionFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+        TextMeshProUGUI sectionTitle = CreateTmpText("Title", section.transform, title, 17f, FontStyles.Bold, TextAlignmentOptions.MidlineLeft, new Color(0.98f, 0.95f, 0.88f, 1f));
+        LayoutElement sectionTitleLayout = sectionTitle.gameObject.AddComponent<LayoutElement>();
+        sectionTitleLayout.preferredHeight = 22f;
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            GachaRewardEntry reward = pool[i];
+            if (reward == null)
+            {
+                continue;
+            }
+
+            GameObject rewardRow = CreateUIObject("Reward_" + i, section.transform);
+            Image rowImage = rewardRow.AddComponent<Image>();
+            rowImage.color = new Color(0.08f, 0.10f, 0.13f, 0.96f);
+            LayoutElement rowLayout = rewardRow.AddComponent<LayoutElement>();
+            rowLayout.preferredHeight = 44f;
+
+            HorizontalLayoutGroup rewardLayout = rewardRow.AddComponent<HorizontalLayoutGroup>();
+            rewardLayout.padding = new RectOffset(12, 12, 6, 6);
+            rewardLayout.spacing = 8f;
+            rewardLayout.childAlignment = TextAnchor.MiddleLeft;
+            rewardLayout.childControlWidth = true;
+            rewardLayout.childControlHeight = true;
+            rewardLayout.childForceExpandWidth = false;
+            rewardLayout.childForceExpandHeight = false;
+
+            Image rewardIcon = CreateUIObject("Icon", rewardRow.transform).AddComponent<Image>();
+            LayoutElement rewardIconLayout = rewardIcon.gameObject.AddComponent<LayoutElement>();
+            rewardIconLayout.preferredWidth = 28f;
+            rewardIconLayout.preferredHeight = 28f;
+            rewardIconLayout.minWidth = 28f;
+            rewardIconLayout.minHeight = 28f;
+            CurrencyUiUtility.ApplySprite(rewardIcon, GetGachaRewardIcon(reward));
+
+            TextMeshProUGUI rewardNameText = CreateTmpText("Name", rewardRow.transform, GetGachaRewardDisplayName(reward), 14f, FontStyles.Bold, TextAlignmentOptions.MidlineLeft, new Color(0.94f, 0.93f, 0.90f, 1f));
+            rewardNameText.enableWordWrapping = false;
+            rewardNameText.overflowMode = TextOverflowModes.Ellipsis;
+            LayoutElement rewardNameLayout = rewardNameText.gameObject.AddComponent<LayoutElement>();
+            rewardNameLayout.flexibleWidth = 1f;
+            rewardNameLayout.minWidth = 110f;
+
+            GameObject rewardMetaGroup = CreateUIObject("MetaGroup", rewardRow.transform);
+            HorizontalLayoutGroup metaLayout = rewardMetaGroup.AddComponent<HorizontalLayoutGroup>();
+            metaLayout.spacing = 6f;
+            metaLayout.childAlignment = TextAnchor.MiddleRight;
+            metaLayout.childControlWidth = false;
+            metaLayout.childControlHeight = true;
+            metaLayout.childForceExpandWidth = false;
+            metaLayout.childForceExpandHeight = false;
+            LayoutElement rewardMetaGroupLayout = rewardMetaGroup.AddComponent<LayoutElement>();
+            rewardMetaGroupLayout.preferredWidth = 116f;
+            rewardMetaGroupLayout.minWidth = 84f;
+
+            Image rewardMetaIcon = CreateUIObject("MetaIcon", rewardMetaGroup.transform).AddComponent<Image>();
+            LayoutElement rewardMetaIconLayout = rewardMetaIcon.gameObject.AddComponent<LayoutElement>();
+            rewardMetaIconLayout.preferredWidth = 18f;
+            rewardMetaIconLayout.preferredHeight = 18f;
+            rewardMetaIconLayout.minWidth = 18f;
+            rewardMetaIconLayout.minHeight = 18f;
+            CurrencyType? metaCurrencyType = GetGachaRewardMetaCurrencyType(reward, profile);
+            if (metaCurrencyType.HasValue)
+            {
+                CurrencyUiUtility.ApplyCurrencySprite(rewardMetaIcon, metaCurrencyType.Value);
+            }
+            else
+            {
+                rewardMetaIcon.gameObject.SetActive(false);
+            }
+
+            TextMeshProUGUI rewardMetaText = CreateTmpText("Meta", rewardMetaGroup.transform, GetGachaRewardMetaText(reward, profile), 11f, FontStyles.Bold, TextAlignmentOptions.MidlineRight, GetGachaRewardMetaColor(reward, profile));
+            rewardMetaText.enableWordWrapping = false;
+            rewardMetaText.overflowMode = TextOverflowModes.Ellipsis;
+            LayoutElement rewardMetaLayout = rewardMetaText.gameObject.AddComponent<LayoutElement>();
+            rewardMetaLayout.preferredWidth = 92f;
+            rewardMetaLayout.minWidth = 54f;
+        }
+
+        return true;
+    }
+
+    private string GetGachaRewardMetaText(GachaRewardEntry reward, SaveFile_Profile profile)
+    {
+        if (reward == null)
+        {
+            return string.Empty;
+        }
+
+        if (IsGachaRewardOwned(reward, profile))
+        {
+            return $"+{CurrencyUiUtility.FormatAmount(reward.duplicateConversionAmount)}";
+        }
+
+        switch (reward.type)
+        {
+            case RewardType.Character:
+                return L("menu.gacha.reward_character", "Character");
+            case RewardType.Weapon:
+                return L("menu.gacha.reward_weapon", "Weapon");
+            case RewardType.Consumable:
+                return L("menu.gacha.reward_consumable", "Consumable");
+            case RewardType.Gold:
+            case RewardType.Orb:
+                return string.Empty;
+            case RewardType.Currency:
+                return L("menu.gacha.reward_currency", "Currency");
+            default:
+                return string.Empty;
+        }
+    }
+
+    private CurrencyType? GetGachaRewardMetaCurrencyType(GachaRewardEntry reward, SaveFile_Profile profile)
+    {
+        if (reward == null)
+        {
+            return null;
+        }
+
+        return IsGachaRewardOwned(reward, profile) ? reward.duplicateConversionType : (CurrencyType?)null;
+    }
+
+    private Color GetGachaRewardMetaColor(GachaRewardEntry reward, SaveFile_Profile profile)
+    {
+        return IsGachaRewardOwned(reward, profile)
+            ? new Color(0.92f, 0.75f, 0.28f, 1f)
+            : new Color(0.73f, 0.82f, 0.84f, 1f);
+    }
+
+    private bool IsGachaRewardOwned(GachaRewardEntry reward, SaveFile_Profile profile)
+    {
+        if (reward == null || profile == null)
+        {
+            return false;
+        }
+
+        if (reward.type == RewardType.Weapon)
+        {
+            string weaponId = reward.itemReference != null ? reward.itemReference.name : reward.idName;
+            return !string.IsNullOrWhiteSpace(weaponId) && profile.weapons.unlocked_weapon_ids.Contains(weaponId);
+        }
+
+        if (reward.type == RewardType.Character)
+        {
+            string characterId = reward.characterReference != null ? reward.characterReference.characterID : reward.idName;
+            return !string.IsNullOrWhiteSpace(characterId) && profile.characters.owned_character_ids.Contains(characterId);
+        }
+
+        return false;
+    }
+
+    private void OnCurrentMeteorPullPressed(bool isTenPull)
+    {
+        EnsureMenuGachaManager();
+
+        MeteoriteBanner banner = GetCurrentGachaBanner();
+        if (GachaManager.Instance == null || banner == null)
+        {
+            return;
+        }
+
+        GachaManager.Instance.PerformPull(banner, isTenPull);
+        RefreshModernMenuContent();
+        RefreshGachaPanel();
+    }
+
+
+    private string GetGachaRewardDisplayName(GachaRewardEntry reward)
+    {
+        if (reward == null)
+        {
+            return L("menu.gacha.reward_unknown", "Unknown reward");
+        }
+
+        if (reward.type == RewardType.Character && reward.characterReference != null)
+        {
+            return reward.characterReference.characterName;
+        }
+
+        if ((reward.type == RewardType.Weapon || reward.type == RewardType.Consumable) && reward.itemReference != null)
+        {
+            return reward.itemReference.itemName;
+        }
+
+        CurrencyType? rewardCurrencyType = GetGachaRewardCurrencyType(reward);
+        if (rewardCurrencyType.HasValue && CurrencyUiUtility.GetSprite(rewardCurrencyType.Value) != null)
+        {
+            return CurrencyUiUtility.FormatAmount(reward.amount);
+        }
+
+        return string.IsNullOrWhiteSpace(reward.idName) ? L("menu.gacha.reward_unknown", "Unknown reward") : reward.idName;
+    }
+
+    private Sprite GetGachaRewardIcon(GachaRewardEntry reward)
+    {
+        if (reward == null)
+        {
+            return null;
+        }
+
+        CurrencyType? currencyType = GetGachaRewardCurrencyType(reward);
+        if (currencyType.HasValue)
+        {
+            Sprite currencySprite = CurrencyUiUtility.GetSprite(currencyType.Value);
+            if (currencySprite != null)
+            {
+                return currencySprite;
+            }
+        }
+
+        if (reward.itemReference != null)
+        {
+            return reward.itemReference.icon;
+        }
+
+        return null;
+    }
+
+    private CurrencyType? GetGachaRewardCurrencyType(GachaRewardEntry reward)
+    {
+        if (reward == null)
+        {
+            return null;
+        }
+
+        switch (reward.type)
+        {
+            case RewardType.Gold:
+                return CurrencyType.Gold;
+            case RewardType.Orb:
+                return CurrencyType.Orb;
+            case RewardType.Currency:
+                if (reward.itemReference is CurrencyItem currencyItem)
+                {
+                    return currencyItem.currencyType;
+                }
+
+                return null;
+            default:
+                return null;
         }
     }
 
@@ -1037,7 +2314,7 @@ public class MainMenu : MonoBehaviour
     {
         GameObject buttonRoot = CreateUIObject(key, parent);
         LayoutElement layout = buttonRoot.AddComponent<LayoutElement>();
-        layout.preferredHeight = primary ? 98f : 86f;
+        layout.preferredHeight = primary ? 118f : 98f;
 
         Image image = buttonRoot.AddComponent<Image>();
         image.color = primary
@@ -1064,21 +2341,27 @@ public class MainMenu : MonoBehaviour
 
         GameObject textWrap = CreateUIObject("TextWrap", buttonRoot.transform);
         RectTransform textWrapRect = textWrap.GetComponent<RectTransform>();
-        StretchToParent(textWrapRect, 20f, 16f);
+        StretchToParent(textWrapRect, 20f, 14f);
 
-        TextMeshProUGUI titleText = CreateTmpText("Title", textWrap.transform, title, primary ? 31f : 25f, FontStyles.Bold, TextAlignmentOptions.TopLeft, primary ? new Color(0.09f, 0.10f, 0.10f, 1f) : new Color(0.97f, 0.95f, 0.90f, 1f));
+        TextMeshProUGUI titleText = CreateTmpText("Title", textWrap.transform, title, primary ? 29f : 23f, FontStyles.Bold, TextAlignmentOptions.TopLeft, primary ? new Color(0.09f, 0.10f, 0.10f, 1f) : new Color(0.97f, 0.95f, 0.90f, 1f));
         RectTransform titleRect = titleText.rectTransform;
-        titleRect.anchorMin = new Vector2(0f, 0.4f);
+        titleText.enableWordWrapping = false;
+        titleText.overflowMode = TextOverflowModes.Ellipsis;
+        titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
-        titleRect.offsetMin = Vector2.zero;
-        titleRect.offsetMax = Vector2.zero;
+        titleRect.pivot = new Vector2(0f, 1f);
+        titleRect.sizeDelta = new Vector2(0f, primary ? 36f : 30f);
+        titleRect.anchoredPosition = new Vector2(0f, -2f);
 
-        TextMeshProUGUI subtitleText = CreateTmpText("Subtitle", textWrap.transform, subtitle, 15f, FontStyles.Normal, TextAlignmentOptions.BottomLeft, primary ? new Color(0.16f, 0.16f, 0.16f, 0.88f) : new Color(0.75f, 0.80f, 0.84f, 1f));
+        TextMeshProUGUI subtitleText = CreateTmpText("Subtitle", textWrap.transform, subtitle, 13f, FontStyles.Normal, TextAlignmentOptions.TopLeft, primary ? new Color(0.16f, 0.16f, 0.16f, 0.88f) : new Color(0.75f, 0.80f, 0.84f, 1f));
         RectTransform subtitleRect = subtitleText.rectTransform;
+        subtitleText.enableWordWrapping = true;
+        subtitleText.overflowMode = TextOverflowModes.Ellipsis;
         subtitleRect.anchorMin = new Vector2(0f, 0f);
-        subtitleRect.anchorMax = new Vector2(1f, 0.55f);
-        subtitleRect.offsetMin = Vector2.zero;
-        subtitleRect.offsetMax = Vector2.zero;
+        subtitleRect.anchorMax = new Vector2(1f, 1f);
+        subtitleRect.pivot = new Vector2(0f, 0f);
+        subtitleRect.offsetMin = new Vector2(0f, 8f);
+        subtitleRect.offsetMax = new Vector2(0f, primary ? -40f : -34f);
 
         landingButtons[key] = button;
     }
@@ -1535,6 +2818,7 @@ public class MainMenu : MonoBehaviour
 
         SetButtonLabel(characterSelectCloseButton, L("common.back", "Back"));
         RefreshSettingsPanel();
+        RefreshGachaPanel();
         RefreshAuthOnboardingPanel();
 
         if (achievementPanelStyled)
@@ -1652,6 +2936,138 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    private void SetCurrencyButtonLabel(Button button, string prefix, int amount, CurrencyType type)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        SetButtonLabel(button, $"{prefix} - {CurrencyUiUtility.FormatAmount(amount)}");
+        ConfigureButtonCurrencyIcon(button, CurrencyUiUtility.GetSprite(type));
+    }
+
+    private void SetPullButtonUnavailableState(Button button, bool isAvailable, int amount, CurrencyType type, string prefix)
+    {
+        if (isAvailable)
+        {
+            SetCurrencyButtonLabel(button, prefix, amount, type);
+            return;
+        }
+
+        SetButtonLabel(button, $"{prefix} - {L("menu.gacha.unavailable", "Unavailable")}");
+        ConfigureButtonCurrencyIcon(button, null);
+    }
+
+    private void ConfigureButtonCurrencyIcon(Button button, Sprite sprite)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        Text label = button.GetComponentInChildren<Text>(true);
+        if (label != null)
+        {
+            RectTransform labelRect = label.rectTransform;
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+
+            if (sprite != null)
+            {
+                labelRect.offsetMin = new Vector2(14f, 12f);
+                labelRect.offsetMax = new Vector2(-42f, -12f);
+                label.alignment = TextAnchor.MiddleLeft;
+            }
+            else
+            {
+                labelRect.offsetMin = new Vector2(12f, 12f);
+                labelRect.offsetMax = new Vector2(-12f, -12f);
+                label.alignment = TextAnchor.MiddleCenter;
+            }
+        }
+
+        Image iconImage = GetOrCreateButtonCurrencyIcon(button);
+        CurrencyUiUtility.ApplySprite(iconImage, sprite);
+    }
+
+    private Image GetOrCreateButtonCurrencyIcon(Button button)
+    {
+        Transform existing = button.transform.Find("CurrencyIcon");
+        if (existing != null && existing.TryGetComponent(out Image existingImage))
+        {
+            return existingImage;
+        }
+
+        Image iconImage = CreateUIObject("CurrencyIcon", button.transform).AddComponent<Image>();
+        RectTransform iconRect = iconImage.rectTransform;
+        iconRect.anchorMin = new Vector2(1f, 0.5f);
+        iconRect.anchorMax = new Vector2(1f, 0.5f);
+        iconRect.pivot = new Vector2(1f, 0.5f);
+        iconRect.sizeDelta = new Vector2(18f, 18f);
+        iconRect.anchoredPosition = new Vector2(-14f, 0f);
+        iconImage.preserveAspect = true;
+        return iconImage;
+    }
+
+    private GameObject CreateCurrencyBadge(string objectName, Transform parent, float fontSize, Color textColor, out Image iconImage, out TextMeshProUGUI amountText)
+    {
+        GameObject badge = CreateUIObject(objectName, parent);
+        HorizontalLayoutGroup badgeLayout = badge.AddComponent<HorizontalLayoutGroup>();
+        badgeLayout.spacing = 8f;
+        badgeLayout.childAlignment = TextAnchor.MiddleLeft;
+        badgeLayout.childControlHeight = true;
+        badgeLayout.childControlWidth = false;
+        badgeLayout.childForceExpandHeight = false;
+        badgeLayout.childForceExpandWidth = false;
+
+        ContentSizeFitter badgeFitter = badge.AddComponent<ContentSizeFitter>();
+        badgeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        badgeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        iconImage = CreateUIObject("Icon", badge.transform).AddComponent<Image>();
+        LayoutElement iconLayout = iconImage.gameObject.AddComponent<LayoutElement>();
+        iconLayout.preferredWidth = 24f;
+        iconLayout.preferredHeight = 24f;
+        iconLayout.minWidth = 24f;
+        iconLayout.minHeight = 24f;
+
+        amountText = CreateTmpText("Amount", badge.transform, string.Empty, fontSize, FontStyles.Bold, TextAlignmentOptions.MidlineLeft, textColor);
+        amountText.enableWordWrapping = false;
+        amountText.overflowMode = TextOverflowModes.Overflow;
+        LayoutElement amountLayout = amountText.gameObject.AddComponent<LayoutElement>();
+        amountLayout.minWidth = 36f;
+
+        return badge;
+    }
+
+    private void RefreshCurrencyBadge(Image iconImage, TextMeshProUGUI amountText, CurrencyType type, int amount)
+    {
+        CurrencyUiUtility.ApplyCurrencySprite(iconImage, type);
+
+        if (amountText != null)
+        {
+            amountText.text = CurrencyUiUtility.FormatAmount(amount);
+        }
+    }
+
+    private void SetCurrencyBadgeWidth(GameObject badge, float preferredWidth)
+    {
+        if (badge == null)
+        {
+            return;
+        }
+
+        LayoutElement layout = badge.GetComponent<LayoutElement>();
+        if (layout == null)
+        {
+            layout = badge.AddComponent<LayoutElement>();
+        }
+
+        layout.preferredWidth = preferredWidth;
+        layout.minWidth = preferredWidth;
+    }
+
     private GameObject CreateUIObject(string objectName, Transform parent)
     {
         GameObject gameObject = new GameObject(objectName, typeof(RectTransform));
@@ -1701,11 +3117,55 @@ public class MainMenu : MonoBehaviour
         rectTransform.offsetMax = new Vector2(-horizontalPadding, -verticalPadding);
     }
 
+    private void ApplyGachaButtonStyle(Button button, Color fillColor, Color labelColor, int fontSize, FontStyle fontStyle)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        Image image = button.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = fillColor;
+        }
+
+        ColorBlock colors = button.colors;
+        colors.normalColor = fillColor;
+        colors.highlightedColor = Color.Lerp(fillColor, Color.white, 0.12f);
+        colors.pressedColor = Color.Lerp(fillColor, Color.black, 0.18f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.disabledColor = new Color(0.28f, 0.30f, 0.34f, 0.9f);
+        button.colors = colors;
+
+        Outline outline = button.GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = button.gameObject.AddComponent<Outline>();
+        }
+        outline.effectColor = new Color(0f, 0f, 0f, 0.22f);
+        outline.effectDistance = new Vector2(1f, -1f);
+
+        Text label = button.GetComponentInChildren<Text>(true);
+        if (label != null)
+        {
+            label.font = fallbackFont;
+            label.fontSize = fontSize;
+            label.fontStyle = fontStyle;
+            label.alignment = TextAnchor.MiddleCenter;
+            label.color = labelColor;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = Mathf.Max(10, fontSize - 6);
+            label.resizeTextMaxSize = fontSize;
+        }
+    }
+
     private void CreateDecorativeGlow(string objectName, Transform parent, Color color, Vector2 size, Vector2 anchoredPosition, Vector2 anchor)
     {
         GameObject glow = CreateUIObject(objectName, parent);
         Image image = glow.AddComponent<Image>();
         image.color = color;
+        image.raycastTarget = false;
         RectTransform rect = glow.GetComponent<RectTransform>();
         rect.anchorMin = anchor;
         rect.anchorMax = anchor;

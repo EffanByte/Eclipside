@@ -9,6 +9,8 @@ public class WaveManager : MonoBehaviour
     [Header("Spawn Configuration")]
     [SerializeField] private float spawnDistance = 12f; // unused value right now
     public float spawnStagger = 0.5f;
+    [SerializeField] private int baseEnemiesPerWave = 8;
+    [SerializeField] private float extraEnemyEveryDifficulty = 0.35f;
 
     // --- State ---
     public int CurrentWave { get; private set; } = 1;
@@ -16,6 +18,7 @@ public class WaveManager : MonoBehaviour
     
     private int enemiesAlive = 0;
     private bool tookDamageThisWave = false;
+    private bool bossEncounterActive = false;
 
     public event Action<int> OnWaveFinished;
 
@@ -42,7 +45,10 @@ public class WaveManager : MonoBehaviour
         
         enemiesAlive = 0;     
         tookDamageThisWave = false;
-        bossPrefab = currentBiome.bossPool[Random.Range(0, currentBiome.bossPool.Count)];
+        bossEncounterActive = false;
+        bossPrefab = currentBiome.bossPool != null && currentBiome.bossPool.Count > 0
+            ? currentBiome.bossPool[Random.Range(0, currentBiome.bossPool.Count)]
+            : null;
     }
 
     // ---------------------------------------------------------
@@ -50,20 +56,15 @@ public class WaveManager : MonoBehaviour
     // ---------------------------------------------------------
     public void TriggerWave(float difficultyMultiplier)
     {
+        if (bossEncounterActive)
+        {
+            return;
+        }
+
         // Tell Director we are locking the shop
         GameDirector.Instance.NotifyWaveStarted();
 
-        int count = 8;
-        if (CurrentWave == MaxWaves)
-        {
-            Debug.Log("<color=magenta>BOSS WAVE TRIGGERED!</color>");
-            // Boss Wave Logic
-            if (bossPrefab != null)
-            {
-                SpawnBoss(difficultyMultiplier); // This will spawn the boss because of the CurrentWave == MaxWaveCount check in SpawnBiomeEnemy
-                return; // Skip spawning regular enemies this wave
-            }
-        }
+        int count = CalculateWaveEnemyCount(difficultyMultiplier);
         StartCoroutine(SpawnRoutine(count, difficultyMultiplier));
     }
 
@@ -118,6 +119,27 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    public bool HasBossAvailable()
+    {
+        return bossPrefab != null;
+    }
+
+    public void StartBossEncounter(float difficulty)
+    {
+        if (bossEncounterActive || bossPrefab == null)
+        {
+            return;
+        }
+
+        StopAllCoroutines();
+        enemiesAlive = 0;
+        tookDamageThisWave = false;
+        bossEncounterActive = true;
+
+        GameDirector.Instance.NotifyWaveStarted();
+        SpawnBoss(difficulty);
+    }
+
     public void SpawnEnemyAroundPlayer(float difficulty, float distance = 8f, List<Vector2> spawnPoints = null)
     {
         if (commonEnemyPool == null || commonEnemyPool.Count == 0) return;
@@ -158,10 +180,17 @@ public class WaveManager : MonoBehaviour
             Debug.Log($"Enemy Killed! {enemiesAlive} remaining.");  
             if (StatisticsManager.Instance != null)
                 StatisticsManager.Instance.IncrementStat("KILLS_REGULAR");
-                
+
             // WAVE CLEAR LOGIC
             if (enemiesAlive <= 0)
             {
+                if (bossEncounterActive)
+                {
+                    bossEncounterActive = false;
+                    tookDamageThisWave = false;
+                    return;
+                }
+
                 // Give Perfect Wave Achievement
                 if (!tookDamageThisWave && StatisticsManager.Instance != null)
                     StatisticsManager.Instance.IncrementStat("PERFECT_WAVES");
@@ -177,5 +206,20 @@ public class WaveManager : MonoBehaviour
     public void TookDamageThisWave()
     {
         tookDamageThisWave = true;
+    }
+
+    public void ResetCombatTracking()
+    {
+        StopAllCoroutines();
+        enemiesAlive = 0;
+        tookDamageThisWave = false;
+        bossEncounterActive = false;
+    }
+
+    private int CalculateWaveEnemyCount(float difficultyMultiplier)
+    {
+        float difficultyOverBase = Mathf.Max(0f, difficultyMultiplier - 1f);
+        int bonusCount = Mathf.FloorToInt(difficultyOverBase / Mathf.Max(0.01f, extraEnemyEveryDifficulty));
+        return Mathf.Max(1, baseEnemiesPerWave + bonusCount);
     }
 }

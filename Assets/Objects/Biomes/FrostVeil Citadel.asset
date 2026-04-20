@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: FrostVeil Citadel
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Frostveil Citadel
+  tileTint: {r: 0.019144746, g: 0.41857165, b: 0.55345905, a: 1}
+  sceneName: 
   wavesToClear: 10
   commonEnemies: []
+  bossPool: []

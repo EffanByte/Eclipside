@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Sky Realm
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Sky Realm
+  tileTint: {r: 0.82119703, g: 1, b: 0.015723169, a: 1}
+  sceneName: 
   wavesToClear: 10
   commonEnemies: []
+  bossPool: []

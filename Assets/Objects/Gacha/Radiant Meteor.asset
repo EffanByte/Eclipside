@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5651567725d568b4d88597113ad2681a, type: 3}
   m_Name: Radiant Meteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteoriteBanner
-  bannerName: Shiny Meteorite
+  bannerName: Radiant Meteorite
   backendBannerId: radiant_meteorite
   currencyType: 3
   singlePullCost: 900
-  tenPullCost: 0
+  tenPullCost: 9000
   probCommon: 50
   probRare: 35
   probEpic: 13

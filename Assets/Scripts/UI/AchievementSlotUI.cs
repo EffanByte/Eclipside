@@ -25,6 +25,19 @@ public class AchievementSlotUI : MonoBehaviour
         {
             // Use reward icon, or add a specific icon field to AchievementData if preferred
             iconImage.sprite = data.rewardItem.icon; 
+            iconImage.enabled = true;
+        }
+        else if (data.rewardType == RewardType.Gold)
+        {
+            CurrencyUiUtility.ApplyCurrencySprite(iconImage, CurrencyType.Gold);
+        }
+        else if (data.rewardType == RewardType.Orb)
+        {
+            CurrencyUiUtility.ApplyCurrencySprite(iconImage, CurrencyType.Orb);
+        }
+        else if (iconImage != null)
+        {
+            iconImage.enabled = false;
         }
         
         // 2. Calculate Progress

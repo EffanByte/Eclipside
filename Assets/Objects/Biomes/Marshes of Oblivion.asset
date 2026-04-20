@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Marshes of Oblivion
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Marshes of Oblivion
+  tileTint: {r: 1, g: 0.8676881, b: 0.16666657, a: 1}
+  sceneName: 
   wavesToClear: 10
   commonEnemies: []
+  bossPool: []

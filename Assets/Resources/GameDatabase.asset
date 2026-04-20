@@ -65,3 +65,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1029777c975a4be4b9fcf08c836f3af8, type: 2}
   - {fileID: 11400000, guid: 3a0cc425d539ef44781850a6a31fa0b4, type: 2}
   - {fileID: 11400000, guid: 9d7f2c1b8a6343d7940f3bc59b6e7a21, type: 2}
+  allGachaBanners:
+  - {fileID: 11400000, guid: 3684fb58062011a46bb308f119e7a3ec, type: 2}
+  - {fileID: 11400000, guid: b008e5e4d038456439339e9f4f0ff0c5, type: 2}
+  - {fileID: 11400000, guid: e3e71e69988c2ee47a250b21c07fd658, type: 2}
+  - {fileID: 11400000, guid: 201b7faabc7fcbc4480c9af4ee9e6c46, type: 2}
+  - {fileID: 11400000, guid: 2ba7f16bfbc93c442842adbb5a738cce, type: 2}
+  - {fileID: 11400000, guid: cedac45532bad384984c82bc8ca726b4, type: 2}
+  - {fileID: 11400000, guid: 516d600f1a48e9b43819e074d2ce367d, type: 2}

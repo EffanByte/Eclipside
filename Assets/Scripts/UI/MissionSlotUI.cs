@@ -44,7 +44,8 @@ public class MissionSlotUI : MonoBehaviour
         float pct = entry.target_value > 0 ? (float)entry.current_progress / entry.target_value : 0f;
         progressBar.value = pct;
 
-        rewardAmountText.text = staticData.rewardAmount.ToString();
+        rewardAmountText.text = CurrencyUiUtility.FormatAmount(staticData.rewardAmount);
+        ApplyRewardIcon(staticData);
 
         bool isComplete = entry.current_progress >= entry.target_value;
         bool isClaimed = entry.is_claimed;
@@ -65,6 +66,27 @@ public class MissionSlotUI : MonoBehaviour
             claimButton.gameObject.SetActive(true);
             claimButton.interactable = false;
             completedCheckmark.SetActive(false);
+        }
+    }
+
+    private void ApplyRewardIcon(MissionData staticData)
+    {
+        if (rewardIcon == null || staticData == null)
+        {
+            return;
+        }
+
+        switch (staticData.rewardType)
+        {
+            case MissionRewardType.Gold:
+                CurrencyUiUtility.ApplyCurrencySprite(rewardIcon, CurrencyType.Gold);
+                break;
+            case MissionRewardType.Orbs:
+                CurrencyUiUtility.ApplyCurrencySprite(rewardIcon, CurrencyType.Orb);
+                break;
+            default:
+                rewardIcon.gameObject.SetActive(false);
+                break;
         }
     }
 

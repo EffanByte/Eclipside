@@ -26,6 +26,7 @@ public class MeteoriteBanner : ScriptableObject
 {
     public string bannerName; // e.g., "Dusty Meteorite"
     public string backendBannerId;
+    public Sprite displaySprite;
     
     [Header("Cost")]
     public CurrencyType currencyType; // Gold or Orbs

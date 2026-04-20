@@ -6,12 +6,15 @@ using TMPro;
 public class GachaManager : MonoBehaviour
 {
     public static GachaManager Instance { get; private set; }
+    public static event System.Action<string> PullSummaryUpdated;
 
     [Header("Configuration")]
     [SerializeField] private int pityThreshold = 50;
     [SerializeField] private int epicSoftPity = 10;
     [SerializeField] private TextMeshPro debugOutput;
     [SerializeField] private bool useBackend = true;
+
+    public string LastPullSummary { get; private set; }
 
     public struct PullResult
     {
@@ -22,6 +25,11 @@ public class GachaManager : MonoBehaviour
 
     private void Awake()
     {
+        if (!BackendRuntimeSettings.IsEnabled)
+        {
+            useBackend = false;
+        }
+
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
@@ -175,10 +183,14 @@ public class GachaManager : MonoBehaviour
 
     private void SetDebugOutput(string text)
     {
+        LastPullSummary = text ?? string.Empty;
+
         if (debugOutput != null)
         {
-            debugOutput.text = text;
+            debugOutput.text = LastPullSummary;
         }
+
+        PullSummaryUpdated?.Invoke(LastPullSummary);
     }
 
     private void PerformPullLocal(MeteoriteBanner banner, bool isTenPull)

@@ -46,6 +46,11 @@ public class MissionManager : MonoBehaviour
 
     private void Start()
     {
+        if (!BackendRuntimeSettings.IsEnabled)
+        {
+            useBackend = false;
+        }
+
         if (StatisticsManager.Instance != null)
         {
             StatisticsManager.Instance.OnStatChanged += OnStatUpdated;

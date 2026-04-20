@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Crimson Fields
   m_EditorClassIdentifier: Assembly-CSharp::BiomeData
   biomeName: Crimson Fields
+  tileTint: {r: 1, g: 0.05345905, b: 0.05345905, a: 1}
+  sceneName: 
   wavesToClear: 10
   commonEnemies: []
+  bossPool: []
