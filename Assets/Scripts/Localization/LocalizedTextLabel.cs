@@ -44,11 +44,13 @@ public class LocalizedTextLabel : MonoBehaviour
 
         if (tmpText != null)
         {
+            LocalizedFontResolver.ApplyTo(tmpText);
             tmpText.text = text;
         }
 
         if (legacyText != null)
         {
+            LocalizedFontResolver.ApplyTo(legacyText);
             legacyText.text = text;
         }
     }

@@ -30,8 +30,8 @@ MonoBehaviour:
   element: 3
   style: 1
   effects:
-  - {fileID: 6910656896257204978}
---- !u!114 &6910656896257204978
+  - {fileID: 4017974268879271150}
+--- !u!114 &4017974268879271150
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

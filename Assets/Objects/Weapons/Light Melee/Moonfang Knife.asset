@@ -1,5 +1,23 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4313477607577335508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ac557601a84e24a88b4cb379906e79, type: 3}
+  m_Name: Conditional
+  m_EditorClassIdentifier: Assembly-CSharp::ConditionalDamageEffect
+  condition: 2
+  damageMultiplier: 0
+  critChanceBonus: 0
+  speedMultiplier: 0.1
+  knockbackMultiplier: 0
+  speedBuffDuration: 0.9
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,22 +48,4 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: 939066102905116313}
---- !u!114 &939066102905116313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93ac557601a84e24a88b4cb379906e79, type: 3}
-  m_Name: Conditional
-  m_EditorClassIdentifier: Assembly-CSharp::ConditionalDamageEffect
-  condition: 2
-  damageMultiplier: 0
-  critChanceBonus: 0
-  speedMultiplier: 0.1
-  knockbackMultiplier: 0
-  speedBuffDuration: 0.9
+  - {fileID: -4313477607577335508}

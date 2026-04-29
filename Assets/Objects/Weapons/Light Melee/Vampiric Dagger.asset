@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1220383124805944603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed6fcd1743833a40a0492f38918f87e, type: 3}
-  m_Name: HealEveryHits
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHealEveryHitsEffect
-  hitThreshold: 15
-  healAmount: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,4 +30,18 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: -1220383124805944603}
+  - {fileID: 918959852527210853}
+--- !u!114 &918959852527210853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed6fcd1743833a40a0492f38918f87e, type: 3}
+  m_Name: HealEveryHits
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponHealEveryHitsEffect
+  hitThreshold: 15
+  healAmount: 1

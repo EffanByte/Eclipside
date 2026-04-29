@@ -135,6 +135,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         inventory = GetComponent<InventoryManager>();
         controls = new PlayerControls();
+        PlayerControlBindingOverrides.ApplySavedOverrides(controls);
         healthComp = GetComponent<PlayerHealth>();
         PlayerHealth.OnPlayerDeath += PlayerKilled;
         characterRuntime = GetComponent<PlayerCharacterRuntime>();

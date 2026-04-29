@@ -267,6 +267,7 @@ public class ControlSettings
     public bool auto_aim_enabled;
     public float joystick_size;
     public Vector2Serializable joystick_position;
+    public string binding_overrides_json;
 }
 
 [Serializable]
@@ -300,6 +301,7 @@ public struct Vector2Serializable
 public static class SaveManager
 {
     private static string BasePath => Application.persistentDataPath;
+    private const int DevelopmentCurrencyFloor = 999000;
 
     // --- NEW: THE CACHE ---
     private static SaveFile_Profile _cachedProfile;
@@ -315,6 +317,8 @@ public static class SaveManager
                 // Load from disk if we haven't yet
                 _cachedProfile = Load<SaveFile_Profile>("Save_Profile");
             }
+
+            ApplyDevelopmentTestWallet(_cachedProfile);
             return _cachedProfile;
         }
     }
@@ -324,6 +328,7 @@ public static class SaveManager
     {
         if (_cachedProfile != null)
         {
+            ApplyDevelopmentTestWallet(_cachedProfile);
             Save("Save_Profile", _cachedProfile);
         }
     }
@@ -353,6 +358,7 @@ public static class SaveManager
     public static void ReplaceProfile(SaveFile_Profile profile)
     {
         _cachedProfile = profile ?? new SaveFile_Profile();
+        ApplyDevelopmentTestWallet(_cachedProfile);
         SaveProfile();
     }
 
@@ -407,5 +413,34 @@ public static class SaveManager
     {
         _cachedProfile = null;
         _cachedSettings = null;
+    }
+
+    [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
+    private static void ApplyDevelopmentTestWallet(SaveFile_Profile profile)
+    {
+        if (profile == null || profile.user_profile == null)
+        {
+            return;
+        }
+
+        bool changed = false;
+
+        if (profile.user_profile.gold < DevelopmentCurrencyFloor)
+        {
+            profile.user_profile.gold = DevelopmentCurrencyFloor;
+            changed = true;
+        }
+
+        if (profile.user_profile.orbs < DevelopmentCurrencyFloor)
+        {
+            profile.user_profile.orbs = DevelopmentCurrencyFloor;
+            changed = true;
+        }
+
+        if (changed)
+        {
+            Save("Save_Profile", profile);
+            Debug.Log($"[SaveManager] Development wallet topped up to {DevelopmentCurrencyFloor} Gold and Orbs.");
+        }
     }
 }

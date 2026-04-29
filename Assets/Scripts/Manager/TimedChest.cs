@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(BoxCollider2D))] // Ensure it has a trigger
@@ -15,9 +14,7 @@ public class TimedChest : MonoBehaviour, IInteractable
     private int keyCount = 1;
     private static int globalKeyCount;
 
-
     [Header("Settings")]
-    [SerializeField] private float disappearTime = 20f;
     [SerializeField] private Sprite openVisual; // Sprite/Object to show when opened
     [SerializeField] private Sprite closedVisual;
 
@@ -31,8 +28,6 @@ public class TimedChest : MonoBehaviour, IInteractable
     
     private void Start()
     {
-        // Start the countdown immediately upon spawning
-        StartCoroutine(DespawnRoutine());
         if (keyCount == 0)
         {
             keyCount = globalKeyCount;
@@ -60,20 +55,12 @@ public class TimedChest : MonoBehaviour, IInteractable
         
         float roll = Random.value;
         float playerLuck = PlayerController.Instance != null ? PlayerController.Instance.GetLuckValue() : 0f;
-        ItemData reward = null;
-
-        if (roll < 0.6f && weaponPool.Count > 0)
-            reward = LuckUtility.PickWeightedByRarity(weaponPool, playerLuck, weapon => weapon.rarity);
-        else if (roll < 0.9f && consumablePool.Count > 0)
-            reward = LuckUtility.PickWeightedByRarity(consumablePool, playerLuck, item => item.rarity);
-        else if (keyItem != null)
-            reward = keyItem;
+        ItemData reward = ResolveReward(roll, playerLuck);
 
         Debug.Log($"[Luck] Chest opened at {playerLuck:0.##} luck. Reward: {reward?.itemName ?? "None"}");
-        // 2. Spawn Visual Loot
+
         if (reward != null && lootPedestalPrefab != null)
         {
-            // Spawn slightly above chest
             Vector3 spawnPos = transform.position + Vector3.up * 0.2f;
             
             GameObject lootObj = Instantiate(lootPedestalPrefab, spawnPos, Quaternion.identity);
@@ -81,23 +68,89 @@ public class TimedChest : MonoBehaviour, IInteractable
             if (pedestal != null)
             {
                 pedestal.Setup(reward);
-                StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
             }
         }
 
         gameObject.GetComponent<SpriteRenderer>().sprite = openVisual;
         StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
-        StopAllCoroutines(); // Stop disappearance timer
     }
-    private IEnumerator DespawnRoutine()
-    {
-        // Optional: Flash sprite when time is running low (at 5 seconds left)
-        yield return new WaitForSeconds(disappearTime);
 
-        if (!isOpened)
+    private ItemData ResolveReward(float roll, float playerLuck)
+    {
+        List<WeaponData> eligibleWeapons = GetEligibleWeapons();
+        List<ItemData> eligibleItems = GetEligibleItems();
+
+        if (roll < 0.6f && eligibleWeapons.Count > 0)
         {
-            Destroy(gameObject);
+            return LuckUtility.PickWeightedByRarity(eligibleWeapons, playerLuck, weapon => weapon.rarity);
         }
+
+        if (roll < 0.9f && eligibleItems.Count > 0)
+        {
+            return LuckUtility.PickWeightedByRarity(eligibleItems, playerLuck, item => item.rarity);
+        }
+
+        if (IsRewardSupported(keyItem))
+        {
+            return keyItem;
+        }
+
+        if (eligibleItems.Count > 0)
+        {
+            return LuckUtility.PickWeightedByRarity(eligibleItems, playerLuck, item => item.rarity);
+        }
+
+        if (eligibleWeapons.Count > 0)
+        {
+            return LuckUtility.PickWeightedByRarity(eligibleWeapons, playerLuck, weapon => weapon.rarity);
+        }
+
+        return null;
+    }
+
+    private List<WeaponData> GetEligibleWeapons()
+    {
+        List<WeaponData> eligibleWeapons = new List<WeaponData>();
+        if (weaponPool == null)
+        {
+            return eligibleWeapons;
+        }
+
+        for (int i = 0; i < weaponPool.Count; i++)
+        {
+            WeaponData weapon = weaponPool[i];
+            if (IsRewardSupported(weapon))
+            {
+                eligibleWeapons.Add(weapon);
+            }
+        }
+
+        return eligibleWeapons;
+    }
+
+    private List<ItemData> GetEligibleItems()
+    {
+        List<ItemData> eligibleItems = new List<ItemData>();
+        if (consumablePool == null)
+        {
+            return eligibleItems;
+        }
+
+        for (int i = 0; i < consumablePool.Count; i++)
+        {
+            ItemData item = consumablePool[i];
+            if (IsRewardSupported(item))
+            {
+                eligibleItems.Add(item);
+            }
+        }
+
+        return eligibleItems;
+    }
+
+    private bool IsRewardSupported(ItemData item)
+    {
+        return item is WeaponData || item is ConsumableItem || item is CurrencyItem;
     }
 
     private void SetKeyCount(int count)

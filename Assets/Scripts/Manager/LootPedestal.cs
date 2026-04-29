@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 
 [RequireComponent(typeof(BoxCollider2D))] // Trigger for interaction
 public class LootPedestal : MonoBehaviour, IInteractable
@@ -12,8 +11,22 @@ public class LootPedestal : MonoBehaviour, IInteractable
     public void Setup(ItemData item)
     {
         content = item;
-        
-        spriteRenderer.sprite = item.icon;
+        EnsureSpriteRenderer();
+
+        if (spriteRenderer == null)
+        {
+            Debug.LogWarning($"LootPedestal on {name} is missing a SpriteRenderer.");
+            return;
+        }
+
+        if (item != null && item.icon != null)
+        {
+            spriteRenderer.sprite = item.icon;
+        }
+        else
+        {
+            Debug.LogWarning($"LootPedestal received reward '{item?.itemName ?? "Unknown"}' without an icon. Keeping fallback sprite.");
+        }
 
     }
 
@@ -33,14 +46,18 @@ public class LootPedestal : MonoBehaviour, IInteractable
                 collected = true;
             }
         }
-        // not using currency in chests
-        // else if (content is CurrencyItem c) 
-        // {
-        //     player.AddCurrency(c.currencyType, c.amount);
-        // }
+        else if (content is CurrencyItem c)
+        {
+            collected = AwardCurrency(player, c);
+            if (collected)
+            {
+                ItemAcquisitionToast.Show(c);
+            }
+        }
         else if (content is ConsumableItem con)
         {
-            collected = PlayerController.Instance.GetComponent<InventoryManager>().AddItem(con);
+            InventoryManager inventory = player != null ? player.GetComponent<InventoryManager>() : null;
+            collected = inventory != null && inventory.AddItem(con);
         }
 
         if (!collected)
@@ -56,5 +73,38 @@ public class LootPedestal : MonoBehaviour, IInteractable
     public string GetInteractionPrompt()
     {
         return content != null ? $"Pick up {content.GetDisplayName()}" : "";
+    }
+
+    private void EnsureSpriteRenderer()
+    {
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        }
+    }
+
+    private static bool AwardCurrency(PlayerController player, CurrencyItem currency)
+    {
+        if (player == null || currency == null)
+        {
+            return false;
+        }
+
+        switch (currency.currencyType)
+        {
+            case CurrencyType.Rupee:
+            case CurrencyType.Key:
+                player.AddCurrency(currency.currencyType, currency.amount);
+                return true;
+
+            case CurrencyType.Gold:
+            case CurrencyType.Orb:
+                CurrencyManager.AddCurrency(currency.currencyType, currency.amount);
+                return true;
+
+            default:
+                Debug.LogWarning($"LootPedestal does not support awarding currency type {currency.currencyType}.");
+                return false;
+        }
     }
 }

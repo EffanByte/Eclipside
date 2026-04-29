@@ -285,6 +285,336 @@ MonoBehaviour:
     m_Localized: Desafiar al Jefe
     m_Metadata:
       m_Items: []
+  - m_Id: 7912345706995712
+    m_Localized: Subir de Nivel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076096
+    m_Localized: El eclipse no espera a nadie. Elige una mejora antes de que llegue
+      la siguiente oleada.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076097
+    m_Localized: Elige Una Bendicion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076098
+    m_Localized: Dano Cuerpo a Cuerpo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076099
+    m_Localized: +10% al dano de tus armas cuerpo a cuerpo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076100
+    m_Localized: Dano Magico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076101
+    m_Localized: +10% al dano de tus armas magicas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076102
+    m_Localized: Dano Pesado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076103
+    m_Localized: +10% al dano de tus armas pesadas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076104
+    m_Localized: Vida Maxima
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076105
+    m_Localized: +1 corazon maximo y una curacion equivalente.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076106
+    m_Localized: Velocidad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076107
+    m_Localized: +5% de velocidad de movimiento durante el resto de la partida.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076108
+    m_Localized: Velocidad de Ataque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076109
+    m_Localized: +5% de velocidad de ataque para todas tus armas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076110
+    m_Localized: 'Modo de pantalla: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076111
+    m_Localized: Ventana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076112
+    m_Localized: Pantalla completa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076113
+    m_Localized: No hay logros configurados.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076114
+    m_Localized: Completado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076115
+    m_Localized: Misiones Diarias
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076116
+    m_Localized: Misiones Semanales
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076117
+    m_Localized: No hay misiones disponibles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076118
+    m_Localized: Reclamada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076119
+    m_Localized: Lista para reclamar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076120
+    m_Localized: En progreso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076121
+    m_Localized: Elige modificadores antes de empezar una partida.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076122
+    m_Localized: Activo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076123
+    m_Localized: Inactivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076124
+    m_Localized: Haz clic para cambiar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076125
+    m_Localized: Cristal Fragil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076126
+    m_Localized: La Purga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076127
+    m_Localized: Codicia Infinita
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076128
+    m_Localized: El Gladiador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076129
+    m_Localized: Sangre por Poder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076130
+    m_Localized: Fuego Cruzado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076131
+    m_Localized: Confusion Total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076132
+    m_Localized: Lluvia de Fuego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076133
+    m_Localized: El Desafortunado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076134
+    m_Localized: Ultimo Aliento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076135
+    m_Localized: Explora meteoritos, revisa las recompensas y tira desde el menu
+      principal.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076136
+    m_Localized: Recompensas del Meteorito
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076137
+    m_Localized: Recompensas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076138
+    m_Localized: No hay meteoritos configurados.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076139
+    m_Localized: Agrega meteoritos a la base de datos del juego para habilitar tiradas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076140
+    m_Localized: Elige un meteorito, revisa sus recompensas y tira cuando estes listo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076141
+    m_Localized: 1 Tirada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076142
+    m_Localized: 10 Tiradas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076143
+    m_Localized: No disponible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076144
+    m_Localized: No hay recompensas configuradas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076145
+    m_Localized: Personaje
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076146
+    m_Localized: Arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076147
+    m_Localized: Consumible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076148
+    m_Localized: Moneda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076149
+    m_Localized: Recompensa desconocida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076150
+    m_Localized: Comun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076151
+    m_Localized: Raro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076152
+    m_Localized: Epico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076153
+    m_Localized: Mitico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076154
+    m_Localized: Base
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076155
+    m_Localized: Epico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076156
+    m_Localized: Mitico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076157
+    m_Localized: Oro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076158
+    m_Localized: Orbes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076159
+    m_Localized: Boletos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076160
+    m_Localized: Llaves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076161
+    m_Localized: XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076162
+    m_Localized: Rupias
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714286972928
+    m_Localized: Pantalla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887488
+    m_Localized: Controles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887489
+    m_Localized: Selecciona un control y pulsa una tecla nueva.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887490
+    m_Localized: Esperando entrada... pulsa una tecla (Esc para cancelar).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887491
+    m_Localized: Esperando entrada...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887492
+    m_Localized: Control actualizado.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887493
+    m_Localized: Sin asignar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887494
+    m_Localized: Mover arriba
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887495
+    m_Localized: Mover abajo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887496
+    m_Localized: Mover izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887497
+    m_Localized: Mover derecha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887498
+    m_Localized: Ranura 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887499
+    m_Localized: Ranura 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887500
+    m_Localized: Ranura 3
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -20,6 +20,7 @@ public class StatusManager : MonoBehaviour
 
     // --- State ---
     private Dictionary<StatusType, float> statusEndTimes = new Dictionary<StatusType, float>();
+    private Dictionary<StatusType, float> statusStartTimes = new Dictionary<StatusType, float>();
     private Dictionary<StatusType, Coroutine> statusCoroutines = new Dictionary<StatusType, Coroutine>();
     
     // --- Modifiers ---
@@ -69,12 +70,29 @@ public class StatusManager : MonoBehaviour
         return statusEndTimes.TryGetValue(type, out float endTime) && Time.time < endTime;
     }
 
+    public float GetRemainingDuration(StatusType type)
+    {
+        return statusEndTimes.TryGetValue(type, out float endTime)
+            ? Mathf.Max(0f, endTime - Time.time)
+            : 0f;
+    }
+
+    public float GetTotalDuration(StatusType type)
+    {
+        if (!statusStartTimes.TryGetValue(type, out float startTime) || !statusEndTimes.TryGetValue(type, out float endTime))
+        {
+            return 0f;
+        }
+
+        return Mathf.Max(0f, endTime - startTime);
+    }
 
     public void ClearStatus(StatusType type)
     {
         if (statusEndTimes.ContainsKey(type))
         {
             statusEndTimes.Remove(type);
+            statusStartTimes.Remove(type);
             
             if (statusCoroutines.TryGetValue(type, out Coroutine co))
             {
@@ -188,6 +206,7 @@ public class StatusManager : MonoBehaviour
     private void StartDot(StatusType type, float dps, float duration)
     {
         ClearStatus(type); 
+        statusStartTimes[type] = Time.time;
         statusEndTimes[type] = Time.time + duration;
         statusCoroutines[type] = host.StartCoroutine(DotRoutine(type, dps, duration));
         OnStatusApplied?.Invoke(type);
@@ -230,6 +249,8 @@ public class StatusManager : MonoBehaviour
 
     private void ApplyFreeze(float duration)
     {
+        ClearStatus(StatusType.Freeze);
+        statusStartTimes[StatusType.Freeze] = Time.time;
         statusEndTimes[StatusType.Freeze] = Time.time + duration;
         IsFrozen = true;
         OnStatusApplied?.Invoke(StatusType.Freeze);
@@ -237,6 +258,8 @@ public class StatusManager : MonoBehaviour
 
     private void ApplyConfusion(float duration)
     {
+        ClearStatus(StatusType.Confusion);
+        statusStartTimes[StatusType.Confusion] = Time.time;
         statusEndTimes[StatusType.Confusion] = Time.time + duration;
         IsConfused = true;
         OnStatusApplied?.Invoke(StatusType.Confusion);
@@ -244,6 +267,8 @@ public class StatusManager : MonoBehaviour
 
     private void ApplyFragile(float duration)
     {
+        ClearStatus(StatusType.Fragile);
+        statusStartTimes[StatusType.Fragile] = Time.time;
         statusEndTimes[StatusType.Fragile] = Time.time + duration;
         DamageTakenMultiplier = 1.2f;
         OnStatusApplied?.Invoke(StatusType.Fragile);

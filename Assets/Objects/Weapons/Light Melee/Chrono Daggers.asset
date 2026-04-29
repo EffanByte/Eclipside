@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8572143688392870400
+--- !u!114 &-7304755026217674604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,9 +44,9 @@ MonoBehaviour:
   element: 3
   style: 0
   effects:
-  - {fileID: -8572143688392870400}
-  - {fileID: 1695838650557806885}
---- !u!114 &1695838650557806885
+  - {fileID: -7304755026217674604}
+  - {fileID: 2912019304947595263}
+--- !u!114 &2912019304947595263
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

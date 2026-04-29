@@ -279,6 +279,334 @@ MonoBehaviour:
     m_Key: portal.challenge_boss
     m_Metadata:
       m_Items: []
+  - m_Id: 7912345706995712
+    m_Key: levelup.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076096
+    m_Key: levelup.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076097
+    m_Key: levelup.prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076098
+    m_Key: levelup.base_damage.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076099
+    m_Key: levelup.base_damage.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076100
+    m_Key: levelup.magic_damage.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076101
+    m_Key: levelup.magic_damage.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076102
+    m_Key: levelup.heavy_damage.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076103
+    m_Key: levelup.heavy_damage.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076104
+    m_Key: levelup.max_health.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076105
+    m_Key: levelup.max_health.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076106
+    m_Key: levelup.speed.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076107
+    m_Key: levelup.speed.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076108
+    m_Key: levelup.attack_speed.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076109
+    m_Key: levelup.attack_speed.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076110
+    m_Key: settings.display.current_format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076111
+    m_Key: settings.display.windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076112
+    m_Key: settings.display.fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076113
+    m_Key: achievements.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076114
+    m_Key: achievements.state.complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076115
+    m_Key: missions.daily
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076116
+    m_Key: missions.weekly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076117
+    m_Key: missions.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076118
+    m_Key: missions.state.claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076119
+    m_Key: missions.state.ready_to_claim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076120
+    m_Key: missions.state.in_progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076121
+    m_Key: menu.challenges.instructions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076122
+    m_Key: menu.challenges.state.active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076123
+    m_Key: menu.challenges.state.inactive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076124
+    m_Key: menu.challenges.action.toggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076125
+    m_Key: menu.challenges.type.fragile_crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076126
+    m_Key: menu.challenges.type.the_purge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076127
+    m_Key: menu.challenges.type.endless_greed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076128
+    m_Key: menu.challenges.type.the_gladiator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076129
+    m_Key: menu.challenges.type.blood_for_power
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076130
+    m_Key: menu.challenges.type.crossfire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076131
+    m_Key: menu.challenges.type.total_confusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076132
+    m_Key: menu.challenges.type.rain_of_fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076133
+    m_Key: menu.challenges.type.the_unlucky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076134
+    m_Key: menu.challenges.type.last_breath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076135
+    m_Key: menu.gacha.panel_subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076136
+    m_Key: menu.gacha.meteor_rewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076137
+    m_Key: menu.gacha.rewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076138
+    m_Key: menu.gacha.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076139
+    m_Key: menu.gacha.empty_result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076140
+    m_Key: menu.gacha.result_default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076141
+    m_Key: menu.gacha.single_pull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076142
+    m_Key: menu.gacha.ten_pull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076143
+    m_Key: menu.gacha.unavailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076144
+    m_Key: menu.gacha.no_rewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076145
+    m_Key: menu.gacha.reward_character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076146
+    m_Key: menu.gacha.reward_weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076147
+    m_Key: menu.gacha.reward_consumable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076148
+    m_Key: menu.gacha.reward_currency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076149
+    m_Key: menu.gacha.reward_unknown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076150
+    m_Key: menu.gacha.rarity.common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076151
+    m_Key: menu.gacha.rarity.rare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076152
+    m_Key: menu.gacha.rarity.epic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076153
+    m_Key: menu.gacha.rarity.mythic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076154
+    m_Key: common.rarity.default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076155
+    m_Key: common.rarity.epic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076156
+    m_Key: common.rarity.mythic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076157
+    m_Key: currency.gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076158
+    m_Key: currency.orb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076159
+    m_Key: currency.ticket
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076160
+    m_Key: currency.key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076161
+    m_Key: currency.xp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076162
+    m_Key: currency.rupee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714286972928
+    m_Key: settings.display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887488
+    m_Key: settings.controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887489
+    m_Key: settings.controls.rebind_hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887490
+    m_Key: settings.controls.rebinding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887491
+    m_Key: settings.controls.listening
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887492
+    m_Key: settings.controls.saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887493
+    m_Key: settings.controls.unbound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887494
+    m_Key: controls.move_up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887495
+    m_Key: controls.move_down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887496
+    m_Key: controls.move_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887497
+    m_Key: controls.move_right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887498
+    m_Key: controls.item1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887499
+    m_Key: controls.item2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887500
+    m_Key: controls.item3
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

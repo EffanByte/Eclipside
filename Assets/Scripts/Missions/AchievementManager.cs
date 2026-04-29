@@ -16,6 +16,11 @@ public class AchievementManager : MonoBehaviour
     private HashSet<string> unlockedAchievements = new HashSet<string>();
     private const string FILE_NAME = "Save_Stats";
 
+    public IReadOnlyList<AchievementData> GetAllAchievements()
+    {
+        return allAchievements;
+    }
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject); // add if statement later, idr exact condition

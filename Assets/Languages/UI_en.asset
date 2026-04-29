@@ -284,6 +284,336 @@ MonoBehaviour:
     m_Localized: Challenge Boss
     m_Metadata:
       m_Items: []
+  - m_Id: 7912345706995712
+    m_Localized: Level Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076096
+    m_Localized: The eclipse bends for no one. Choose one upgrade before the next
+      wave crashes in.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076097
+    m_Localized: Choose One Blessing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076098
+    m_Localized: Melee Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076099
+    m_Localized: +10% to your melee weapon damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076100
+    m_Localized: Magic Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076101
+    m_Localized: +10% to your magic weapon damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076102
+    m_Localized: Heavy Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076103
+    m_Localized: +10% to your heavy weapon damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076104
+    m_Localized: Max Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076105
+    m_Localized: +1 maximum heart and a matching heal.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076106
+    m_Localized: Move Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076107
+    m_Localized: +5% movement speed for the rest of the run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076108
+    m_Localized: Attack Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076109
+    m_Localized: +5% attack speed for all weapons.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076110
+    m_Localized: 'Display Mode: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076111
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076112
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076113
+    m_Localized: No achievements configured.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076114
+    m_Localized: Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076115
+    m_Localized: Daily Missions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076116
+    m_Localized: Weekly Missions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076117
+    m_Localized: No missions available.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076118
+    m_Localized: Claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076119
+    m_Localized: Ready to claim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076120
+    m_Localized: In progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076121
+    m_Localized: Choose modifiers before starting a run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076122
+    m_Localized: Active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076123
+    m_Localized: Inactive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076124
+    m_Localized: Click to toggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076125
+    m_Localized: Fragile Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076126
+    m_Localized: The Purge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076127
+    m_Localized: Endless Greed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076128
+    m_Localized: The Gladiator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076129
+    m_Localized: Blood for Power
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076130
+    m_Localized: Crossfire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076131
+    m_Localized: Total Confusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076132
+    m_Localized: Rain of Fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076133
+    m_Localized: The Unlucky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076134
+    m_Localized: Last Breath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076135
+    m_Localized: Browse meteorite banners, inspect the pool, and pull from the main
+      menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076136
+    m_Localized: Meteor Rewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076137
+    m_Localized: Rewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076138
+    m_Localized: No meteor banners configured.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076139
+    m_Localized: Add meteorite banners to the game database to enable pulls.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076140
+    m_Localized: Choose a meteor, inspect its rewards, and pull when you are ready.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076141
+    m_Localized: 1 Pull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076142
+    m_Localized: 10 Pull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076143
+    m_Localized: Unavailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076144
+    m_Localized: No rewards configured.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076145
+    m_Localized: Character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076146
+    m_Localized: Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076147
+    m_Localized: Consumable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076148
+    m_Localized: Currency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076149
+    m_Localized: Unknown reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076150
+    m_Localized: Common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076151
+    m_Localized: Rare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076152
+    m_Localized: Epic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076153
+    m_Localized: Mythic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076154
+    m_Localized: Default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076155
+    m_Localized: Epic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076156
+    m_Localized: Mythic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076157
+    m_Localized: Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076158
+    m_Localized: Orbs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076159
+    m_Localized: Tickets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076160
+    m_Localized: Keys
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076161
+    m_Localized: XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7912345795076162
+    m_Localized: Rupees
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714286972928
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887488
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887489
+    m_Localized: Select a control and press a new key.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887490
+    m_Localized: Listening... press a key (Esc to cancel).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887491
+    m_Localized: Listening...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887492
+    m_Localized: Control updated.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887493
+    m_Localized: Unbound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887494
+    m_Localized: Move Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887495
+    m_Localized: Move Down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887496
+    m_Localized: Move Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887497
+    m_Localized: Move Right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887498
+    m_Localized: Item Slot 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887499
+    m_Localized: Item Slot 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8262714349887500
+    m_Localized: Item Slot 3
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -1,10 +1,12 @@
 using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class GameDirector : MonoBehaviour
 {
     public static GameDirector Instance { get; private set; }
@@ -26,6 +28,11 @@ public class GameDirector : MonoBehaviour
     [Header("Generation & Rewards")]
     [SerializeField] private GameObject timedChestPrefab;
     [SerializeField] private float chestSpawnRadius = 5f;
+
+    [Header("Boss Health Bar")]
+    [SerializeField] private Sprite bossHealthFillSprite;
+    [SerializeField] private Sprite bossHealthFrameSprite;
+    [SerializeField] private Sprite bossHealthBackgroundSprite;
     
     // Events
     public event Action<bool> OnCombatStateChanged; 
@@ -49,6 +56,11 @@ public class GameDirector : MonoBehaviour
     private bool bossDefeatedForBiome;
     private readonly Dictionary<Tilemap, Color> baseTilemapColors = new Dictionary<Tilemap, Color>();
 
+#if UNITY_EDITOR
+    private const string BossHealthBarPath = "Assets/UI/healthbar.png";
+    private const string BossHealthBarFramePath = "Assets/UI/healthbar_dragon_frame.png";
+#endif
+
     private void Awake()
     {
         Instance = this;
@@ -58,6 +70,14 @@ public class GameDirector : MonoBehaviour
         {
             gameObject.AddComponent<SceneBoundaryWalls>();
         }
+
+        BossHealthBarUI bossHealthBarUi = GetComponent<BossHealthBarUI>();
+        if (bossHealthBarUi == null)
+        {
+            bossHealthBarUi = gameObject.AddComponent<BossHealthBarUI>();
+        }
+
+        bossHealthBarUi.Configure(bossHealthFillSprite, bossHealthFrameSprite, bossHealthBackgroundSprite);
     }
 
     private void Start()
@@ -430,4 +450,50 @@ public class GameDirector : MonoBehaviour
     {
         return LocalizationManager.GetString(LocalizationManager.DefaultTable, key, fallback, args);
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        ResolveBossHealthBarSprites();
+    }
+
+    private void ResolveBossHealthBarSprites()
+    {
+        if (bossHealthFillSprite == null || bossHealthBackgroundSprite == null)
+        {
+            UnityEngine.Object[] barAssets = AssetDatabase.LoadAllAssetsAtPath(BossHealthBarPath);
+            for (int i = 0; i < barAssets.Length; i++)
+            {
+                Sprite sprite = barAssets[i] as Sprite;
+                if (sprite == null)
+                {
+                    continue;
+                }
+
+                if (bossHealthFillSprite == null && string.Equals(sprite.name, "healthbar_3", StringComparison.Ordinal))
+                {
+                    bossHealthFillSprite = sprite;
+                }
+                else if (bossHealthBackgroundSprite == null && string.Equals(sprite.name, "healthbar_0", StringComparison.Ordinal))
+                {
+                    bossHealthBackgroundSprite = sprite;
+                }
+            }
+        }
+
+        if (bossHealthFrameSprite == null)
+        {
+            UnityEngine.Object[] frameAssets = AssetDatabase.LoadAllAssetsAtPath(BossHealthBarFramePath);
+            for (int i = 0; i < frameAssets.Length; i++)
+            {
+                Sprite sprite = frameAssets[i] as Sprite;
+                if (sprite != null && string.Equals(sprite.name, "healthbar_dragon_frame_0", StringComparison.Ordinal))
+                {
+                    bossHealthFrameSprite = sprite;
+                    break;
+                }
+            }
+        }
+    }
+#endif
 }

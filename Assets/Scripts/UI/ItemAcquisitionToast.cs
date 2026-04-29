@@ -76,7 +76,7 @@ public class ItemAcquisitionToast : MonoBehaviour
         }
 
         instance = this;
-        fallbackTmpFont = TMP_Settings.defaultFontAsset;
+        fallbackTmpFont = LocalizedFontResolver.ResolveTmpFont(TMP_Settings.defaultFontAsset);
         BuildUi();
         SetVisible(false);
     }
@@ -225,7 +225,7 @@ public class ItemAcquisitionToast : MonoBehaviour
     {
         GameObject textObject = CreateUiObject(objectName, parent);
         TextMeshProUGUI text = textObject.AddComponent<TextMeshProUGUI>();
-        text.font = fallbackTmpFont != null ? fallbackTmpFont : TMP_Settings.defaultFontAsset;
+        text.font = LocalizedFontResolver.ResolveTmpFont(fallbackTmpFont != null ? fallbackTmpFont : TMP_Settings.defaultFontAsset);
         text.text = message;
         text.fontSize = fontSize;
         text.fontStyle = fontStyle;

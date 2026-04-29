@@ -280,7 +280,7 @@ public class BiomeTitleOverlay : MonoBehaviour
 
     private TMP_FontAsset ResolveFont()
     {
-        TMP_FontAsset font = TMP_Settings.defaultFontAsset;
+        TMP_FontAsset font = LocalizedFontResolver.ResolveTmpFont(TMP_Settings.defaultFontAsset);
         if (font != null)
         {
             return font;

@@ -19,27 +19,27 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1492426752
-    m_Localized: Crimson Fields
+    m_Localized: Campos Carmes\u00edes
     m_Metadata:
       m_Items: []
   - m_Id: 1517592576
-    m_Localized: Crystal Catacombs
+    m_Localized: Catacumbas de Cristal
     m_Metadata:
       m_Items: []
   - m_Id: 1517592577
-    m_Localized: Frostveil Citadel
+    m_Localized: Ciudadela del Velo de Escarcha
     m_Metadata:
       m_Items: []
   - m_Id: 1517592578
-    m_Localized: Marshes of Oblivion
+    m_Localized: Pantanos del Olvido
     m_Metadata:
       m_Items: []
   - m_Id: 1517592579
-    m_Localized: Sky Realm
+    m_Localized: Reino del Cielo
     m_Metadata:
       m_Items: []
   - m_Id: 1517592580
-    m_Localized: Whispering Woods
+    m_Localized: Bosques Susurrantes
     m_Metadata:
       m_Items: []
   references:

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6062269911971553040
+--- !u!114 &-6642791412925910401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,25 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 2
-  amount: 0.15
---- !u!114 &-2023755043947657687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 0
-  amount: 0.15
+  m_Script: {fileID: 11500000, guid: 7055fbb8b7ea14a40b4a2226e468b3af, type: 3}
+  m_Name: ProjectileModifier
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponProjectileModifierEffect
+  speedMultiplier: 1
+  additionalPierces: 6
+  colliderRadiusMultiplier: 1.8
+  lifetime: 3
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,10 +47,10 @@ MonoBehaviour:
   element: 2
   style: 2
   effects:
-  - {fileID: -2023755043947657687}
-  - {fileID: -6062269911971553040}
-  - {fileID: 6057224133160438661}
---- !u!114 &6057224133160438661
+  - {fileID: 618089860550434363}
+  - {fileID: 6243645400100946573}
+  - {fileID: -6642791412925910401}
+--- !u!114 &618089860550434363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,10 +59,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7055fbb8b7ea14a40b4a2226e468b3af, type: 3}
-  m_Name: ProjectileModifier
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponProjectileModifierEffect
-  speedMultiplier: 1
-  additionalPierces: 6
-  colliderRadiusMultiplier: 1.8
-  lifetime: 3
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 0
+  amount: 0.15
+--- !u!114 &6243645400100946573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 2
+  amount: 0.15
