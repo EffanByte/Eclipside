@@ -4960,7 +4960,7 @@ public class MainMenu : MonoBehaviour
         previewFrameRect.anchorMax = new Vector2(0.5f, 1f);
         previewFrameRect.pivot = new Vector2(0.5f, 1f);
         previewFrameRect.sizeDelta = new Vector2(260f, 260f);
-        previewFrameRect.anchoredPosition = new Vector2(0f, -26f);
+        previewFrameRect.anchoredPosition = new Vector2(0f, -80f);
 
         Image previewFrameImage = previewFrame.GetComponent<Image>();
         if (previewFrameImage == null)
