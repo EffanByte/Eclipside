@@ -6,17 +6,43 @@ using UnityEngine;
 public static class WeaponDefinitionCompilerSync
 {
     private const string SyncMenuPath = "Tools/Eclipside/Sync Weapon Definitions";
+    private const string AutoSyncMenuPath = "Tools/Eclipside/Auto Sync Weapon Definitions On Editor Load";
+    private const string AutoSyncPreferenceKey = "Eclipside.WeaponDefinitions.AutoSyncOnEditorLoad";
     private static bool syncQueued;
 
     static WeaponDefinitionCompilerSync()
     {
-        QueueAutoSync();
+        if (IsAutoSyncEnabled())
+        {
+            QueueAutoSync();
+        }
     }
 
     [MenuItem(SyncMenuPath)]
     public static void SyncFromMenu()
     {
         SyncAllWeapons(logSummary: true);
+    }
+
+    [MenuItem(AutoSyncMenuPath)]
+    public static void ToggleAutoSync()
+    {
+        bool enabled = !IsAutoSyncEnabled();
+        EditorPrefs.SetBool(AutoSyncPreferenceKey, enabled);
+        Menu.SetChecked(AutoSyncMenuPath, enabled);
+        Debug.Log($"[Weapons] Auto sync on editor load {(enabled ? "enabled" : "disabled")}.");
+    }
+
+    [MenuItem(AutoSyncMenuPath, true)]
+    private static bool ToggleAutoSyncValidation()
+    {
+        Menu.SetChecked(AutoSyncMenuPath, IsAutoSyncEnabled());
+        return true;
+    }
+
+    private static bool IsAutoSyncEnabled()
+    {
+        return EditorPrefs.GetBool(AutoSyncPreferenceKey, false);
     }
 
     private static void QueueAutoSync()

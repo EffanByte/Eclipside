@@ -200,6 +200,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
         DisablePlayerJoiningInMenu();
         UINavigationUtility.EnsureEventSystem();
         ResolveTrackedPanelReferences();
@@ -941,6 +942,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnStartRunFromCharacterSelectPressed()
     {
+        Time.timeScale = 1f;
         EnsurePendingLandingCharacterSelection();
         if (string.IsNullOrWhiteSpace(pendingCharacterSelectionId))
         {
@@ -1169,7 +1171,6 @@ public class MainMenu : MonoBehaviour
         ResolveMainMenuArtReferences();
         fallbackTmpFont = LocalizedFontResolver.ResolveTmpFont(pixelMenuFont != null ? pixelMenuFont : TMP_Settings.defaultFontAsset);
 
-        HideLegacyLandingButtons(canvas.transform);
 
         if (!forceGenerateModernMenuRoot && TryBindStaticModernMenuRoot(canvas))
         {
@@ -1409,13 +1410,6 @@ public class MainMenu : MonoBehaviour
         }
 
         EnsureLandingCharacterSelectorLayout();
-        PositionLandingButton("GachaButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 192f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("MissionsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 80f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("AchievementsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -32f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("ChallengesButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -144f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("SettingsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -256f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("QuitGameButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -368f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("StartButton", new Vector2(1f, 0f), new Vector2(390f, 112f), new Vector2(-48f, 48f), new Vector2(1f, 0f));
     }
 
     private void PositionLandingButton(string key, Vector2 anchor, Vector2 size, Vector2 anchoredPosition, Vector2 pivot)
@@ -2201,19 +2195,6 @@ public class MainMenu : MonoBehaviour
     }
 #endif
 
-    private void HideLegacyLandingButtons(Transform canvasTransform)
-    {
-        if (canvasTransform == null)
-        {
-            return;
-        }
-
-        Transform buttonsPanel = canvasTransform.Find("ButtonsPanel");
-        if (buttonsPanel != null)
-        {
-            buttonsPanel.gameObject.SetActive(false);
-        }
-    }
 
     private void RefreshModernMenuContent()
     {

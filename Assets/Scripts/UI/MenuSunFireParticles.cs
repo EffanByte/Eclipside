@@ -22,6 +22,11 @@ public class MenuSunFireParticles : MonoBehaviour
         RefreshParticles();
     }
 
+    private void Start()
+    {
+        RefreshParticles();
+    }
+
     private void OnValidate()
     {
         RefreshParticles();
@@ -78,7 +83,15 @@ public class MenuSunFireParticles : MonoBehaviour
 
     private void EnsureParticleSystem()
     {
-        targetCamera = Camera.main;
+        if (targetCamera == null || !targetCamera.isActiveAndEnabled)
+        {
+            targetCamera = Camera.main;
+        }
+
+        if (targetCamera == null)
+        {
+            return;
+        }
 
         if (configureCanvasForParticles)
         {

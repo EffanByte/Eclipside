@@ -82,6 +82,8 @@ public class GameDirector : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
+
         if (ChallengeManager.Instance != null)
         {
             ChallengeManager.Instance.ApplyActiveChallenges();
