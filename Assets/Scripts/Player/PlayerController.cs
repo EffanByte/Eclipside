@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityHFSM; // Requires UnityHFSM package
+using UnityEngine.SceneManagement;
 
 public enum StatType 
 { 
@@ -131,6 +132,7 @@ public class PlayerController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += HandleSceneLoaded;
         
         rb = GetComponent<Rigidbody2D>();
         inventory = GetComponent<InventoryManager>();
@@ -203,12 +205,29 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         PlayerHealth.OnPlayerDeath -= PlayerKilled;
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
 
         if (GameDirector.Instance != null)
         {
             GameDirector.Instance.OnWaveAdvanced -= HandleWaveTransition;
             GameDirector.Instance.OnLevelCompleted -= HandleWaveTransition;
         }
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
     }
 
     // ---------------------------------------------------------

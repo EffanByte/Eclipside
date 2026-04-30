@@ -12,8 +12,7 @@ public static class UINavigationUtility
             return;
         }
 
-        GameObject root = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-        Object.DontDestroyOnLoad(root);
+        new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
     }
 
     public static void ConfigureAutomaticNavigation(Transform root)

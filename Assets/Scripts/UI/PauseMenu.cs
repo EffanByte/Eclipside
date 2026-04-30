@@ -34,6 +34,7 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         fallbackTmpFont = LocalizedFontResolver.ResolveTmpFont(TMP_Settings.defaultFontAsset);
+        UINavigationUtility.EnsureEventSystem();
         BuildPauseMenuUi();
         SetMenuVisible(false);
     }

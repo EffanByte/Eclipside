@@ -19,107 +19,119 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 871669760
-    m_Localized: Big Spender
+    m_Localized: "\u0411\u043E\u043B\u044C\u0448\u043E\u0439 \u0422\u0440\u0430\u043D\u0436\u0438\u0440\u0430"
     m_Metadata:
       m_Items: []
   - m_Id: 930390016
-    m_Localized: Spent 5000 Gold in Shops.
+    m_Localized: "\u041F\u043E\u0442\u0440\u0430\u0442\u044C\u0442\u0435 5000 \u0437\u043E\u043B\u043E\u0442\u0430
+      \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430\u0445."
     m_Metadata:
       m_Items: []
   - m_Id: 930390017
-    m_Localized: Boss Slayer I
+    m_Localized: "\u0423\u0431\u0438\u0439\u0446\u0430 \u0411\u043E\u0441\u0441\u043E\u0432
+      I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390018
-    m_Localized: "Kill your First Boss.\t"
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 \u0441\u0432\u043E\u0435\u0433\u043E
+      \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u0431\u043E\u0441\u0441\u0430."
     m_Metadata:
       m_Items: []
   - m_Id: 930390019
-    m_Localized: Boss Slayer Ii
+    m_Localized: "\u0423\u0431\u0438\u0439\u0446\u0430 \u0411\u043E\u0441\u0441\u043E\u0432
+      II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390020
-    m_Localized: "Kill 10 Bosses.\t"
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 10 \u0431\u043E\u0441\u0441\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390021
-    m_Localized: Endless Challenge
+    m_Localized: "\u0411\u0435\u0441\u043A\u043E\u043D\u0435\u0447\u043D\u044B\u0439
+      \u0412\u044B\u0437\u043E\u0432"
     m_Metadata:
       m_Items: []
   - m_Id: 930390022
-    m_Localized: Reach Wave 20 in the Arena.
+    m_Localized: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0438\u0442\u0435 20-\u0439
+      \u0432\u043E\u043B\u043D\u044B \u043D\u0430 \u0430\u0440\u0435\u043D\u0435."
     m_Metadata:
       m_Items: []
   - m_Id: 930390023
-    m_Localized: First Challenge
+    m_Localized: "\u041F\u0435\u0440\u0432\u043E\u0435 \u0418\u0441\u043F\u044B\u0442\u0430\u043D\u0438\u0435"
     m_Metadata:
       m_Items: []
   - m_Id: 930390024
-    m_Localized: Defeat Your First Miniboss
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 \u0441\u0432\u043E\u0435\u0433\u043E
+      \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u0430."
     m_Metadata:
       m_Items: []
   - m_Id: 930390025
-    m_Localized: First Steps
+    m_Localized: "\u041F\u0435\u0440\u0432\u044B\u0435 \u0428\u0430\u0433\u0438"
     m_Metadata:
       m_Items: []
   - m_Id: 930390026
-    m_Localized: Complete your First Run.
+    m_Localized: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0441\u0432\u043E\u0439
+      \u043F\u0435\u0440\u0432\u044B\u0439 \u0437\u0430\u0431\u0435\u0433."
     m_Metadata:
       m_Items: []
   - m_Id: 930390027
-    m_Localized: Hunter of Shadows
+    m_Localized: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u0422\u0435\u043D\u0435\u0439"
     m_Metadata:
       m_Items: []
   - m_Id: 930390028
-    m_Localized: Defeat 10 mini-bosses.
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 10 \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390029
-    m_Localized: Pest Control
+    m_Localized: "\u0411\u043E\u0440\u044C\u0431\u0430 \u0441 \u0412\u0440\u0435\u0434\u0438\u0442\u0435\u043B\u044F\u043C\u0438"
     m_Metadata:
       m_Items: []
   - m_Id: 930390030
-    m_Localized: Defeat 100 Regular Enemies
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 100 \u043E\u0431\u044B\u0447\u043D\u044B\u0445
+      \u0432\u0440\u0430\u0433\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390031
-    m_Localized: Slayer
+    m_Localized: "\u0418\u0441\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043B\u044C"
     m_Metadata:
       m_Items: []
   - m_Id: 930390032
-    m_Localized: Defeat 1000 Regular Enemies
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 1000 \u043E\u0431\u044B\u0447\u043D\u044B\u0445
+      \u0432\u0440\u0430\u0433\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390033
-    m_Localized: Survivor I
+    m_Localized: "\u0412\u044B\u0436\u0438\u0432\u0448\u0438\u0439 I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390034
-    m_Localized: Complete 5 runs.
+    m_Localized: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 5 \u0437\u0430\u0431\u0435\u0433\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390035
-    m_Localized: Survivor II
+    m_Localized: "\u0412\u044B\u0436\u0438\u0432\u0448\u0438\u0439 II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390036
-    m_Localized: Complete 20 runs.
+    m_Localized: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 20 \u0437\u0430\u0431\u0435\u0433\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390037
-    m_Localized: Treasure Hunter I
+    m_Localized: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u0437\u0430 \u0421\u043E\u043A\u0440\u043E\u0432\u0438\u0449\u0430\u043C\u0438
+      I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390038
-    m_Localized: Open 10 Chests
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 10 \u0441\u0443\u043D\u0434\u0443\u043A\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 930390039
-    m_Localized: Treasure Hunter II
+    m_Localized: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u0437\u0430 \u0421\u043E\u043A\u0440\u043E\u0432\u0438\u0449\u0430\u043C\u0438
+      II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390040
-    m_Localized: Open 50 Chests
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 50 \u0441\u0443\u043D\u0434\u0443\u043A\u043E\u0432."
     m_Metadata:
       m_Items: []
   references:

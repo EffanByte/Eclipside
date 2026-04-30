@@ -19,107 +19,107 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 871669760
-    m_Localized: Big Spender
+    m_Localized: "\u5927\u5BCC\u8C6A"
     m_Metadata:
       m_Items: []
   - m_Id: 930390016
-    m_Localized: Spent 5000 Gold in Shops.
+    m_Localized: "\u30B7\u30E7\u30C3\u30D7\u3067\u30B4\u30FC\u30EB\u30C9\u30925000\u4F7F\u3046\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390017
-    m_Localized: Boss Slayer I
+    m_Localized: "\u30DC\u30B9\u30B9\u30EC\u30A4\u30E4\u30FC I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390018
-    m_Localized: "Kill your First Boss.\t"
+    m_Localized: "\u6700\u521D\u306E\u30DC\u30B9\u3092\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390019
-    m_Localized: Boss Slayer Ii
+    m_Localized: "\u30DC\u30B9\u30B9\u30EC\u30A4\u30E4\u30FC II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390020
-    m_Localized: "Kill 10 Bosses.\t"
+    m_Localized: "\u30DC\u30B9\u309210\u4F53\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390021
-    m_Localized: Endless Challenge
+    m_Localized: "\u7D42\u308F\u308A\u306A\u304D\u6311\u6226"
     m_Metadata:
       m_Items: []
   - m_Id: 930390022
-    m_Localized: Reach Wave 20 in the Arena.
+    m_Localized: "\u30A2\u30EA\u30FC\u30CA\u3067Wave 20\u306B\u5230\u9054\u3059\u308B\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390023
-    m_Localized: First Challenge
+    m_Localized: "\u6700\u521D\u306E\u8A66\u7DF4"
     m_Metadata:
       m_Items: []
   - m_Id: 930390024
-    m_Localized: Defeat Your First Miniboss
+    m_Localized: "\u6700\u521D\u306E\u30DF\u30CB\u30DC\u30B9\u3092\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390025
-    m_Localized: First Steps
+    m_Localized: "\u6700\u521D\u306E\u4E00\u6B69"
     m_Metadata:
       m_Items: []
   - m_Id: 930390026
-    m_Localized: Complete your First Run.
+    m_Localized: "\u521D\u3081\u3066\u306E\u30E9\u30F3\u3092\u30AF\u30EA\u30A2\u3059\u308B\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390027
-    m_Localized: Hunter of Shadows
+    m_Localized: "\u5F71\u3092\u72E9\u308B\u8005"
     m_Metadata:
       m_Items: []
   - m_Id: 930390028
-    m_Localized: Defeat 10 mini-bosses.
+    m_Localized: "\u30DF\u30CB\u30DC\u30B9\u309210\u4F53\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390029
-    m_Localized: Pest Control
+    m_Localized: "\u5BB3\u7363\u99C6\u9664"
     m_Metadata:
       m_Items: []
   - m_Id: 930390030
-    m_Localized: Defeat 100 Regular Enemies
+    m_Localized: "\u901A\u5E38\u306E\u6575\u3092100\u4F53\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390031
-    m_Localized: Slayer
+    m_Localized: "\u30B9\u30EC\u30A4\u30E4\u30FC"
     m_Metadata:
       m_Items: []
   - m_Id: 930390032
-    m_Localized: Defeat 1000 Regular Enemies
+    m_Localized: "\u901A\u5E38\u306E\u6575\u30921000\u4F53\u5012\u3059\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390033
-    m_Localized: Survivor I
+    m_Localized: "\u30B5\u30D0\u30A4\u30D0\u30FC I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390034
-    m_Localized: Complete 5 runs.
+    m_Localized: "\u30E9\u30F3\u30925\u56DE\u30AF\u30EA\u30A2\u3059\u308B\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390035
-    m_Localized: Survivor II
+    m_Localized: "\u30B5\u30D0\u30A4\u30D0\u30FC II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390036
-    m_Localized: Complete 20 runs.
+    m_Localized: "\u30E9\u30F3\u309220\u56DE\u30AF\u30EA\u30A2\u3059\u308B\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390037
-    m_Localized: Treasure Hunter I
+    m_Localized: "\u30C8\u30EC\u30B8\u30E3\u30FC\u30CF\u30F3\u30BF\u30FC I"
     m_Metadata:
       m_Items: []
   - m_Id: 930390038
-    m_Localized: Open 10 Chests
+    m_Localized: "\u5B9D\u7BB1\u309210\u500B\u958B\u3051\u308B\u3002"
     m_Metadata:
       m_Items: []
   - m_Id: 930390039
-    m_Localized: Treasure Hunter II
+    m_Localized: "\u30C8\u30EC\u30B8\u30E3\u30FC\u30CF\u30F3\u30BF\u30FC II"
     m_Metadata:
       m_Items: []
   - m_Id: 930390040
-    m_Localized: Open 50 Chests
+    m_Localized: "\u5B9D\u7BB1\u309250\u500B\u958B\u3051\u308B\u3002"
     m_Metadata:
       m_Items: []
   references:

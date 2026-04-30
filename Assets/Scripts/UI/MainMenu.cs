@@ -90,6 +90,7 @@ public class MainMenu : MonoBehaviour
     private TextMeshProUGUI characterSelectTitleLabel;
     private TextMeshProUGUI selectedCharacterLabel;
     private Image characterPreviewImage;
+    private Sprite defaultCharacterPreviewSprite;
     private Button characterSelectCloseButton;
     private Button startRunButton;
     private readonly Dictionary<string, Button> characterButtons = new Dictionary<string, Button>();
@@ -673,6 +674,7 @@ public class MainMenu : MonoBehaviour
         characterSelectTitleLabel = FindComponentAtPath<TextMeshProUGUI>(characterSelectPanel.transform, "CharacterSelectCard/Title");
         selectedCharacterLabel = FindComponentAtPath<TextMeshProUGUI>(characterSelectPanel.transform, "CharacterSelectCard/SelectedLabel");
         characterPreviewImage = FindComponentAtPath<Image>(characterSelectPanel.transform, "CharacterSelectCard/PreviewPanel/PreviewImage");
+        CacheDefaultCharacterPreviewSprite(characterPreviewImage);
         characterSelectCloseButton = FindComponentAtPath<Button>(characterSelectPanel.transform, "CharacterSelectCard/CloseButton");
         startRunButton = FindComponentAtPath<Button>(characterSelectPanel.transform, "CharacterSelectCard/StartRunButton");
     }
@@ -2274,8 +2276,11 @@ public class MainMenu : MonoBehaviour
             }
 
             menuStatusText.text = L("menu.status_selected", "Selected: {0}", selectedCharacterName);
-            RefreshMenuCurrencyBadge(menuGoldIconImage, menuGoldAmountText, CurrencyType.Gold, profile.user_profile.gold, GetMainMenuSprite(7));
-            RefreshMenuCurrencyBadge(menuOrbIconImage, menuOrbAmountText, CurrencyType.Orb, profile.user_profile.orbs, GetMainMenuSprite(6));
+            if (profile != null && profile.user_profile != null)
+            {
+                RefreshMenuCurrencyBadge(menuGoldIconImage, menuGoldAmountText, CurrencyType.Gold, profile.user_profile.gold, GetMainMenuSprite(7));
+                RefreshMenuCurrencyBadge(menuOrbIconImage, menuOrbAmountText, CurrencyType.Orb, profile.user_profile.orbs, GetMainMenuSprite(6));
+            }
         }
 
         if (menuFooterText != null)
@@ -2289,13 +2294,13 @@ public class MainMenu : MonoBehaviour
 
     private void RefreshLandingButtonLabels()
     {
-        SetLandingButtonTexts("StartButton", L("menu.start_run", "Start Run"), L("menu.start_run.subtitle", "Select your character and enter the next run."));
-        SetLandingButtonTexts("GachaButton", L("menu.gacha", "Gacha"), L("menu.gacha.subtitle", "Spend meteorites and expand your roster."));
-        SetLandingButtonTexts("MissionsButton", GetMissionsTitle(), L("menu.missions.subtitle", "Track daily goals and collect rewards."));
-        SetLandingButtonTexts("AchievementsButton", GetAchievementsTitle(), L("menu.achievements.subtitle", "Review long-term progress and milestones."));
-        SetLandingButtonTexts("ChallengesButton", GetChallengesTitle(), L("menu.challenges.subtitle", "Enable run modifiers and earn bragging rights."));
-        SetLandingButtonTexts("SettingsButton", L("menu.settings", "Settings"), L("menu.settings.subtitle", "Adjust language, display, and menu preferences."));
-        SetLandingButtonTexts("QuitGameButton", L("menu.quit", "Quit Game"), L("menu.quit.subtitle", "Exit Eclipside."));
+        SetLandingButtonLabel("StartButton", L("menu.start_run", "Start Run"));
+        SetLandingButtonLabel("GachaButton", L("menu.gacha", "Gacha"));
+        SetLandingButtonLabel("MissionsButton", GetMissionsTitle());
+        SetLandingButtonLabel("AchievementsButton", GetAchievementsTitle());
+        SetLandingButtonLabel("ChallengesButton", GetChallengesTitle());
+        SetLandingButtonLabel("SettingsButton", L("menu.settings", "Settings"));
+        SetLandingButtonLabel("QuitGameButton", L("pause.quit", "Quit Game"));
     }
 
     private void ApplySavedDisplayMode()
@@ -2512,6 +2517,9 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
+        RectTransform cardRect = cardTransform.GetComponent<RectTransform>();
+        cardRect.sizeDelta = new Vector2(860f, 720f);
+
         settingsLanguageArea = cardTransform.Find("LanguageArea")?.gameObject;
         settingsDisplayArea = cardTransform.Find("DisplayArea")?.gameObject;
         settingsControlsArea = cardTransform.Find("ControlsArea")?.gameObject;
@@ -2593,8 +2601,8 @@ public class MainMenu : MonoBehaviour
         RectTransform controlsAreaRect = settingsControlsArea.GetComponent<RectTransform>();
         controlsAreaRect.anchorMin = new Vector2(0f, 0f);
         controlsAreaRect.anchorMax = new Vector2(1f, 1f);
-        controlsAreaRect.offsetMin = new Vector2(32f, 176f);
-        controlsAreaRect.offsetMax = new Vector2(-32f, -234f);
+        controlsAreaRect.offsetMin = new Vector2(32f, 104f);
+        controlsAreaRect.offsetMax = new Vector2(-32f, -220f);
 
         settingsControlsHeaderText = FindComponentAtPath<TextMeshProUGUI>(settingsPanel.transform, "SettingsCard/ControlsArea/ControlsHeader");
         if (settingsControlsHeaderText == null)
@@ -2630,11 +2638,6 @@ public class MainMenu : MonoBehaviour
             controlsViewportMask.showMaskGraphic = true;
 
             controlsViewportRect = controlsViewport.GetComponent<RectTransform>();
-            controlsViewportRect.anchorMin = new Vector2(0f, 0f);
-            controlsViewportRect.anchorMax = new Vector2(1f, 1f);
-            controlsViewportRect.offsetMin = new Vector2(18f, 18f);
-            controlsViewportRect.offsetMax = new Vector2(-18f, -112f);
-
             ScrollRect controlsScrollRect = controlsViewport.AddComponent<ScrollRect>();
             controlsScrollRect.horizontal = false;
             controlsScrollRect.vertical = true;
@@ -2649,6 +2652,11 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        controlsViewportRect.anchorMin = new Vector2(0f, 0f);
+        controlsViewportRect.anchorMax = new Vector2(1f, 1f);
+        controlsViewportRect.offsetMin = new Vector2(18f, 18f);
+        controlsViewportRect.offsetMax = new Vector2(-18f, -100f);
+
         settingsControlsListContent = FindComponentAtPath<RectTransform>(settingsPanel.transform, "SettingsCard/ControlsArea/ControlsViewport/ControlsList");
         if (settingsControlsListContent == null)
         {
@@ -2661,7 +2669,7 @@ public class MainMenu : MonoBehaviour
         settingsControlsListContent.anchorMax = new Vector2(1f, 1f);
         settingsControlsListContent.pivot = new Vector2(0.5f, 1f);
         settingsControlsListContent.anchoredPosition = Vector2.zero;
-        settingsControlsListContent.sizeDelta = new Vector2(0f, settingsControlsListContent.sizeDelta.y);
+        settingsControlsListContent.sizeDelta = Vector2.zero;
 
         ScrollRect existingControlsScrollRect = controlsViewportRect.GetComponent<ScrollRect>();
         if (existingControlsScrollRect == null)
@@ -4449,10 +4457,22 @@ public class MainMenu : MonoBehaviour
 
     private void SetLandingButtonTexts(string key, string title, string subtitle)
     {
-        if (!landingButtons.TryGetValue(key, out Button button) || button == null)
+        if ((!landingButtons.TryGetValue(key, out Button button) || button == null) && modernMenuRoot != null)
+        {
+            button = GetComponentAtPath<Button>(modernMenuRoot.transform, key);
+            if (button != null)
+            {
+                landingButtons[key] = button;
+            }
+        }
+
+        if (button == null)
         {
             return;
         }
+
+        bool titleAssigned = false;
+        bool subtitleAssigned = false;
 
         TextMeshProUGUI[] labels = button.GetComponentsInChildren<TextMeshProUGUI>(true);
         foreach (TextMeshProUGUI label in labels)
@@ -4464,13 +4484,15 @@ public class MainMenu : MonoBehaviour
 
             LocalizedFontResolver.ApplyTo(label, fallbackTmpFont);
 
-            if (label.name == "Title")
+            if (MatchesLabelRole(label.transform, "Title", "Label", "Text"))
             {
                 label.text = title;
+                titleAssigned = true;
             }
-            else if (label.name == "Subtitle")
+            else if (MatchesLabelRole(label.transform, "Subtitle", "Description"))
             {
                 label.text = subtitle;
+                subtitleAssigned = true;
             }
         }
 
@@ -4484,15 +4506,86 @@ public class MainMenu : MonoBehaviour
 
             LocalizedFontResolver.ApplyTo(legacyLabel, fallbackFont);
 
-            if (legacyLabel.name == "Title")
+            if (MatchesLabelRole(legacyLabel.transform, "Title", "Label", "Text"))
             {
                 legacyLabel.text = title;
+                titleAssigned = true;
             }
-            else if (legacyLabel.name == "Subtitle")
+            else if (MatchesLabelRole(legacyLabel.transform, "Subtitle", "Description"))
             {
                 legacyLabel.text = subtitle;
+                subtitleAssigned = true;
             }
         }
+
+        if (!titleAssigned && labels.Length > 0 && labels[0] != null)
+        {
+            LocalizedFontResolver.ApplyTo(labels[0], fallbackTmpFont);
+            labels[0].text = title;
+            titleAssigned = true;
+        }
+
+        if (!subtitleAssigned && labels.Length > 1 && labels[1] != null)
+        {
+            LocalizedFontResolver.ApplyTo(labels[1], fallbackTmpFont);
+            labels[1].text = subtitle;
+        }
+    }
+
+    private void SetLandingButtonLabel(string key, string label)
+    {
+        if ((!landingButtons.TryGetValue(key, out Button button) || button == null) && modernMenuRoot != null)
+        {
+            button = GetComponentAtPath<Button>(modernMenuRoot.transform, key);
+            if (button != null)
+            {
+                landingButtons[key] = button;
+            }
+        }
+
+        SetButtonLabel(button, label);
+    }
+
+    private static bool MatchesLabelRole(Transform target, params string[] expectedNames)
+    {
+        if (target == null)
+        {
+            return false;
+        }
+
+        if (NameLooksLike(target.name, expectedNames))
+        {
+            return true;
+        }
+
+        Transform parent = target.parent;
+        return parent != null && NameLooksLike(parent.name, expectedNames);
+    }
+
+    private static bool NameLooksLike(string candidate, params string[] expectedNames)
+    {
+        if (string.IsNullOrWhiteSpace(candidate) || expectedNames == null)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < expectedNames.Length; i++)
+        {
+            string expected = expectedNames[i];
+            if (string.IsNullOrWhiteSpace(expected))
+            {
+                continue;
+            }
+
+            if (candidate.Equals(expected, StringComparison.OrdinalIgnoreCase) ||
+                candidate.StartsWith(expected + " ", StringComparison.OrdinalIgnoreCase) ||
+                candidate.StartsWith(expected + "(", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void BeautifyTrackedPanel(GameObject panel, string title, ref bool styledFlag)
@@ -4898,16 +4991,37 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        Sprite previewSprite = null;
-        if (character != null)
-        {
-            previewSprite = character.inGameSprite != null ? character.inGameSprite : character.portrait;
-        }
+        Sprite previewSprite = GetCharacterPreviewSprite(character);
 
         characterPreviewImage.sprite = previewSprite;
         characterPreviewImage.enabled = previewSprite != null;
         characterPreviewImage.color = previewSprite != null ? Color.white : new Color(1f, 1f, 1f, 0f);
         characterPreviewImage.preserveAspect = true;
+    }
+
+    private void CacheDefaultCharacterPreviewSprite(Image previewImage)
+    {
+        if (defaultCharacterPreviewSprite == null && previewImage != null && previewImage.sprite != null)
+        {
+            defaultCharacterPreviewSprite = previewImage.sprite;
+        }
+    }
+
+    private Sprite GetCharacterPreviewSprite(CharacterData character)
+    {
+        if (character == null)
+        {
+            return null;
+        }
+
+        if (character.inGameSprite != null)
+        {
+            return character.inGameSprite;
+        }
+
+        CacheDefaultCharacterPreviewSprite(characterPreviewImage);
+        CacheDefaultCharacterPreviewSprite(menuCharacterPreviewImage);
+        return defaultCharacterPreviewSprite;
     }
 
     private void EnsureDefaultCharacterUnlocked(SaveFile_Profile profile)
@@ -4978,6 +5092,7 @@ public class MainMenu : MonoBehaviour
             menuCharacterPreviewImage = previewImageObject.AddComponent<Image>();
         }
 
+        CacheDefaultCharacterPreviewSprite(menuCharacterPreviewImage);
         menuCharacterPreviewImage.preserveAspect = true;
         menuCharacterPreviewImage.raycastTarget = false;
         RectTransform previewImageRect = menuCharacterPreviewImage.rectTransform;
@@ -5011,8 +5126,8 @@ public class MainMenu : MonoBehaviour
         characterHintRect.sizeDelta = new Vector2(-48f, 24f);
         characterHintRect.anchoredPosition = new Vector2(0f, -370f);
 
-        menuCharacterPrevButton = EnsureOrCreateLandingSelectorButton(selector.transform, "PrevCharacterButton", "<", new Vector2(22f, 18f));
-        menuCharacterNextButton = EnsureOrCreateLandingSelectorButton(selector.transform, "NextCharacterButton", ">", new Vector2(318f, 18f));
+        menuCharacterPrevButton = EnsureOrCreateLandingSelectorButton(selector.transform, "PrevCharacterButton", "<", new Vector2(95f, 18f));
+        menuCharacterNextButton = EnsureOrCreateLandingSelectorButton(selector.transform, "NextCharacterButton", ">", new Vector2(200f, 18f));
     }
 
     private TextMeshProUGUI EnsureOrCreateLandingSelectorText(Transform parent, string objectName, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, Color color)
@@ -5096,9 +5211,7 @@ public class MainMenu : MonoBehaviour
 
         if (menuCharacterPreviewImage != null)
         {
-            Sprite previewSprite = selectedCharacter != null
-                ? (selectedCharacter.inGameSprite != null ? selectedCharacter.inGameSprite : selectedCharacter.portrait)
-                : null;
+            Sprite previewSprite = GetCharacterPreviewSprite(selectedCharacter);
             menuCharacterPreviewImage.sprite = previewSprite;
             menuCharacterPreviewImage.enabled = previewSprite != null;
             menuCharacterPreviewImage.color = previewSprite != null ? Color.white : new Color(1f, 1f, 1f, 0f);
@@ -5165,6 +5278,7 @@ public class MainMenu : MonoBehaviour
 
         characterPreviewImage.raycastTarget = false;
         characterPreviewImage.preserveAspect = true;
+        CacheDefaultCharacterPreviewSprite(characterPreviewImage);
 
         RectTransform previewImageRect = characterPreviewImage.rectTransform;
         previewImageRect.anchorMin = new Vector2(0f, 0f);

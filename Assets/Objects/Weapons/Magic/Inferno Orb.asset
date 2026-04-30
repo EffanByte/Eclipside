@@ -1,5 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4242294093717985174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d6efd1331087649ab85f12b6777973, type: 3}
+  m_Name: Status
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatusChance
+  statusToApply: 1
+  chance: 0.2
+  durationOverride: -1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,9 +45,9 @@ MonoBehaviour:
   element: 2
   style: 2
   effects:
-  - {fileID: 7772465676681849552}
-  - {fileID: 5271012493833788642}
---- !u!114 &5271012493833788642
+  - {fileID: -4242294093717985174}
+  - {fileID: 2084184318338024411}
+--- !u!114 &2084184318338024411
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,18 +61,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
   statToBuff: 0
   amount: 0.05
---- !u!114 &7772465676681849552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24d6efd1331087649ab85f12b6777973, type: 3}
-  m_Name: Status
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatusChance
-  statusToApply: 1
-  chance: 0.2
-  durationOverride: -1
