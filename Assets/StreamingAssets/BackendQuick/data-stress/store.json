@@ -1,0 +1,3430 @@
+{
+  "players": {
+    "stress-same-ed939763-3669-484d-a7e7-b395af5598e0": {
+      "playerId": "stress-same-ed939763-3669-484d-a7e7-b395af5598e0",
+      "createdAt": 1777586149186,
+      "wallet": {
+        "Gold": 748400,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 800,
+        "currentPityCounter": 35,
+        "consecutivePullsNoEpic": 9
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-same-ed939763-3669-484d-a7e7-b395af5598e0",
+        "deviceProfileId": "stress-same-ed939763-3669-484d-a7e7-b395af5598e0",
+        "accountId": "",
+        "displayName": "Guest-stress-s",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586149,
+        "data": {
+          "username": "Guest-stress-s",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "843b23fa8c31cc3332a27d5ef8627b96288f2b556681057f66efc67ca11b774f",
+        "weeklySeed": "46ecd851f19a978732bd838e43232203dbe413434204563121da19658db1db3b",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-f87f3a11-6d3f-458a-9ff2-7ff2f339eedd": {
+      "playerId": "stress-multi-f87f3a11-6d3f-458a-9ff2-7ff2f339eedd",
+      "createdAt": 1777586150456,
+      "wallet": {
+        "Gold": 961000,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 16,
+        "consecutivePullsNoEpic": 4
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-f87f3a11-6d3f-458a-9ff2-7ff2f339eedd",
+        "deviceProfileId": "stress-multi-f87f3a11-6d3f-458a-9ff2-7ff2f339eedd",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586150,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Hex Scepter",
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "08cfa7b3e1e79639e7832bac491e30f80d34b5503068449191258005d420b69e",
+        "weeklySeed": "5247928c46be0153622a4f595ff29819058a221d341f285b178c04982532a5ba",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-394fac2b-2ea5-4146-889d-170bc2736ea3": {
+      "playerId": "stress-multi-394fac2b-2ea5-4146-889d-170bc2736ea3",
+      "createdAt": 1777586150465,
+      "wallet": {
+        "Gold": 962800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 40,
+        "consecutivePullsNoEpic": 6
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-394fac2b-2ea5-4146-889d-170bc2736ea3",
+        "deviceProfileId": "stress-multi-394fac2b-2ea5-4146-889d-170bc2736ea3",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586150,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "ad285b4d0e660c60836fd3a3dc7cc8e042affdbf61cd1faba4c8aca578dbbdd1",
+        "weeklySeed": "d9264c965309b4bad7d40a3ac6aa6564f2c4a68ae7355405854ce2c3ef29a172",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-529e6cbb-ed98-47b5-b46e-958d2ffa9420": {
+      "playerId": "stress-multi-529e6cbb-ed98-47b5-b46e-958d2ffa9420",
+      "createdAt": 1777586150473,
+      "wallet": {
+        "Gold": 961200,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 20,
+        "consecutivePullsNoEpic": 9
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-529e6cbb-ed98-47b5-b46e-958d2ffa9420",
+        "deviceProfileId": "stress-multi-529e6cbb-ed98-47b5-b46e-958d2ffa9420",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 3,
+        "lastSyncUnix": 1777586151,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Hex Scepter",
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "9edf3dcee6c631be1283989492a56f83ecec60238cdd2a894c3cbc0bf995803b",
+        "weeklySeed": "ba5c5e48304809a2d19b10d35f444cc7d8ca8e15b3a765b85a6a8076c190376f",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-a57c63ee-64a2-4f24-b917-c41240b197a3": {
+      "playerId": "stress-multi-a57c63ee-64a2-4f24-b917-c41240b197a3",
+      "createdAt": 1777586150480,
+      "wallet": {
+        "Gold": 962400,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 18,
+        "consecutivePullsNoEpic": 1
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-a57c63ee-64a2-4f24-b917-c41240b197a3",
+        "deviceProfileId": "stress-multi-a57c63ee-64a2-4f24-b917-c41240b197a3",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586151,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "e246a544cdcbc6230c31e6a5da381ac7b1814db828a3af7131b6863867622de6",
+        "weeklySeed": "7422827fb174ede6f34b237314f4b0beafa40126c4a13bc2973e060e3d7537b6",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-97b4d966-c2d1-40e5-a8ec-bccea1984652": {
+      "playerId": "stress-multi-97b4d966-c2d1-40e5-a8ec-bccea1984652",
+      "createdAt": 1777586150488,
+      "wallet": {
+        "Gold": 961000,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 18,
+        "consecutivePullsNoEpic": 7
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-97b4d966-c2d1-40e5-a8ec-bccea1984652",
+        "deviceProfileId": "stress-multi-97b4d966-c2d1-40e5-a8ec-bccea1984652",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 3,
+        "lastSyncUnix": 1777586151,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "91c086c245b76eae9b7376a3fc5d438fe233e21ce862ded21fd9183d9ee6e0e7",
+        "weeklySeed": "41f4752cd95d0687325085bc6fa7901b4331e52ca2c065662c8de754caefba15",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-f9495f4b-7cf5-4e9f-83a7-96c4cefbfd0a": {
+      "playerId": "stress-multi-f9495f4b-7cf5-4e9f-83a7-96c4cefbfd0a",
+      "createdAt": 1777586150496,
+      "wallet": {
+        "Gold": 962200,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 6,
+        "consecutivePullsNoEpic": 6
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-f9495f4b-7cf5-4e9f-83a7-96c4cefbfd0a",
+        "deviceProfileId": "stress-multi-f9495f4b-7cf5-4e9f-83a7-96c4cefbfd0a",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586151,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb",
+              "Storm Catalyst"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "257c5d4af6d6acbe70455d981d77d6b68dfff5918f94e6f4b0e699d55185387c",
+        "weeklySeed": "d62348b6fc0414d16a091b8d1c86f0db7c0a7ef56a205b1906a6295536272b41",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-1d5ed500-3497-43d1-a0d1-b97b44f9ca06": {
+      "playerId": "stress-multi-1d5ed500-3497-43d1-a0d1-b97b44f9ca06",
+      "createdAt": 1777586150503,
+      "wallet": {
+        "Gold": 962600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 17,
+        "consecutivePullsNoEpic": 9
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-1d5ed500-3497-43d1-a0d1-b97b44f9ca06",
+        "deviceProfileId": "stress-multi-1d5ed500-3497-43d1-a0d1-b97b44f9ca06",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586151,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Hex Scepter",
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "be79dfc8eeb0de99636b59d3a779693a3b0b103793d9267b131225b5020510a5",
+        "weeklySeed": "b66c58b3320eab2ab5661df87bfec5fb3a48eb4314e519fc2042c7a55cc2fb5a",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-ab9bb330-ec24-4a26-bc61-31c0f1526889": {
+      "playerId": "stress-multi-ab9bb330-ec24-4a26-bc61-31c0f1526889",
+      "createdAt": 1777586150510,
+      "wallet": {
+        "Gold": 960800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 33,
+        "consecutivePullsNoEpic": 7
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-ab9bb330-ec24-4a26-bc61-31c0f1526889",
+        "deviceProfileId": "stress-multi-ab9bb330-ec24-4a26-bc61-31c0f1526889",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "cae2ac6d3f90d32c2eac0e6531b03a9d01815f510bb60c422f25c477cc32ff57",
+        "weeklySeed": "757d90664644002f74624d03c156ba5388d35a2a3b9902d10de596b7d558af08",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-dd9226f4-5255-419e-beb2-bda33a12ac1f": {
+      "playerId": "stress-multi-dd9226f4-5255-419e-beb2-bda33a12ac1f",
+      "createdAt": 1777586150517,
+      "wallet": {
+        "Gold": 962600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 18,
+        "consecutivePullsNoEpic": 5
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-dd9226f4-5255-419e-beb2-bda33a12ac1f",
+        "deviceProfileId": "stress-multi-dd9226f4-5255-419e-beb2-bda33a12ac1f",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 3,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Hex Scepter",
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "745e2cc34367e4ffb2da871c1ef764e4b9ceb15670e532a8b1304650c6903162",
+        "weeklySeed": "4aee91c1cf925968b52f7e88de22052431d1f32df344ad4f06a5f174a0b9405a",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-71e1bc67-13af-42a6-bbbd-fa15dd8e7177": {
+      "playerId": "stress-multi-71e1bc67-13af-42a6-bbbd-fa15dd8e7177",
+      "createdAt": 1777586150524,
+      "wallet": {
+        "Gold": 960800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 36,
+        "consecutivePullsNoEpic": 4
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-71e1bc67-13af-42a6-bbbd-fa15dd8e7177",
+        "deviceProfileId": "stress-multi-71e1bc67-13af-42a6-bbbd-fa15dd8e7177",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 4,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Hex Scepter",
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "0624b5f92491cf7c6196e1d524bede971625250f50dcc5b4c72a04e7158c6f59",
+        "weeklySeed": "d95bfbcd955bcc004aed11f5b5f836239a07493199c4f0b72aa6bdc276671907",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-5a4b8733-0b23-4196-a232-3e9db25725d9": {
+      "playerId": "stress-multi-5a4b8733-0b23-4196-a232-3e9db25725d9",
+      "createdAt": 1777586150530,
+      "wallet": {
+        "Gold": 961600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 31,
+        "consecutivePullsNoEpic": 6
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-5a4b8733-0b23-4196-a232-3e9db25725d9",
+        "deviceProfileId": "stress-multi-5a4b8733-0b23-4196-a232-3e9db25725d9",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "05035a8f4d869cfb49d20e29eda67cef7db67cc823b1451f9b7323df227f7ff1",
+        "weeklySeed": "c38b6ceb673f62736fb58189dafbca882af99c71d648a30c539f78c44ae893d1",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-eefcd5fc-9de3-41ae-ba89-cde2a6cb2254": {
+      "playerId": "stress-multi-eefcd5fc-9de3-41ae-ba89-cde2a6cb2254",
+      "createdAt": 1777586150538,
+      "wallet": {
+        "Gold": 960800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 19,
+        "consecutivePullsNoEpic": 9
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-eefcd5fc-9de3-41ae-ba89-cde2a6cb2254",
+        "deviceProfileId": "stress-multi-eefcd5fc-9de3-41ae-ba89-cde2a6cb2254",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "e5ac60ddbde09fa90fb4b0eadbb40da7f4235bdb9f249853e41538cc1a36db00",
+        "weeklySeed": "ab94977cf326a2099327f97b1c339240838cef4c1922b12bbfac07a8de0b9a17",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-db499ac6-b318-4bbc-812e-d27af97e2077": {
+      "playerId": "stress-multi-db499ac6-b318-4bbc-812e-d27af97e2077",
+      "createdAt": 1777586150545,
+      "wallet": {
+        "Gold": 960800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 18,
+        "consecutivePullsNoEpic": 1
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-db499ac6-b318-4bbc-812e-d27af97e2077",
+        "deviceProfileId": "stress-multi-db499ac6-b318-4bbc-812e-d27af97e2077",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586153,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "ed6d45ee8febceb351489cdf4377d5116ba40509b7c2fb0ff90b696b9246333b",
+        "weeklySeed": "baab1243c518a9e9f06a9ae211f9f32ab4d35d40e9a5a71c91097200e11d6c73",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-fee57c9f-0aa0-4014-a0ed-6e4acdcf2c20": {
+      "playerId": "stress-multi-fee57c9f-0aa0-4014-a0ed-6e4acdcf2c20",
+      "createdAt": 1777586150553,
+      "wallet": {
+        "Gold": 961600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 20,
+        "consecutivePullsNoEpic": 1
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-fee57c9f-0aa0-4014-a0ed-6e4acdcf2c20",
+        "deviceProfileId": "stress-multi-fee57c9f-0aa0-4014-a0ed-6e4acdcf2c20",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586152,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "390a740d83fba395b7117a175b0a7083f9b420d777d0303372374836014b4910",
+        "weeklySeed": "ec8d78fcc9f10740dac29f5941bac25881bd34efd6c8b476b3dfbe7e599256d2",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_open_25_chests",
+            "title": "Open 25 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 25,
+            "reward": {
+              "type": "Orbs",
+              "amount": 75
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-4c1a88b9-4667-4135-a4ed-0c5a8a17758c": {
+      "playerId": "stress-multi-4c1a88b9-4667-4135-a4ed-0c5a8a17758c",
+      "createdAt": 1777586150561,
+      "wallet": {
+        "Gold": 961200,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 33,
+        "consecutivePullsNoEpic": 2
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-4c1a88b9-4667-4135-a4ed-0c5a8a17758c",
+        "deviceProfileId": "stress-multi-4c1a88b9-4667-4135-a4ed-0c5a8a17758c",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586153,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "5e80e8134c5b805e5c0b37e57dc29b42af81772d5fe927ddda63404b2fba98b5",
+        "weeklySeed": "b220103d30f709e7138e320c24afefacd05baf9f6864b9621041ef511ac86f5b",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-edeab18a-557f-40cd-9a8c-ce272481526e": {
+      "playerId": "stress-multi-edeab18a-557f-40cd-9a8c-ce272481526e",
+      "createdAt": 1777586150568,
+      "wallet": {
+        "Gold": 962000,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 3,
+        "consecutivePullsNoEpic": 3
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-edeab18a-557f-40cd-9a8c-ce272481526e",
+        "deviceProfileId": "stress-multi-edeab18a-557f-40cd-9a8c-ce272481526e",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 3,
+        "lastSyncUnix": 1777586153,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Inferno Orb",
+              "Hex Scepter",
+              "Predator's Dagger"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "0967f78bd52291da60003b033c26637e4fc3956fa256f4f40c50b6601bea2237",
+        "weeklySeed": "62d5ffdf9ced3d5ab976b7290f0712f8d44c88b2b17c44bfda78168efa7eb86c",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-4fc9f22b-8f7d-49ae-8477-d0bd2c02f276": {
+      "playerId": "stress-multi-4fc9f22b-8f7d-49ae-8477-d0bd2c02f276",
+      "createdAt": 1777586150575,
+      "wallet": {
+        "Gold": 959800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 16,
+        "consecutivePullsNoEpic": 7
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-4fc9f22b-8f7d-49ae-8477-d0bd2c02f276",
+        "deviceProfileId": "stress-multi-4fc9f22b-8f7d-49ae-8477-d0bd2c02f276",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586153,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "750dd3c3b09a225b82f526e3b6ef4d18144de16dff2deef3362cc05a9b902bef",
+        "weeklySeed": "93472fb07febd50264213cf1c9000cc3d025086d2be79e8e2342d4af377f304b",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-f7eca507-7ef1-4879-93ca-2a051b59c841": {
+      "playerId": "stress-multi-f7eca507-7ef1-4879-93ca-2a051b59c841",
+      "createdAt": 1777586150582,
+      "wallet": {
+        "Gold": 960400,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 49,
+        "consecutivePullsNoEpic": 6
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-f7eca507-7ef1-4879-93ca-2a051b59c841",
+        "deviceProfileId": "stress-multi-f7eca507-7ef1-4879-93ca-2a051b59c841",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586153,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Predator's Dagger",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "be0336ce2d81354c7a29f7fc36fe78259bdcea396ebd926c7c336ef91173ca10",
+        "weeklySeed": "2cd281537a98025bf76806874f10dcc56e75a052502ba887747ba6a722f220e3",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-563a82c3-a4f3-4fe3-a463-26862a28f0a3": {
+      "playerId": "stress-multi-563a82c3-a4f3-4fe3-a463-26862a28f0a3",
+      "createdAt": 1777586150589,
+      "wallet": {
+        "Gold": 962800,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 38,
+        "consecutivePullsNoEpic": 1
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-563a82c3-a4f3-4fe3-a463-26862a28f0a3",
+        "deviceProfileId": "stress-multi-563a82c3-a4f3-4fe3-a463-26862a28f0a3",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586154,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "b94eb1f5445f30c53ef11fd09f9a6812a92df63b8d849b62d854dc1501d69363",
+        "weeklySeed": "7f00874061a0539c67bfc89b067d8164b6c4e1d5e7fe21166e24440c06ef650c",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-f90de3e9-97d8-44a6-bf24-b0f60581ff5b": {
+      "playerId": "stress-multi-f90de3e9-97d8-44a6-bf24-b0f60581ff5b",
+      "createdAt": 1777586150596,
+      "wallet": {
+        "Gold": 963000,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 8,
+        "consecutivePullsNoEpic": 5
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-f90de3e9-97d8-44a6-bf24-b0f60581ff5b",
+        "deviceProfileId": "stress-multi-f90de3e9-97d8-44a6-bf24-b0f60581ff5b",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586154,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "c621a058fc9dd8b89a154a511ab658c96f3c57ce46350bab862245cc20ac1c6d",
+        "weeklySeed": "7eed667632eac64147f9c4fc9e111f8bab48d00b755767c31250c51a580d95f5",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_kill_120",
+            "title": "Defeat 120 enemies",
+            "statKey": "KILLS_REGULAR",
+            "targetValue": 120,
+            "reward": {
+              "type": "Gold",
+              "amount": 200
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_open_3_chests",
+            "title": "Open 3 chests",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 300
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_miniboss_2",
+            "title": "Defeat 2 minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 500
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-c049e302-aeb8-45a6-8f96-f0a8af32d7d9": {
+      "playerId": "stress-multi-c049e302-aeb8-45a6-8f96-f0a8af32d7d9",
+      "createdAt": 1777586150603,
+      "wallet": {
+        "Gold": 961600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 20,
+        "consecutivePullsNoEpic": 6
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-c049e302-aeb8-45a6-8f96-f0a8af32d7d9",
+        "deviceProfileId": "stress-multi-c049e302-aeb8-45a6-8f96-f0a8af32d7d9",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 3,
+        "lastSyncUnix": 1777586154,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Storm Catalyst",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "94d65ffe1a3a4933d4b474ef138f7770cfe446568dc97e415311da7c5ec3e95b",
+        "weeklySeed": "b91b779b7e11d32f1720a33877f7022e29392e764eab5b56515cbcd2f19be2f5",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-ca2f62e2-f77f-4f93-a663-6a4135a1eda6": {
+      "playerId": "stress-multi-ca2f62e2-f77f-4f93-a663-6a4135a1eda6",
+      "createdAt": 1777586150610,
+      "wallet": {
+        "Gold": 960600,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 45,
+        "consecutivePullsNoEpic": 9
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-ca2f62e2-f77f-4f93-a663-6a4135a1eda6",
+        "deviceProfileId": "stress-multi-ca2f62e2-f77f-4f93-a663-6a4135a1eda6",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586154,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "fd2d5b3ca9acba69dd76d6d2e0a58c3042cf723567988bd2ae68365a9e291a97",
+        "weeklySeed": "d21ec7e43353a3e1edfc8d61e50d680c59b1d13c180e6a37bd69ddc839359a9c",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_open_1_chest",
+            "title": "Open 1 chest",
+            "statKey": "CHESTS_OPENED",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 180
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-fb430260-f353-465c-b269-59f3fd8b05c6": {
+      "playerId": "stress-multi-fb430260-f353-465c-b269-59f3fd8b05c6",
+      "createdAt": 1777586150617,
+      "wallet": {
+        "Gold": 962000,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 5,
+        "consecutivePullsNoEpic": 5
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-fb430260-f353-465c-b269-59f3fd8b05c6",
+        "deviceProfileId": "stress-multi-fb430260-f353-465c-b269-59f3fd8b05c6",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 1,
+        "lastSyncUnix": 1777586154,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Predator's Dagger",
+              "Storm Catalyst",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "b8404e14514258e8d8f9e6a138aaf0bf86acc3420b4ecffeeae4c2838f5132b1",
+        "weeklySeed": "2b3497e4079ea82d6ddb152fb5056c7dffe48bcb357be61a7fa1a005410f2ece",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_spend_250_rupees",
+            "title": "Spend 250 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 250,
+            "reward": {
+              "type": "Gold",
+              "amount": 400
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_portal_2",
+            "title": "Activate 2 portals",
+            "statKey": "PORTALS_OPENED",
+            "targetValue": 2,
+            "reward": {
+              "type": "Gold",
+              "amount": 450
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_spend_2500_rupees",
+            "title": "Spend 2500 rupees",
+            "statKey": "RUPEE_SPENT",
+            "targetValue": 2500,
+            "reward": {
+              "type": "Gold",
+              "amount": 900
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    },
+    "stress-multi-a58df4db-b146-4d5c-84c8-492ec78b223c": {
+      "playerId": "stress-multi-a58df4db-b146-4d5c-84c8-492ec78b223c",
+      "createdAt": 1777586150624,
+      "wallet": {
+        "Gold": 961400,
+        "Orbs": 1000000,
+        "Ticket": 0
+      },
+      "gacha": {
+        "totalPullsLifetime": 120,
+        "currentPityCounter": 34,
+        "consecutivePullsNoEpic": 3
+      },
+      "inventory": {
+        "weapons": [],
+        "characters": [],
+        "consumables": {}
+      },
+      "profile": {
+        "remoteProfileId": "remote_stress-multi-a58df4db-b146-4d5c-84c8-492ec78b223c",
+        "deviceProfileId": "stress-multi-a58df4db-b146-4d5c-84c8-492ec78b223c",
+        "accountId": "",
+        "displayName": "Guest-stress-m",
+        "isGuest": true,
+        "profileVersion": 2,
+        "lastSyncUnix": 1777586155,
+        "data": {
+          "username": "Guest-stress-m",
+          "monthlyPass": {
+            "is_active": false,
+            "expiration_date": 0,
+            "current_exp_progress": 0
+          },
+          "characters": {
+            "owned_character_ids": [],
+            "equipped_character_id": "",
+            "skins": [],
+            "character_progress": []
+          },
+          "weapons": {
+            "unlocked_weapon_ids": [
+              "Storm Catalyst",
+              "Predator's Dagger",
+              "Hex Scepter",
+              "Inferno Orb"
+            ],
+            "weapon_skins": []
+          },
+          "consumables": {
+            "stash": []
+          },
+          "progression": {
+            "flags": {
+              "has_watched_intro_cutscene": false,
+              "has_completed_tutorial": false,
+              "has_defeated_final_boss": false,
+              "is_hard_mode_unlocked": false,
+              "is_arena_unlocked": false
+            },
+            "tutorial_steps": {
+              "initial_selection_done": false,
+              "movement_done": false,
+              "attack_done": false,
+              "upgrade_done": false,
+              "special_attack_done": false,
+              "shop_purchase_done": false
+            }
+          }
+        }
+      },
+      "missionCycles": {
+        "dayIndex": 20573,
+        "weekIndex": 20570,
+        "dailySeed": "7d79c1d04c7298b4566bcbc36d520855cd60a5dee982fae74412f263028826b5",
+        "weeklySeed": "63996a990028db8e1c9c8fc684d35785552599ddd10919c893b8e3923600e060",
+        "dailyRerollUsed": false,
+        "dailyBonusClaimed": false,
+        "weeklyBonusClaimed": false,
+        "dailyMissions": [
+          {
+            "missionId": "daily_easy_buy_3_items",
+            "title": "Purchase 3 items",
+            "statKey": "ITEMS_PURCHASED",
+            "targetValue": 3,
+            "reward": {
+              "type": "Gold",
+              "amount": 220
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_medium_miniboss_1",
+            "title": "Defeat 1 miniboss",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 1,
+            "reward": {
+              "type": "Gold",
+              "amount": 350
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          },
+          {
+            "missionId": "daily_hard_run_time_900",
+            "title": "Reach 15 minutes in a run",
+            "statKey": "RUN_TIME",
+            "targetValue": 900,
+            "reward": {
+              "type": "Ticket",
+              "amount": 1
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "weeklyMissions": [
+          {
+            "missionId": "weekly_miniboss_12",
+            "title": "Defeat 12 portal minibosses",
+            "statKey": "KILLS_MINIBOSS",
+            "targetValue": 12,
+            "reward": {
+              "type": "Gold",
+              "amount": 800
+            },
+            "currentProgress": 0,
+            "isCompleted": false,
+            "isClaimed": false
+          }
+        ],
+        "statTotals": {}
+      }
+    }
+  },
+  "accounts": {}
+}

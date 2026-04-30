@@ -91,8 +91,15 @@ public class GachaManager : MonoBehaviour
 
         BackendApiClient.ApplyWalletToProfile(backendResponse.wallet);
         BackendApiClient.ApplyGachaToProfile(backendResponse.gacha);
-        ApplyServerRewards(backendResponse.results);
-        BackendApiClient.MarkProfileDirty();
+        if (backendResponse.profile != null)
+        {
+            BackendApiClient.ApplyProfileDataToProfile(backendResponse.profile);
+        }
+        else
+        {
+            ApplyServerRewards(backendResponse.results);
+        }
+        BackendApiClient.ApplySyncedProfileMetadata(backendResponse.profileVersion, backendResponse.serverUnixTime);
         SaveManager.SaveProfile();
 
         SetDebugOutput(BuildPullSummary(backendResponse.results));
@@ -108,7 +115,7 @@ public class GachaManager : MonoBehaviour
         var profile = SaveManager.Profile;
         foreach (var result in results)
         {
-            if (result == null || result.reward == null)
+            if (result == null || result.reward == null || !result.granted || result.isDuplicate)
             {
                 continue;
             }
@@ -175,6 +182,13 @@ public class GachaManager : MonoBehaviour
             string rewardName = !string.IsNullOrWhiteSpace(result.reward.id)
                 ? result.reward.id
                 : $"{result.reward.type} x{result.reward.amount}";
+
+            if (result.isDuplicate && result.duplicateConversion != null)
+            {
+                lines.Add($"Pulled: {rewardName} ({result.rarity}) -> converted to {result.duplicateConversion.type} x{result.duplicateConversion.amount}");
+                continue;
+            }
+
             lines.Add($"Pulled: {rewardName} ({result.rarity})");
         }
 
@@ -304,11 +318,8 @@ public class GachaManager : MonoBehaviour
         }
         else if (item.type == RewardType.Consumable)
         {
-            profile.consumables.stash.Add(new InventoryItemEntry
-            {
-                item_id = item.itemReference.itemName,
-                count = item.amount
-            });
+            string consumableId = item.itemReference != null ? item.itemReference.name : item.idName;
+            AddConsumableToProfile(profile, consumableId, item.amount);
         }
         else if (item.type == RewardType.Weapon)
         {

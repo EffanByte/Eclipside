@@ -1285,7 +1285,7 @@ public class MainMenu : MonoBehaviour
 
         CreatePixelLandingButton(modernMenuRoot.transform, "StartButton", L("menu.start_run", "Start Run"), string.Empty, OnStartGameButtonPressed, true, GetMainMenuSprite(0), null, new Vector2(0.5f, 0.5f), new Vector2(480f, 122f), new Vector2(0f, -50f), 42f);
 
-        CreatePixelLandingButton(modernMenuRoot.transform, "GachaButton", L("menu.gacha", "Gacha"), string.Empty, OnGachaButtonPressed, false, GetMainMenuSprite(5), GetMainMenuSprite(4), new Vector2(0f, 0.5f), new Vector2(330f, 96f), new Vector2(176f, 90f), 25f);
+        CreatePixelLandingButton(modernMenuRoot.transform, "GachaButton", L("menu.gacha", "Meteorite Temple"), string.Empty, OnGachaButtonPressed, false, GetMainMenuSprite(5), GetMainMenuSprite(4), new Vector2(0f, 0.5f), new Vector2(330f, 96f), new Vector2(176f, 90f), 25f);
         CreatePixelLandingButton(modernMenuRoot.transform, "MissionsButton", GetMissionsTitle(), string.Empty, OnMissionButtonPressed, false, GetMainMenuSprite(11), GetMainMenuSprite(10), new Vector2(0f, 0.5f), new Vector2(330f, 96f), new Vector2(176f, -34f), 25f);
         CreatePixelLandingButton(modernMenuRoot.transform, "SettingsButton", L("menu.settings", "Settings"), string.Empty, OnSettingsButtonPressed, false, GetMainMenuSprite(14), GetMainMenuSprite(13), new Vector2(0f, 0.5f), new Vector2(330f, 96f), new Vector2(176f, -158f), 25f);
 
@@ -1407,15 +1407,6 @@ public class MainMenu : MonoBehaviour
         {
             return;
         }
-
-        EnsureLandingCharacterSelectorLayout();
-        PositionLandingButton("GachaButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 192f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("MissionsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 80f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("AchievementsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -32f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("ChallengesButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -144f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("SettingsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -256f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("QuitGameButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -368f), new Vector2(0.5f, 0.5f));
-        PositionLandingButton("StartButton", new Vector2(1f, 0f), new Vector2(390f, 112f), new Vector2(-48f, 48f), new Vector2(1f, 0f));
     }
 
     private void PositionLandingButton(string key, Vector2 anchor, Vector2 size, Vector2 anchoredPosition, Vector2 pivot)
@@ -1449,11 +1440,7 @@ public class MainMenu : MonoBehaviour
     }
 
     private void EnsureMenuSunFireParticles()
-    {
-        if (!enableSunFireParticles || modernMenuRoot == null)
-        {
-            return;
-        }
+    {   
 
         menuSunFireParticles = modernMenuRoot.GetComponent<MenuSunFireParticles>();
         if (menuSunFireParticles == null)
@@ -1462,8 +1449,10 @@ public class MainMenu : MonoBehaviour
         }
 
         menuSunFireParticles.enabled = true;
+        menuSunFireParticles.RefreshParticles();
         RefreshLandingEffectsVisibility();
     }
+
 
     private void RefreshLandingEffectsVisibility()
     {
@@ -1477,23 +1466,7 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        menuSunFireParticles.SetParticlesVisible(IsLandingScreenClear());
-    }
-
-    private bool IsLandingScreenClear()
-    {
-        return !IsPanelActive(characterSelectPanel)
-            && !IsPanelActive(settingsPanel)
-            && !IsPanelActive(gachaPanel)
-            && !IsPanelActive(authOnboardingPanel)
-            && !IsPanelActive(achievementPanel)
-            && !IsPanelActive(ChallengePanel)
-            && !IsPanelActive(missionPanel);
-    }
-
-    private bool IsPanelActive(GameObject panel)
-    {
-        return panel != null && panel.activeInHierarchy;
+        menuSunFireParticles.SetParticlesVisible(true);
     }
 
     private T GetComponentAtPath<T>(Transform root, string path) where T : Component
@@ -2295,7 +2268,7 @@ public class MainMenu : MonoBehaviour
     private void RefreshLandingButtonLabels()
     {
         SetLandingButtonLabel("StartButton", L("menu.start_run", "Start Run"));
-        SetLandingButtonLabel("GachaButton", L("menu.gacha", "Gacha"));
+        SetLandingButtonLabel("GachaButton", L("menu.gacha", "Meteorite Temple"));
         SetLandingButtonLabel("MissionsButton", GetMissionsTitle());
         SetLandingButtonLabel("AchievementsButton", GetAchievementsTitle());
         SetLandingButtonLabel("ChallengesButton", GetChallengesTitle());
@@ -3425,7 +3398,7 @@ public class MainMenu : MonoBehaviour
 
         if (gachaTitleText != null)
         {
-            gachaTitleText.text = L("menu.gacha", "Gacha");
+            gachaTitleText.text = L("menu.gacha", "Meteorite Temple");
         }
 
         if (gachaSubtitleText != null)
@@ -4455,85 +4428,10 @@ public class MainMenu : MonoBehaviour
         landingButtons[key] = button;
     }
 
-    private void SetLandingButtonTexts(string key, string title, string subtitle)
-    {
-        if ((!landingButtons.TryGetValue(key, out Button button) || button == null) && modernMenuRoot != null)
-        {
-            button = GetComponentAtPath<Button>(modernMenuRoot.transform, key);
-            if (button != null)
-            {
-                landingButtons[key] = button;
-            }
-        }
-
-        if (button == null)
-        {
-            return;
-        }
-
-        bool titleAssigned = false;
-        bool subtitleAssigned = false;
-
-        TextMeshProUGUI[] labels = button.GetComponentsInChildren<TextMeshProUGUI>(true);
-        foreach (TextMeshProUGUI label in labels)
-        {
-            if (label == null)
-            {
-                continue;
-            }
-
-            LocalizedFontResolver.ApplyTo(label, fallbackTmpFont);
-
-            if (MatchesLabelRole(label.transform, "Title", "Label", "Text"))
-            {
-                label.text = title;
-                titleAssigned = true;
-            }
-            else if (MatchesLabelRole(label.transform, "Subtitle", "Description"))
-            {
-                label.text = subtitle;
-                subtitleAssigned = true;
-            }
-        }
-
-        Text[] legacyLabels = button.GetComponentsInChildren<Text>(true);
-        foreach (Text legacyLabel in legacyLabels)
-        {
-            if (legacyLabel == null)
-            {
-                continue;
-            }
-
-            LocalizedFontResolver.ApplyTo(legacyLabel, fallbackFont);
-
-            if (MatchesLabelRole(legacyLabel.transform, "Title", "Label", "Text"))
-            {
-                legacyLabel.text = title;
-                titleAssigned = true;
-            }
-            else if (MatchesLabelRole(legacyLabel.transform, "Subtitle", "Description"))
-            {
-                legacyLabel.text = subtitle;
-                subtitleAssigned = true;
-            }
-        }
-
-        if (!titleAssigned && labels.Length > 0 && labels[0] != null)
-        {
-            LocalizedFontResolver.ApplyTo(labels[0], fallbackTmpFont);
-            labels[0].text = title;
-            titleAssigned = true;
-        }
-
-        if (!subtitleAssigned && labels.Length > 1 && labels[1] != null)
-        {
-            LocalizedFontResolver.ApplyTo(labels[1], fallbackTmpFont);
-            labels[1].text = subtitle;
-        }
-    }
-
+    
     private void SetLandingButtonLabel(string key, string label)
     {
+
         if ((!landingButtons.TryGetValue(key, out Button button) || button == null) && modernMenuRoot != null)
         {
             button = GetComponentAtPath<Button>(modernMenuRoot.transform, key);
@@ -4544,7 +4442,7 @@ public class MainMenu : MonoBehaviour
         }
 
         SetButtonLabel(button, label);
-    }
+    }   
 
     private static bool MatchesLabelRole(Transform target, params string[] expectedNames)
     {

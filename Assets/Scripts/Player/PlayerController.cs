@@ -108,6 +108,8 @@ public class PlayerController : MonoBehaviour
     private PlayerControls controls; 
     private InventoryManager inventory; 
     private PlayerCharacterRuntime characterRuntime;
+    private bool gameplayRuntimeInitialized;
+    private GameDirector subscribedGameDirector;
 
     // --- Events ---
     public event Action onCurrencyUpdate;
@@ -174,29 +176,16 @@ public class PlayerController : MonoBehaviour
         controls.Player.Item1.performed += ctx => inventory.TriggerItemUse(0); 
         controls.Player.Item2.performed += ctx => inventory.TriggerItemUse(1); 
         controls.Player.Item3.performed += ctx => inventory.TriggerItemUse(2); 
+
+        EnsureGameplayRuntimeInitialized();
     }
 
     private void Start()
     {
-        specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
-        characterRuntime.Initialize(this, healthComp, statusMgr);
-        characterRuntime.ApplyEquippedCharacter();
-
-        if (currentWeapon != null && (weaponObject == null || weaponObject.childCount == 0))
-        {
-            EquipWeapon(currentWeapon);
-        }
-
+        EnsureGameplayRuntimeInitialized();
+        RefreshSceneReferences();
         onCurrencyUpdate?.Invoke();
-
-        if (GameDirector.Instance != null)
-        {
-            GameDirector.Instance.OnWaveAdvanced += HandleWaveTransition;
-            GameDirector.Instance.OnLevelCompleted += HandleWaveTransition;
-        }
-
-        // Initialize HFSM
-        InitializeStateMachine();
+        BindGameDirectorEvents();
     }
 
     private void OnEnable() => controls.Enable();
@@ -207,10 +196,11 @@ public class PlayerController : MonoBehaviour
         PlayerHealth.OnPlayerDeath -= PlayerKilled;
         SceneManager.sceneLoaded -= HandleSceneLoaded;
 
-        if (GameDirector.Instance != null)
+        if (subscribedGameDirector != null)
         {
-            GameDirector.Instance.OnWaveAdvanced -= HandleWaveTransition;
-            GameDirector.Instance.OnLevelCompleted -= HandleWaveTransition;
+            subscribedGameDirector.OnWaveAdvanced -= HandleWaveTransition;
+            subscribedGameDirector.OnLevelCompleted -= HandleWaveTransition;
+            subscribedGameDirector = null;
         }
 
         if (Instance == this)
@@ -227,7 +217,69 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        EnsureGameplayRuntimeInitialized();
+        RefreshSceneReferences();
+        BindGameDirectorEvents();
+        controls?.Enable();
+    }
+
+    private void EnsureGameplayRuntimeInitialized()
+    {
+        if (gameplayRuntimeInitialized)
+        {
+            return;
+        }
+
+        if (characterRuntime == null)
+        {
+            characterRuntime = GetComponent<PlayerCharacterRuntime>();
+            if (characterRuntime == null)
+            {
+                characterRuntime = gameObject.AddComponent<PlayerCharacterRuntime>();
+            }
+        }
+
+        characterRuntime.Initialize(this, healthComp, statusMgr);
+        characterRuntime.ApplyEquippedCharacter();
+
+        if (fsm == null)
+        {
+            InitializeStateMachine();
+        }
+
+        if (currentWeapon != null && weaponObject != null && weaponObject.childCount == 0)
+        {
+            EquipWeapon(currentWeapon);
+        }
+
+        gameplayRuntimeInitialized = true;
+    }
+
+    private void RefreshSceneReferences()
+    {
         specialMeterFill = FindFirstObjectByType<SpecialMeterFill>();
+    }
+
+    private void BindGameDirectorEvents()
+    {
+        GameDirector currentDirector = GameDirector.Instance;
+        if (currentDirector == subscribedGameDirector)
+        {
+            return;
+        }
+
+        if (subscribedGameDirector != null)
+        {
+            subscribedGameDirector.OnWaveAdvanced -= HandleWaveTransition;
+            subscribedGameDirector.OnLevelCompleted -= HandleWaveTransition;
+        }
+
+        subscribedGameDirector = currentDirector;
+        if (subscribedGameDirector != null)
+        {
+            subscribedGameDirector.OnWaveAdvanced += HandleWaveTransition;
+            subscribedGameDirector.OnLevelCompleted += HandleWaveTransition;
+        }
     }
 
     // ---------------------------------------------------------
@@ -330,6 +382,15 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!gameplayRuntimeInitialized || fsm == null)
+        {
+            EnsureGameplayRuntimeInitialized();
+            if (fsm == null)
+            {
+                return;
+            }
+        }
+
         characterRuntime?.ManualUpdate(Time.deltaTime);
         if (isDead) return;
 
@@ -429,6 +490,10 @@ public class PlayerController : MonoBehaviour
         pendingLuckRupeeFraction = 0f;
         isReviveInvulnerable = false;
         hasPendingRevive = false;
+        rawInputMovement = Vector2.zero;
+        dashRequested = false;
+        isAttackPressed = false;
+        rb.linearVelocity = Vector2.zero;
         
         // Reset Logic State
         isDashing = false;

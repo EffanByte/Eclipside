@@ -4,7 +4,7 @@ const path = require("path");
 const crypto = require("crypto");
 
 const PORT = Number(process.env.PORT || 8080);
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, "data"));
 const STORE_PATH = path.join(DATA_DIR, "store.json");
 const LOG_PATH = path.join(DATA_DIR, "server.log");
 
@@ -93,9 +93,12 @@ function createBanner(id, currencyType, costs) {
     probabilities: { Mythical: 1, Epic: 9, Rare: 30, Common: 60 },
     pools: {
       Common: [{ id: "gold_100", type: "Gold", amount: 100 }],
-      Rare: [{ id: `${id}_rare_reward`, type: "Weapon", amount: 1 }],
-      Epic: [{ id: `${id}_epic_reward`, type: "Weapon", amount: 1 }],
-      Mythical: [{ id: `${id}_mythic_reward`, type: "Weapon", amount: 1 }]
+      Rare: [
+        { id: "Predator's Dagger", type: "Weapon", amount: 1 },
+        { id: "Storm Catalyst", type: "Weapon", amount: 1 }
+      ],
+      Epic: [{ id: "Hex Scepter", type: "Weapon", amount: 1 }],
+      Mythical: [{ id: "Inferno Orb", type: "Weapon", amount: 1 }]
     }
   };
 }
@@ -293,6 +296,137 @@ function normalizeSyncableProfile(rawProfile, playerId, displayName = "") {
   return profile;
 }
 
+function ensureInventoryState(player) {
+  if (!player.inventory || typeof player.inventory !== "object") {
+    player.inventory = {
+      weapons: [],
+      characters: [],
+      consumables: {}
+    };
+  }
+
+  if (!Array.isArray(player.inventory.weapons)) player.inventory.weapons = [];
+  if (!Array.isArray(player.inventory.characters)) player.inventory.characters = [];
+  if (!player.inventory.consumables || typeof player.inventory.consumables !== "object") {
+    player.inventory.consumables = {};
+  }
+
+  return player.inventory;
+}
+
+function addUniqueString(target, value) {
+  const normalizedValue = typeof value === "string" ? value.trim() : "";
+  if (!normalizedValue) {
+    return false;
+  }
+
+  if (!target.includes(normalizedValue)) {
+    target.push(normalizedValue);
+    return true;
+  }
+
+  return false;
+}
+
+function normalizeWeaponRewardId(rewardId) {
+  const normalizedId = typeof rewardId === "string" ? rewardId.trim() : "";
+  if (!normalizedId) {
+    return "";
+  }
+
+  if (normalizedId.endsWith("_mythic_reward")) {
+    return "Inferno Orb";
+  }
+
+  if (normalizedId.endsWith("_epic_reward")) {
+    return "Hex Scepter";
+  }
+
+  if (normalizedId.endsWith("_rare_reward")) {
+    return "Predator's Dagger";
+  }
+
+  return normalizedId;
+}
+
+function normalizeCharacterRewardId(rewardId) {
+  return typeof rewardId === "string" ? rewardId.trim() : "";
+}
+
+function addConsumableToProfileStash(profileData, itemId, amount) {
+  const normalizedId = typeof itemId === "string" ? itemId.trim() : "";
+  const normalizedAmount = Number.isFinite(Number(amount)) ? Math.max(0, Math.floor(Number(amount))) : 0;
+  if (!normalizedId || normalizedAmount <= 0) {
+    return false;
+  }
+
+  const stash = Array.isArray(profileData?.consumables?.stash) ? profileData.consumables.stash : [];
+  for (const entry of stash) {
+    if (entry && entry.item_id === normalizedId) {
+      entry.count = Math.max(0, Math.floor(Number(entry.count) || 0)) + normalizedAmount;
+      return true;
+    }
+  }
+
+  stash.push({
+    item_id: normalizedId,
+    count: normalizedAmount
+  });
+
+  if (profileData?.consumables) {
+    profileData.consumables.stash = stash;
+  }
+
+  return true;
+}
+
+function migrateLegacyInventoryToProfile(player, profile) {
+  const inventory = ensureInventoryState(player);
+  const targetProfile = profile.data;
+  let changed = false;
+
+  for (const weaponId of inventory.weapons) {
+    changed = addUniqueString(targetProfile.weapons.unlocked_weapon_ids, normalizeWeaponRewardId(weaponId)) || changed;
+  }
+
+  for (const characterId of inventory.characters) {
+    changed = addUniqueString(targetProfile.characters.owned_character_ids, normalizeCharacterRewardId(characterId)) || changed;
+  }
+
+  for (const [itemId, count] of Object.entries(inventory.consumables)) {
+    changed = addConsumableToProfileStash(targetProfile, itemId, count) || changed;
+  }
+
+  const normalizedWeaponIds = [];
+  for (const weaponId of targetProfile.weapons.unlocked_weapon_ids) {
+    addUniqueString(normalizedWeaponIds, normalizeWeaponRewardId(weaponId));
+  }
+  if (normalizedWeaponIds.length !== targetProfile.weapons.unlocked_weapon_ids.length
+    || normalizedWeaponIds.some((id, index) => id !== targetProfile.weapons.unlocked_weapon_ids[index])) {
+    targetProfile.weapons.unlocked_weapon_ids = normalizedWeaponIds;
+    changed = true;
+  }
+
+  const normalizedCharacterIds = [];
+  for (const characterId of targetProfile.characters.owned_character_ids) {
+    addUniqueString(normalizedCharacterIds, normalizeCharacterRewardId(characterId));
+  }
+  if (normalizedCharacterIds.length !== targetProfile.characters.owned_character_ids.length
+    || normalizedCharacterIds.some((id, index) => id !== targetProfile.characters.owned_character_ids[index])) {
+    targetProfile.characters.owned_character_ids = normalizedCharacterIds;
+    changed = true;
+  }
+
+  if (inventory.weapons.length > 0 || inventory.characters.length > 0 || Object.keys(inventory.consumables).length > 0) {
+    inventory.weapons = [];
+    inventory.characters = [];
+    inventory.consumables = {};
+    changed = true;
+  }
+
+  return changed;
+}
+
 function defaultProfileState(playerId, displayName = "") {
   return {
     remoteProfileId: `remote_${playerId}`,
@@ -312,6 +446,7 @@ function ensureProfileState(player) {
   }
 
   const profile = player.profile;
+  ensureInventoryState(player);
   if (!profile.remoteProfileId) profile.remoteProfileId = `remote_${player.playerId}`;
   if (!profile.deviceProfileId) profile.deviceProfileId = player.playerId;
   if (typeof profile.accountId !== "string") profile.accountId = "";
@@ -322,6 +457,10 @@ function ensureProfileState(player) {
   profile.profileVersion = Number.isFinite(profile.profileVersion) ? Math.max(0, Math.floor(profile.profileVersion)) : 0;
   profile.lastSyncUnix = Number.isFinite(profile.lastSyncUnix) ? Math.max(0, Math.floor(profile.lastSyncUnix)) : 0;
   profile.data = normalizeSyncableProfile(profile.data, player.playerId, profile.displayName);
+  if (migrateLegacyInventoryToProfile(player, profile)) {
+    profile.profileVersion += 1;
+    profile.lastSyncUnix = Math.floor(Date.now() / 1000);
+  }
   return profile;
 }
 
@@ -676,37 +815,93 @@ async function verifyFirebaseTokenFromRequest(req) {
 function assignReward(player, reward) {
   if (!reward || !reward.type) {
     log("Skipped reward assignment because reward was empty", { playerId: player?.playerId });
-    return;
+    return {
+      reward,
+      granted: false,
+      isDuplicate: false,
+      duplicateConversion: null,
+      profileChanged: false
+    };
   }
 
+  const profile = ensureProfileState(player);
+  const targetProfile = profile.data;
   const walletBefore = { ...player.wallet };
+  const rawRewardId = typeof reward.id === "string" ? reward.id.trim() : "";
 
   if (reward.type === "Weapon") {
-    if (!player.inventory.weapons.includes(reward.id)) {
-      player.inventory.weapons.push(reward.id);
-      log("Granted weapon reward", { playerId: player.playerId, rewardId: reward.id });
-    } else {
-      player.wallet.Gold += 300;
-      log("Weapon duplicate converted to gold", { playerId: player.playerId, rewardId: reward.id, convertedGold: 300 });
+    const rewardId = normalizeWeaponRewardId(rawRewardId);
+    if (addUniqueString(targetProfile.weapons.unlocked_weapon_ids, rewardId)) {
+      log("Granted weapon reward", { playerId: player.playerId, rewardId });
+      return {
+        reward: Object.assign({}, reward, { id: rewardId }),
+        granted: true,
+        isDuplicate: false,
+        duplicateConversion: null,
+        profileChanged: true
+      };
     }
+
+    const duplicateConversion = { id: "gold_300", type: "Gold", amount: 300 };
+    player.wallet.Gold += duplicateConversion.amount;
+    log("Weapon duplicate converted to gold", { playerId: player.playerId, rewardId, convertedGold: duplicateConversion.amount });
     log("Wallet after weapon reward handling", { playerId: player.playerId, before: walletBefore, after: player.wallet });
-    return;
+    return {
+      reward: Object.assign({}, reward, { id: rewardId }),
+      granted: false,
+      isDuplicate: true,
+      duplicateConversion,
+      profileChanged: false
+    };
   }
 
   if (reward.type === "Character") {
-    if (!player.inventory.characters.includes(reward.id)) {
-      player.inventory.characters.push(reward.id);
-      log("Granted character reward", { playerId: player.playerId, rewardId: reward.id });
-    } else {
-      player.wallet.Orbs += 150;
-      log("Character duplicate converted to orbs", { playerId: player.playerId, rewardId: reward.id, convertedOrbs: 150 });
+    const rewardId = normalizeCharacterRewardId(rawRewardId);
+    if (addUniqueString(targetProfile.characters.owned_character_ids, rewardId)) {
+      log("Granted character reward", { playerId: player.playerId, rewardId });
+      return {
+        reward: Object.assign({}, reward, { id: rewardId }),
+        granted: true,
+        isDuplicate: false,
+        duplicateConversion: null,
+        profileChanged: true
+      };
     }
+
+    const duplicateConversion = { id: "orbs_150", type: "Orbs", amount: 150 };
+    player.wallet.Orbs += duplicateConversion.amount;
+    log("Character duplicate converted to orbs", { playerId: player.playerId, rewardId, convertedOrbs: duplicateConversion.amount });
     log("Wallet after character reward handling", { playerId: player.playerId, before: walletBefore, after: player.wallet });
-    return;
+    return {
+      reward: Object.assign({}, reward, { id: rewardId }),
+      granted: false,
+      isDuplicate: true,
+      duplicateConversion,
+      profileChanged: false
+    };
+  }
+
+  if (reward.type === "Consumable") {
+    const granted = addConsumableToProfileStash(targetProfile, rawRewardId, reward.amount || 0);
+    log("Granted consumable reward", { playerId: player.playerId, rewardId: rawRewardId, amount: reward.amount || 0, granted });
+    return {
+      reward,
+      granted,
+      isDuplicate: false,
+      duplicateConversion: null,
+      profileChanged: granted
+    };
   }
 
   player.wallet[reward.type] = (player.wallet[reward.type] || 0) + (reward.amount || 0);
   log("Granted wallet reward", { playerId: player.playerId, rewardType: reward.type, rewardAmount: reward.amount || 0, before: walletBefore, after: player.wallet });
+  return {
+    reward,
+    granted: true,
+    isDuplicate: false,
+    duplicateConversion: null,
+    profileChanged: false
+  };
 }
 
 function createMissionEntry(mission, existingProgress) {
@@ -1233,6 +1428,7 @@ const server = http.createServer(async (req, res) => {
       player.wallet[currency] -= cost;
 
       const results = [];
+      let profileChanged = false;
       for (let i = 0; i < pullCount; i += 1) {
         player.gacha.totalPullsLifetime += 1;
         player.gacha.currentPityCounter += 1;
@@ -1249,8 +1445,16 @@ const server = http.createServer(async (req, res) => {
         }
 
         const reward = pickReward(banner, rarity, pullSeed);
-        assignReward(player, reward);
-        results.push({ rarity, reward });
+        const rewardOutcome = assignReward(player, reward);
+        profileChanged = profileChanged || rewardOutcome.profileChanged === true;
+        delete rewardOutcome.profileChanged;
+        results.push({ rarity, ...rewardOutcome });
+      }
+
+      const profile = ensureProfileState(player);
+      if (profileChanged) {
+        profile.profileVersion += 1;
+        profile.lastSyncUnix = Math.floor(Date.now() / 1000);
       }
 
       saveStore();
@@ -1262,6 +1466,9 @@ const server = http.createServer(async (req, res) => {
         currencySpent: { type: currency, amount: cost },
         wallet: player.wallet,
         gacha: player.gacha,
+        profileVersion: profile.profileVersion,
+        serverUnixTime: profile.lastSyncUnix,
+        profile: cloneJson(profile.data, defaultSyncableProfile(player.playerId, profile.displayName)),
         results
       });
       return;

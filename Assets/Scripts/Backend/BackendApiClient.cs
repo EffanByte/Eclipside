@@ -186,6 +186,41 @@ public static class BackendApiClient
         profile.gacha_state.consecutive_pulls_no_epic = gacha.consecutivePullsNoEpic;
     }
 
+    public static void ApplyProfileDataToProfile(BackendProfileSyncableData profileData)
+    {
+        if (profileData == null)
+        {
+            return;
+        }
+
+        var profile = SaveManager.Profile;
+        profile.user_profile.username = string.IsNullOrWhiteSpace(profileData.username)
+            ? profile.user_profile.username
+            : profileData.username;
+        profile.monthly_pass = profileData.monthlyPass ?? profile.monthly_pass;
+        profile.characters = profileData.characters ?? profile.characters;
+        profile.weapons = profileData.weapons ?? profile.weapons;
+        profile.consumables = profileData.consumables ?? profile.consumables;
+        profile.progression = profileData.progression ?? profile.progression;
+    }
+
+    public static void ApplySyncedProfileMetadata(int profileVersion, long serverUnixTime)
+    {
+        var user = SaveManager.Profile.user_profile;
+
+        if (profileVersion >= 0)
+        {
+            user.last_synced_profile_version = profileVersion;
+        }
+
+        if (serverUnixTime > 0)
+        {
+            user.last_sync_unix = serverUnixTime;
+        }
+
+        user.has_pending_sync = false;
+    }
+
     private static void ApplyProfileState(
         string playerId,
         string deviceProfileId,
@@ -226,18 +261,7 @@ public static class BackendApiClient
             user.username = displayName;
         }
 
-        if (profileData != null)
-        {
-            profile.user_profile.username = string.IsNullOrWhiteSpace(profileData.username)
-                ? profile.user_profile.username
-                : profileData.username;
-            profile.monthly_pass = profileData.monthlyPass ?? profile.monthly_pass;
-            profile.characters = profileData.characters ?? profile.characters;
-            profile.weapons = profileData.weapons ?? profile.weapons;
-            profile.consumables = profileData.consumables ?? profile.consumables;
-            profile.progression = profileData.progression ?? profile.progression;
-        }
-
+        ApplyProfileDataToProfile(profileData);
         ApplyWalletToProfile(wallet);
         ApplyGachaToProfile(gacha);
         SaveManager.SaveProfile();
@@ -781,6 +805,9 @@ public class BackendGachaPullResult
 {
     public string rarity;
     public BackendReward reward;
+    public bool granted;
+    public bool isDuplicate;
+    public BackendReward duplicateConversion;
 }
 
 [Serializable]
@@ -791,5 +818,8 @@ public class BackendGachaPullResponse
     public int pullCount;
     public BackendWalletState wallet;
     public BackendGachaState gacha;
+    public int profileVersion;
+    public long serverUnixTime;
+    public BackendProfileSyncableData profile;
     public BackendGachaPullResult[] results;
 }

@@ -19,21 +19,30 @@ public class MenuSunFireParticles : MonoBehaviour
 
     private void OnEnable()
     {
-        EnsureParticleSystem();
-        ConfigureParticleSystems();
-        PositionParticleSystems();
+        RefreshParticles();
     }
 
     private void OnValidate()
     {
-        EnsureParticleSystem();
-        ConfigureParticleSystems();
-        PositionParticleSystems();
+        RefreshParticles();
     }
 
     private void LateUpdate()
     {
+        if (fireParticles == null || meteorParticles == null)
+        {
+            EnsureParticleSystem();
+        }
+
         PositionParticleSystems();
+    }
+
+    public void RefreshParticles()
+    {
+        EnsureParticleSystem();
+        ConfigureParticleSystems();
+        PositionParticleSystems();
+        SetParticlesVisible(particlesVisible);
     }
 
     public void SetParticlesVisible(bool visible)
@@ -44,12 +53,6 @@ public class MenuSunFireParticles : MonoBehaviour
         {
             EnsureParticleSystem();
         }
-
-        if (fireParticles == null)
-        {
-            return;
-        }
-
         ParticleSystem.EmissionModule emission = fireParticles.emission;
         emission.enabled = visible;
 
@@ -75,15 +78,7 @@ public class MenuSunFireParticles : MonoBehaviour
 
     private void EnsureParticleSystem()
     {
-        if (targetCamera == null)
-        {
-            targetCamera = Camera.main;
-        }
-
-        if (targetCamera == null)
-        {
-            return;
-        }
+        targetCamera = Camera.main;
 
         if (configureCanvasForParticles)
         {
@@ -97,37 +92,59 @@ public class MenuSunFireParticles : MonoBehaviour
             }
         }
 
-        if (fireParticles == null)
+        EnsureParticleObject(ref fireParticles, "MenuSunFireParticles");
+        EnsureParticleObject(ref meteorParticles, "MenuMeteorShowerParticles");
+    }
+
+    private void EnsureParticleObject(ref ParticleSystem particles, string objectName)
+    {
+        if (targetCamera == null)
         {
-            Transform existing = targetCamera.transform.Find("MenuSunFireParticles");
+            return;
+        }
+
+        if (particles == null)
+        {
+            Transform existing = targetCamera.transform.Find(objectName);
+            if (existing == null)
+            {
+                ParticleSystem[] childParticles = targetCamera.GetComponentsInChildren<ParticleSystem>(true);
+                for (int i = 0; i < childParticles.Length; i++)
+                {
+                    ParticleSystem candidate = childParticles[i];
+                    if (candidate != null && candidate.name == objectName)
+                    {
+                        existing = candidate.transform;
+                        break;
+                    }
+                }
+            }
+
             if (existing != null)
             {
-                fireParticles = existing.GetComponent<ParticleSystem>();
+                particles = existing.GetComponent<ParticleSystem>();
             }
         }
 
-        if (fireParticles == null)
+        if (particles == null)
         {
-            GameObject particleObject = new GameObject("MenuSunFireParticles");
+            GameObject particleObject = new GameObject(objectName);
             particleObject.transform.SetParent(targetCamera.transform, false);
-            fireParticles = particleObject.AddComponent<ParticleSystem>();
+            particles = particleObject.AddComponent<ParticleSystem>();
         }
 
-        if (meteorParticles == null)
+        if (particles == null)
         {
-            Transform existingMeteor = targetCamera.transform.Find("MenuMeteorShowerParticles");
-            if (existingMeteor != null)
-            {
-                meteorParticles = existingMeteor.GetComponent<ParticleSystem>();
-            }
+            return;
         }
 
-        if (meteorParticles == null)
+        if (particles.transform.parent != targetCamera.transform)
         {
-            GameObject meteorObject = new GameObject("MenuMeteorShowerParticles");
-            meteorObject.transform.SetParent(targetCamera.transform, false);
-            meteorParticles = meteorObject.AddComponent<ParticleSystem>();
+            particles.transform.SetParent(targetCamera.transform, false);
         }
+
+        particles.gameObject.name = objectName;
+        particles.gameObject.SetActive(true);
     }
 
     private void ConfigureParticleSystems()
