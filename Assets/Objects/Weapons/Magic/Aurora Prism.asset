@@ -1,20 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8189950619084099944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
-  m_Name: StatBoost
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
-  statToBuff: 0
-  amount: 0.15
---- !u!114 &-7049455841729173640
+--- !u!114 &-7335259515275136774
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -30,6 +16,20 @@ MonoBehaviour:
   additionalPierces: 6
   colliderRadiusMultiplier: 1.8
   lifetime: 3
+--- !u!114 &-4346729246608720205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98714b98bd7b9464fadaf946a54887c6, type: 3}
+  m_Name: StatBoost
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStatBoost
+  statToBuff: 0
+  amount: 0.15
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,10 +61,10 @@ MonoBehaviour:
   element: 2
   style: 2
   effects:
-  - {fileID: -8189950619084099944}
-  - {fileID: 8920132294563674328}
-  - {fileID: -7049455841729173640}
---- !u!114 &8920132294563674328
+  - {fileID: -4346729246608720205}
+  - {fileID: 4324586368339709475}
+  - {fileID: -7335259515275136774}
+--- !u!114 &4324586368339709475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

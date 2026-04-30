@@ -1407,6 +1407,15 @@ public class MainMenu : MonoBehaviour
         {
             return;
         }
+
+        EnsureLandingCharacterSelectorLayout();
+        PositionLandingButton("GachaButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 192f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("MissionsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, 80f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("AchievementsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -32f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("ChallengesButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -144f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("SettingsButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -256f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("QuitGameButton", new Vector2(0.5f, 0.5f), new Vector2(360f, 92f), new Vector2(0f, -368f), new Vector2(0.5f, 0.5f));
+        PositionLandingButton("StartButton", new Vector2(1f, 0f), new Vector2(390f, 112f), new Vector2(-48f, 48f), new Vector2(1f, 0f));
     }
 
     private void PositionLandingButton(string key, Vector2 anchor, Vector2 size, Vector2 anchoredPosition, Vector2 pivot)
@@ -6613,36 +6622,11 @@ public class MainMenu : MonoBehaviour
         tmpRect.offsetMin = Vector2.zero;
         tmpRect.offsetMax = Vector2.zero;
 
-        CopyLegacyTextSettings(legacyText, convertedText);
         legacyText.enabled = false;
 
         return convertedText;
     }
 
-    private void CopyLegacyTextSettings(Text legacyText, TextMeshProUGUI tmpText)
-    {
-        if (legacyText == null || tmpText == null)
-        {
-            return;
-        }
-
-        tmpText.font = LocalizedFontResolver.ResolveTmpFont(fallbackTmpFont != null ? fallbackTmpFont : TMP_Settings.defaultFontAsset);
-        tmpText.text = legacyText.text;
-        tmpText.fontSize = legacyText.fontSize;
-        tmpText.fontStyle = ConvertFontStyle(legacyText.fontStyle);
-        tmpText.alignment = ConvertAlignment(legacyText.alignment);
-        tmpText.color = legacyText.color;
-        tmpText.raycastTarget = legacyText.raycastTarget;
-        tmpText.richText = legacyText.supportRichText;
-        tmpText.lineSpacing = legacyText.lineSpacing;
-        tmpText.enableWordWrapping = legacyText.horizontalOverflow != HorizontalWrapMode.Overflow;
-        tmpText.enableAutoSizing = legacyText.resizeTextForBestFit;
-        tmpText.fontSizeMin = legacyText.resizeTextMinSize;
-        tmpText.fontSizeMax = legacyText.resizeTextMaxSize > 0 ? legacyText.resizeTextMaxSize : legacyText.fontSize;
-        tmpText.overflowMode = legacyText.horizontalOverflow == HorizontalWrapMode.Overflow
-            ? TextOverflowModes.Overflow
-            : TextOverflowModes.Truncate;
-    }
 
     private void CreateDecorativeGlow(string objectName, Transform parent, Color color, Vector2 size, Vector2 anchoredPosition, Vector2 anchor)
     {
