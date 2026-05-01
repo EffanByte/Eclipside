@@ -10,18 +10,43 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     [Tooltip("The TextMeshPro (World) that shows the price")]
     [SerializeField] private TextMeshPro priceText; 
     
-    [Tooltip("Optional: A visual object (like an X mark) shown when sold out")]
+    [Header("Hover")]
+    [SerializeField] private bool enableHover = true;
+    [SerializeField] private float hoverAmplitude = 0.04f;
+    [SerializeField] private float hoverFrequency = 1.6f;
 
     // --- State ---
     private int slotIndex;
     private bool isSoldOut = false;
     private ItemData currentItem;
+    private Sprite fallbackSprite;
+    private Vector3 baseLocalPosition;
+    private float hoverOffset;
 
     private void Awake()
     {
         // Auto-find references if not assigned
         if (itemSprite == null) itemSprite = GetComponentInChildren<SpriteRenderer>();
         if (priceText == null) priceText = GetComponentInChildren<TextMeshPro>();
+
+        if (itemSprite != null)
+        {
+            fallbackSprite = itemSprite.sprite;
+        }
+
+        baseLocalPosition = transform.localPosition;
+        hoverOffset = Random.Range(0f, Mathf.PI * 2f);
+    }
+
+    private void Update()
+    {
+        if (!enableHover)
+        {
+            return;
+        }
+
+        float hoverY = Mathf.Sin((Time.time * hoverFrequency) + hoverOffset) * hoverAmplitude;
+        transform.localPosition = baseLocalPosition + Vector3.up * hoverY;
     }
 
     // Called by ShopZone.cs
@@ -40,13 +65,7 @@ public class ShopPedestal : MonoBehaviour, IInteractable
             // 1. Set Sprite
             if (itemSprite != null)
             {
-                itemSprite.sprite = item.icon;
-                
-                // Fallback if no icon 
-                if (item.icon == null) 
-                {
-                    //  enable a text label here 
-                }
+                itemSprite.sprite = item.icon != null ? item.icon : fallbackSprite;
             }
 
             // 2. Set Price (Using Logic from ShopManager)
@@ -93,7 +112,9 @@ public class ShopPedestal : MonoBehaviour, IInteractable
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-            priceText.fontStyle = FontStyles.Normal;
+        {
+            if (priceText != null) priceText.fontStyle = FontStyles.Normal;
+        }
     }
 
     // Helper for visual flair

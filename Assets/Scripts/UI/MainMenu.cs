@@ -1469,7 +1469,23 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        menuSunFireParticles.SetParticlesVisible(true);
+        menuSunFireParticles.SetParticlesVisible(!IsAnyMenuPanelOpen());
+    }
+
+    private bool IsAnyMenuPanelOpen()
+    {
+        return IsPanelOpen(characterSelectPanel)
+            || IsPanelOpen(settingsPanel)
+            || IsPanelOpen(gachaPanel)
+            || IsPanelOpen(achievementPanel)
+            || IsPanelOpen(ChallengePanel)
+            || IsPanelOpen(missionPanel)
+            || IsPanelOpen(authOnboardingPanel);
+    }
+
+    private static bool IsPanelOpen(GameObject panel)
+    {
+        return panel != null && panel.activeInHierarchy;
     }
 
     private T GetComponentAtPath<T>(Transform root, string path) where T : Component
@@ -3083,12 +3099,12 @@ public class MainMenu : MonoBehaviour
         walletPanelRect.anchorMin = new Vector2(1f, 1f);
         walletPanelRect.anchorMax = new Vector2(1f, 1f);
         walletPanelRect.pivot = new Vector2(1f, 1f);
-        walletPanelRect.sizeDelta = new Vector2(320f, 48f);
+        walletPanelRect.sizeDelta = new Vector2(420f, 48f);
         walletPanelRect.anchoredPosition = new Vector2(-34f, -28f);
 
         HorizontalLayoutGroup walletLayout = walletPanel.AddComponent<HorizontalLayoutGroup>();
         walletLayout.padding = new RectOffset(14, 14, 8, 8);
-        walletLayout.spacing = 16f;
+        walletLayout.spacing = 36f;
         walletLayout.childAlignment = TextAnchor.MiddleLeft;
         walletLayout.childControlHeight = true;
         walletLayout.childControlWidth = false;
@@ -3097,8 +3113,8 @@ public class MainMenu : MonoBehaviour
 
         GameObject gachaGoldBadge = CreateCurrencyBadge("GoldWalletBadge", walletPanel.transform, 21f, new Color(0.94f, 0.86f, 0.55f, 1f), out gachaGoldIconImage, out gachaGoldAmountText);
         GameObject gachaOrbBadge = CreateCurrencyBadge("OrbWalletBadge", walletPanel.transform, 21f, new Color(0.94f, 0.86f, 0.55f, 1f), out gachaOrbIconImage, out gachaOrbAmountText);
-        SetCurrencyBadgeWidth(gachaGoldBadge, 132f);
-        SetCurrencyBadgeWidth(gachaOrbBadge, 92f);
+        SetCurrencyBadgeWidth(gachaGoldBadge, 168f);
+        SetCurrencyBadgeWidth(gachaOrbBadge, 168f);
 
         GameObject indexPanel = CreateUIObject("MeteorIndexPanel", card.transform);
         Image indexPanelImage = indexPanel.AddComponent<Image>();
@@ -3366,8 +3382,8 @@ public class MainMenu : MonoBehaviour
         ApplyGachaButtonStyle(gachaPrevButton, new Color(0.12f, 0.15f, 0.19f, 0.95f), new Color(0.92f, 0.75f, 0.28f, 1f), 28, FontStyle.Bold);
         ApplyGachaButtonStyle(gachaNextButton, new Color(0.12f, 0.15f, 0.19f, 0.95f), new Color(0.92f, 0.75f, 0.28f, 1f), 28, FontStyle.Bold);
         ApplyGachaButtonStyle(gachaRewardsButton, new Color(0.17f, 0.20f, 0.24f, 0.98f), new Color(0.96f, 0.94f, 0.90f, 1f), 18, FontStyle.Bold);
-        ApplyGachaButtonStyle(gachaSinglePullButton, new Color(0.90f, 0.72f, 0.24f, 1f), new Color(0.08f, 0.09f, 0.11f, 1f), 18, FontStyle.Bold);
-        ApplyGachaButtonStyle(gachaTenPullButton, new Color(0.24f, 0.34f, 0.50f, 1f), new Color(0.96f, 0.97f, 0.98f, 1f), 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaSinglePullButton, new Color(0.90f, 0.72f, 0.24f, 1f), Color.white, 18, FontStyle.Bold);
+        ApplyGachaButtonStyle(gachaTenPullButton, new Color(0.24f, 0.34f, 0.50f, 1f), Color.white, 18, FontStyle.Bold);
         ApplyGachaButtonStyle(gachaCloseButton, new Color(0.16f, 0.18f, 0.22f, 0.98f), new Color(0.93f, 0.93f, 0.95f, 1f), 18, FontStyle.Bold);
         ApplyGachaButtonStyle(gachaRewardsCloseButton, new Color(0.16f, 0.18f, 0.22f, 0.98f), new Color(0.93f, 0.93f, 0.95f, 1f), 18, FontStyle.Bold);
         gachaRewardsButton.gameObject.SetActive(false);
@@ -3439,11 +3455,13 @@ public class MainMenu : MonoBehaviour
 
         if (gachaMeteorCostText != null)
         {
+            gachaMeteorCostText.gameObject.SetActive(false);
             gachaMeteorCostText.text = string.Empty;
         }
 
         if (gachaMeteorRatesText != null)
         {
+            gachaMeteorRatesText.gameObject.SetActive(false);
             gachaMeteorRatesText.text = string.Empty;
         }
 
@@ -3561,11 +3579,13 @@ public class MainMenu : MonoBehaviour
 
         if (gachaMeteorCostText != null)
         {
+            gachaMeteorCostText.gameObject.SetActive(false);
             gachaMeteorCostText.text = string.Empty;
         }
 
         if (gachaMeteorRatesText != null)
         {
+            gachaMeteorRatesText.gameObject.SetActive(false);
             gachaMeteorRatesText.text = string.Empty;
         }
 
@@ -5715,7 +5735,7 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        TMP_Text tmpLabelText = button.GetComponentInChildren<TMP_Text>(true);
+        TMP_Text tmpLabelText = GetPrimaryButtonLabel(button);
         if (tmpLabelText != null)
         {
             LocalizedFontResolver.ApplyTo(tmpLabelText, fallbackTmpFont);
@@ -5764,7 +5784,7 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        SetButtonLabel(button, $"{prefix} - {CurrencyUiUtility.FormatAmount(amount)}");
+        SetButtonLabel(button, $"{prefix} {CurrencyUiUtility.FormatAmount(amount)}");
         ConfigureButtonCurrencyIcon(button, CurrencyUiUtility.GetSprite(type));
     }
 
@@ -5787,7 +5807,7 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        TMP_Text tmpLabel = button.GetComponentInChildren<TMP_Text>(true);
+        TMP_Text tmpLabel = GetPrimaryButtonLabel(button);
         if (tmpLabel != null)
         {
             RectTransform labelRect = tmpLabel.rectTransform;
@@ -5850,6 +5870,75 @@ public class MainMenu : MonoBehaviour
         iconRect.anchoredPosition = new Vector2(-14f, 0f);
         iconImage.preserveAspect = true;
         return iconImage;
+    }
+
+    private TMP_Text GetPrimaryButtonLabel(Button button)
+    {
+        if (button == null)
+        {
+            return null;
+        }
+
+        DisableLegacyButtonTextComponents(button.transform);
+
+        TMP_Text label = FindButtonLabelAtPath(button.transform, "Label/TMPLabel");
+        if (label != null)
+        {
+            return label;
+        }
+
+        label = FindButtonLabelAtPath(button.transform, "TMPLabel");
+        if (label != null)
+        {
+            return label;
+        }
+
+        label = FindButtonLabelAtPath(button.transform, "Label");
+        if (label != null)
+        {
+            return label;
+        }
+
+        return button.GetComponentInChildren<TMP_Text>(true);
+    }
+
+    private TMP_Text FindButtonLabelAtPath(Transform root, string path)
+    {
+        if (root == null || string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        Transform target = root.Find(path);
+        if (target == null)
+        {
+            return null;
+        }
+
+        TMP_Text tmpText = target.GetComponent<TMP_Text>();
+        if (tmpText != null)
+        {
+            return tmpText;
+        }
+
+        return target.GetComponentInChildren<TMP_Text>(true);
+    }
+
+    private void DisableLegacyButtonTextComponents(Transform root)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        Text[] legacyTexts = root.GetComponentsInChildren<Text>(true);
+        for (int i = 0; i < legacyTexts.Length; i++)
+        {
+            if (legacyTexts[i] != null)
+            {
+                legacyTexts[i].enabled = false;
+            }
+        }
     }
 
     private GameObject CreateCurrencyBadge(string objectName, Transform parent, float fontSize, Color textColor, out Image iconImage, out TextMeshProUGUI amountText)
@@ -6439,6 +6528,13 @@ public class MainMenu : MonoBehaviour
             gachaMeteorNameText.color = new Color(1f, 0.94f, 0.82f, 1f);
         }
 
+        if (gachaMeteorRatesText != null)
+        {
+            gachaMeteorRatesText.font = LocalizedFontResolver.ResolveTmpFont(fallbackTmpFont != null ? fallbackTmpFont : TMP_Settings.defaultFontAsset);
+            gachaMeteorRatesText.characterSpacing = 0.4f;
+            gachaMeteorRatesText.color = new Color(0.74f, 0.76f, 0.80f, 1f);
+        }
+
         if (gachaRewardsTitleText != null)
         {
             gachaRewardsTitleText.font = LocalizedFontResolver.ResolveTmpFont(fallbackTmpFont != null ? fallbackTmpFont : TMP_Settings.defaultFontAsset);
@@ -6449,8 +6545,8 @@ public class MainMenu : MonoBehaviour
         ApplyMenuSpriteButtonStyle(gachaPrevButton, 5, new Color(0.18f, 0.11f, 0.08f, 0.98f), new Color(0.95f, 0.78f, 0.30f, 1f), 28, FontStyle.Bold);
         ApplyMenuSpriteButtonStyle(gachaNextButton, 5, new Color(0.18f, 0.11f, 0.08f, 0.98f), new Color(0.95f, 0.78f, 0.30f, 1f), 28, FontStyle.Bold);
         ApplyMenuSpriteButtonStyle(gachaRewardsButton, 11, new Color(0.16f, 0.12f, 0.09f, 0.98f), new Color(0.96f, 0.88f, 0.60f, 1f), 18, FontStyle.Bold);
-        ApplyMenuSpriteButtonStyle(gachaSinglePullButton, 0, new Color(0.93f, 0.76f, 0.28f, 1f), new Color(0.13f, 0.08f, 0.03f, 1f), 18, FontStyle.Bold);
-        ApplyMenuSpriteButtonStyle(gachaTenPullButton, 11, new Color(0.19f, 0.12f, 0.08f, 0.98f), new Color(0.96f, 0.88f, 0.60f, 1f), 18, FontStyle.Bold);
+        ApplyMenuSpriteButtonStyle(gachaSinglePullButton, 0, new Color(0.93f, 0.76f, 0.28f, 1f), Color.white, 18, FontStyle.Bold);
+        ApplyMenuSpriteButtonStyle(gachaTenPullButton, 11, new Color(0.19f, 0.12f, 0.08f, 0.98f), Color.white, 18, FontStyle.Bold);
         ApplyMenuSpriteButtonStyle(gachaCloseButton, 5, new Color(0.18f, 0.11f, 0.08f, 0.98f), new Color(0.96f, 0.88f, 0.60f, 1f), 18, FontStyle.Bold);
         ApplyMenuSpriteButtonStyle(gachaRewardsCloseButton, 5, new Color(0.18f, 0.11f, 0.08f, 0.98f), new Color(0.96f, 0.88f, 0.60f, 1f), 18, FontStyle.Bold);
     }
@@ -6511,7 +6607,7 @@ public class MainMenu : MonoBehaviour
         outline.effectColor = new Color(0f, 0f, 0f, 0.22f);
         outline.effectDistance = new Vector2(1f, -1f);
 
-        TMP_Text tmpLabel = button.GetComponentInChildren<TMP_Text>(true);
+        TMP_Text tmpLabel = GetPrimaryButtonLabel(button);
         if (tmpLabel != null)
         {
             LocalizedFontResolver.ApplyTo(tmpLabel, fallbackTmpFont);

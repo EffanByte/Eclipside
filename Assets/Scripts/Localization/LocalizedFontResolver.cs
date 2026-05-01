@@ -41,7 +41,7 @@ public static class LocalizedFontResolver
     public static Font ResolveLegacyFont(Font preferredFont = null)
     {
         string languageCode = LocalizationManager.GetCurrentLanguageCode();
-        if (!RequiresLocalizedFallback(languageCode))
+        if (!RequiresLocalizedLegacyFallback(languageCode))
         {
             return preferredFont != null ? preferredFont : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
@@ -58,7 +58,13 @@ public static class LocalizedFontResolver
     public static TMP_FontAsset ResolveTmpFont(TMP_FontAsset preferredFont = null)
     {
         string languageCode = LocalizationManager.GetCurrentLanguageCode();
-        if (RequiresLocalizedFallback(languageCode))
+        string normalizedCode = NormalizeLanguageCode(languageCode);
+        if (normalizedCode == LocalizationManager.JapaneseCode && TMP_Settings.defaultFontAsset != null)
+        {
+            return TMP_Settings.defaultFontAsset;
+        }
+
+        if (RequiresLocalizedTmpFallback(languageCode))
         {
             TMP_FontAsset localized = GetOrCreateTmpFont(languageCode);
             if (localized != null)
@@ -94,11 +100,17 @@ public static class LocalizedFontResolver
         tmpText.font = ResolveTmpFont(preferredFont);
     }
 
-    private static bool RequiresLocalizedFallback(string languageCode)
+    private static bool RequiresLocalizedLegacyFallback(string languageCode)
     {
         string normalizedCode = NormalizeLanguageCode(languageCode);
         return normalizedCode == LocalizationManager.JapaneseCode
             || normalizedCode == LocalizationManager.RussianCode;
+    }
+
+    private static bool RequiresLocalizedTmpFallback(string languageCode)
+    {
+        string normalizedCode = NormalizeLanguageCode(languageCode);
+        return normalizedCode == LocalizationManager.RussianCode;
     }
 
     private static Font GetOrCreateLegacyFont(string languageCode)

@@ -5,8 +5,38 @@ public class LootPedestal : MonoBehaviour, IInteractable
 {
     [Header("Visuals")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private bool enableHover = true;
+    [SerializeField] private float hoverAmplitude = 0.05f;
+    [SerializeField] private float hoverFrequency = 1.8f;
     private ItemData content;
     private bool isCollected = false;
+    private Sprite fallbackSprite;
+    private Vector3 baseLocalPosition;
+    private float hoverOffset;
+
+    private void Awake()
+    {
+        EnsureSpriteRenderer();
+
+        if (spriteRenderer != null)
+        {
+            fallbackSprite = spriteRenderer.sprite;
+        }
+
+        baseLocalPosition = transform.localPosition;
+        hoverOffset = Random.Range(0f, Mathf.PI * 2f);
+    }
+
+    private void Update()
+    {
+        if (!enableHover)
+        {
+            return;
+        }
+
+        float hoverY = Mathf.Sin((Time.time * hoverFrequency) + hoverOffset) * hoverAmplitude;
+        transform.localPosition = baseLocalPosition + Vector3.up * hoverY;
+    }
 
     public void Setup(ItemData item)
     {
@@ -25,6 +55,7 @@ public class LootPedestal : MonoBehaviour, IInteractable
         }
         else
         {
+            spriteRenderer.sprite = fallbackSprite;
             Debug.LogWarning($"LootPedestal received reward '{item?.itemName ?? "Unknown"}' without an icon. Keeping fallback sprite.");
         }
 

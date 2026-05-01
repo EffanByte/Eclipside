@@ -19,67 +19,67 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 561291264
-    m_Localized: Reach Wave 20 In The Arena
+    m_Localized: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0438\u0442\u0435 20-\u0439 \u0432\u043E\u043B\u043D\u044B \u043D\u0430 \u0430\u0440\u0435\u043D\u0435"
     m_Metadata:
       m_Items: []
   - m_Id: 590651392
-    m_Localized: Open 3 Chest
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 3 \u0441\u0443\u043D\u0434\u0443\u043A\u0430"
     m_Metadata:
       m_Items: []
   - m_Id: 590651393
-    m_Localized: Open 25 Chests
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 25 \u0441\u0443\u043D\u0434\u0443\u043A\u043E\u0432"
     m_Metadata:
       m_Items: []
   - m_Id: 590651394
-    m_Localized: Open 1 Chest
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 1 \u0441\u0443\u043D\u0434\u0443\u043A"
     m_Metadata:
       m_Items: []
   - m_Id: 590651395
-    m_Localized: Complete One Run
+    m_Localized: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 1 \u0437\u0430\u0431\u0435\u0433"
     m_Metadata:
       m_Items: []
   - m_Id: 590651396
-    m_Localized: Defeat 120 Enemies
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 120 \u0432\u0440\u0430\u0433\u043E\u0432"
     m_Metadata:
       m_Items: []
   - m_Id: 590651397
-    m_Localized: Defeat 25 enemies affected by a status effect.
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 25 \u0432\u0440\u0430\u0433\u043E\u0432 \u043F\u043E\u0434 \u044D\u0444\u0444\u0435\u043A\u0442\u043E\u043C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044F."
     m_Metadata:
       m_Items: []
   - m_Id: 590651398
-    m_Localized: Defeat 1 Portal Miniboss
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 1 \u043F\u043E\u0440\u0442\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u0430"
     m_Metadata:
       m_Items: []
   - m_Id: 590651399
-    m_Localized: Defeat 2 Portal Minibosses.
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 2 \u043F\u043E\u0440\u0442\u0430\u043B\u044C\u043D\u044B\u0445 \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 590651400
-    m_Localized: Defeat 12 Portal Minibosses.
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 12 \u043F\u043E\u0440\u0442\u0430\u043B\u044C\u043D\u044B\u0445 \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u043E\u0432."
     m_Metadata:
       m_Items: []
   - m_Id: 590651401
-    m_Localized: Defeat a Miniboss Without Dying
+    m_Localized: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435 \u043C\u0438\u043D\u0438-\u0431\u043E\u0441\u0441\u0430, \u043D\u0435 \u0443\u043C\u0438\u0440\u0430\u044F"
     m_Metadata:
       m_Items: []
   - m_Id: 590651402
-    m_Localized: Complete a Run Without Dying
+    m_Localized: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0437\u0430\u0431\u0435\u0433, \u043D\u0435 \u0443\u043C\u0438\u0440\u0430\u044F"
     m_Metadata:
       m_Items: []
   - m_Id: 590651403
-    m_Localized: Activate 1 Portal.
+    m_Localized: "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u0439\u0442\u0435 1 \u043F\u043E\u0440\u0442\u0430\u043B."
     m_Metadata:
       m_Items: []
   - m_Id: 590651404
-    m_Localized: Purchase 3 items from the shop
+    m_Localized: "\u041A\u0443\u043F\u0438\u0442\u0435 3 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u0430 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435"
     m_Metadata:
       m_Items: []
   - m_Id: 590651405
-    m_Localized: Spent 250 Gold Total In the Shop.
+    m_Localized: "\u041F\u043E\u0442\u0440\u0430\u0442\u044C\u0442\u0435 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 250 \u0437\u043E\u043B\u043E\u0442\u0430."
     m_Metadata:
       m_Items: []
   - m_Id: 590651406
-    m_Localized: Spent 2500 Rupees Total In the Shop.
+    m_Localized: "\u041F\u043E\u0442\u0440\u0430\u0442\u044C\u0442\u0435 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 2500 \u0440\u0443\u043F\u0438\u0439."
     m_Metadata:
       m_Items: []
   references:

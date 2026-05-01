@@ -19,67 +19,67 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 561291264
-    m_Localized: Reach Wave 20 In The Arena
+    m_Localized: "\u30A2\u30EA\u30FC\u30CA\u3067\u30A6\u30A7\u30FC\u30D620\u306B\u5230\u9054\u3059\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651392
-    m_Localized: Open 3 Chest
+    m_Localized: "\u5B9D\u7BB1\u30923\u500B\u958B\u3051\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651393
-    m_Localized: Open 25 Chests
+    m_Localized: "\u5B9D\u7BB1\u309225\u500B\u958B\u3051\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651394
-    m_Localized: Open 1 Chest
+    m_Localized: "\u5B9D\u7BB1\u30921\u500B\u958B\u3051\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651395
-    m_Localized: Complete One Run
+    m_Localized: "1\u56DE\u30E9\u30F3\u3092\u5B8C\u4E86\u3059\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651396
-    m_Localized: Defeat 120 Enemies
+    m_Localized: "\u6575\u3092120\u4F53\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651397
-    m_Localized: Defeat 25 enemies affected by a status effect.
+    m_Localized: "\u72B6\u614B\u7570\u5E38\u306E\u6575\u309225\u4F53\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651398
-    m_Localized: Defeat 1 Portal Miniboss
+    m_Localized: "\u30DD\u30FC\u30BF\u30EB\u306E\u30DF\u30CB\u30DC\u30B9\u30921\u4F53\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651399
-    m_Localized: Defeat 2 Portal Minibosses.
+    m_Localized: "\u30DD\u30FC\u30BF\u30EB\u306E\u30DF\u30CB\u30DC\u30B9\u30922\u4F53\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651400
-    m_Localized: Defeat 12 Portal Minibosses.
+    m_Localized: "\u30DD\u30FC\u30BF\u30EB\u306E\u30DF\u30CB\u30DC\u30B9\u309212\u4F53\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651401
-    m_Localized: Defeat a Miniboss Without Dying
+    m_Localized: "\u6B7B\u306A\u305A\u306B\u30DF\u30CB\u30DC\u30B9\u3092\u5012\u3059"
     m_Metadata:
       m_Items: []
   - m_Id: 590651402
-    m_Localized: Complete a Run Without Dying
+    m_Localized: "\u6B7B\u306A\u305A\u306B1\u56DE\u30E9\u30F3\u3092\u5B8C\u4E86\u3059\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651403
-    m_Localized: Activate 1 Portal.
+    m_Localized: "\u30DD\u30FC\u30BF\u30EB\u30921\u3064\u8D77\u52D5\u3059\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651404
-    m_Localized: Purchase 3 items from the shop
+    m_Localized: "\u30B7\u30E7\u30C3\u30D7\u3067\u30A2\u30A4\u30C6\u30E0\u30923\u500B\u8CFC\u5165\u3059\u308B"
     m_Metadata:
       m_Items: []
   - m_Id: 590651405
-    m_Localized: Spent 250 Gold Total In the Shop.
+    m_Localized: "\u30B7\u30E7\u30C3\u30D7\u3067\u5408\u8A08250\u30B4\u30FC\u30EB\u30C9\u4F7F\u3046"
     m_Metadata:
       m_Items: []
   - m_Id: 590651406
-    m_Localized: Spent 2500 Rupees Total In the Shop.
+    m_Localized: "\u30B7\u30E7\u30C3\u30D7\u3067\u5408\u8A082500\u30EB\u30D4\u30FC\u4F7F\u3046"
     m_Metadata:
       m_Items: []
   references:

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class MenuSunFireParticles : MonoBehaviour
 {
     [SerializeField] private bool configureCanvasForParticles = true;
+    [SerializeField] private bool enableMeteorShower = false;
     [SerializeField] private Camera targetCamera;
     [SerializeField] private Vector2 sunViewportPosition = new Vector2(0.5f, 0.78f);
     [SerializeField] private Vector2 meteorViewportPosition = new Vector2(0.88f, 1.04f);
@@ -58,6 +59,13 @@ public class MenuSunFireParticles : MonoBehaviour
         {
             EnsureParticleSystem();
         }
+
+        if (fireParticles == null)
+        {
+            SetMeteorParticlesVisible(visible && enableMeteorShower);
+            return;
+        }
+
         ParticleSystem.EmissionModule emission = fireParticles.emission;
         emission.enabled = visible;
 
@@ -79,6 +87,8 @@ public class MenuSunFireParticles : MonoBehaviour
             fireParticles.Clear();
             fireParticles.Pause();
         }
+
+        SetMeteorParticlesVisible(visible && enableMeteorShower);
     }
 
     private void EnsureParticleSystem()
@@ -163,7 +173,14 @@ public class MenuSunFireParticles : MonoBehaviour
     private void ConfigureParticleSystems()
     {
         ConfigureFireParticles();
-        ConfigureMeteorParticles();
+        if (enableMeteorShower)
+        {
+            ConfigureMeteorParticles();
+        }
+        else
+        {
+            DisableMeteorParticles();
+        }
     }
 
     private void ConfigureFireParticles()
@@ -361,6 +378,56 @@ public class MenuSunFireParticles : MonoBehaviour
         if (!meteorParticles.isPlaying)
         {
             meteorParticles.Play();
+        }
+    }
+
+    private void DisableMeteorParticles()
+    {
+        if (meteorParticles == null)
+        {
+            return;
+        }
+
+        ParticleSystem.EmissionModule emission = meteorParticles.emission;
+        emission.enabled = false;
+
+        ParticleSystemRenderer renderer = meteorParticles.GetComponent<ParticleSystemRenderer>();
+        if (renderer != null)
+        {
+            renderer.enabled = false;
+        }
+
+        meteorParticles.Clear();
+        meteorParticles.Pause();
+    }
+
+    private void SetMeteorParticlesVisible(bool visible)
+    {
+        if (meteorParticles == null)
+        {
+            return;
+        }
+
+        ParticleSystem.EmissionModule emission = meteorParticles.emission;
+        emission.enabled = visible;
+
+        ParticleSystemRenderer renderer = meteorParticles.GetComponent<ParticleSystemRenderer>();
+        if (renderer != null)
+        {
+            renderer.enabled = visible;
+        }
+
+        if (visible)
+        {
+            if (!meteorParticles.isPlaying)
+            {
+                meteorParticles.Play();
+            }
+        }
+        else
+        {
+            meteorParticles.Clear();
+            meteorParticles.Pause();
         }
     }
 

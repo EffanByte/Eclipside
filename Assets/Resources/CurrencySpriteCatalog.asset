@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e7b60d03cf14984a87975d64c5e43a1, type: 3}
   m_Name: CurrencySpriteCatalog
   m_EditorClassIdentifier: Assembly-CSharp::CurrencySpriteCatalog
-  goldSprite: {fileID: -9024074997002851060, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
-  orbSprite: {fileID: -1372165304353773876, guid: fc6f3840e082b854a81bf4053a9118cb, type: 3}
+  goldSprite: {fileID: 8120250265164856919, guid: a2d01c5e055079343826a5de8ab1ccbc, type: 3}
+  orbSprite: {fileID: 7125355028462864523, guid: a2d01c5e055079343826a5de8ab1ccbc, type: 3}
