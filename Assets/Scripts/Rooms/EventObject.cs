@@ -15,7 +15,11 @@ public abstract class EventObject : MonoBehaviour, IInteractable
         if (oneTimeUse)
         {
             isUsed = true;
-            // Optional: Disable collider or change sprite to "Used" state
+            Collider2D interactionCollider = GetComponent<Collider2D>();
+            if (interactionCollider != null)
+            {
+                interactionCollider.enabled = false;
+            }
         }
     }
 

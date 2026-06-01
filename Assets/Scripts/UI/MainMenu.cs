@@ -3878,90 +3878,9 @@ public class MainMenu : MonoBehaviour
             rewardNameLayout.flexibleWidth = 1f;
             rewardNameLayout.minWidth = 110f;
 
-            GameObject rewardMetaGroup = CreateUIObject("MetaGroup", rewardRow.transform);
-            HorizontalLayoutGroup metaLayout = rewardMetaGroup.AddComponent<HorizontalLayoutGroup>();
-            metaLayout.spacing = 6f;
-            metaLayout.childAlignment = TextAnchor.MiddleRight;
-            metaLayout.childControlWidth = false;
-            metaLayout.childControlHeight = true;
-            metaLayout.childForceExpandWidth = false;
-            metaLayout.childForceExpandHeight = false;
-            LayoutElement rewardMetaGroupLayout = rewardMetaGroup.AddComponent<LayoutElement>();
-            rewardMetaGroupLayout.preferredWidth = 116f;
-            rewardMetaGroupLayout.minWidth = 84f;
-
-            Image rewardMetaIcon = CreateUIObject("MetaIcon", rewardMetaGroup.transform).AddComponent<Image>();
-            LayoutElement rewardMetaIconLayout = rewardMetaIcon.gameObject.AddComponent<LayoutElement>();
-            rewardMetaIconLayout.preferredWidth = 18f;
-            rewardMetaIconLayout.preferredHeight = 18f;
-            rewardMetaIconLayout.minWidth = 18f;
-            rewardMetaIconLayout.minHeight = 18f;
-            CurrencyType? metaCurrencyType = GetGachaRewardMetaCurrencyType(reward, profile);
-            if (metaCurrencyType.HasValue)
-            {
-                CurrencyUiUtility.ApplyCurrencySprite(rewardMetaIcon, metaCurrencyType.Value);
-            }
-            else
-            {
-                rewardMetaIcon.gameObject.SetActive(false);
-            }
-
-            TextMeshProUGUI rewardMetaText = CreateTmpText("Meta", rewardMetaGroup.transform, GetGachaRewardMetaText(reward, profile), 11f, FontStyles.Bold, TextAlignmentOptions.MidlineRight, GetGachaRewardMetaColor(reward, profile));
-            rewardMetaText.enableWordWrapping = false;
-            rewardMetaText.overflowMode = TextOverflowModes.Ellipsis;
-            LayoutElement rewardMetaLayout = rewardMetaText.gameObject.AddComponent<LayoutElement>();
-            rewardMetaLayout.preferredWidth = 92f;
-            rewardMetaLayout.minWidth = 54f;
         }
 
         return true;
-    }
-
-    private string GetGachaRewardMetaText(GachaRewardEntry reward, SaveFile_Profile profile)
-    {
-        if (reward == null)
-        {
-            return string.Empty;
-        }
-
-        if (IsGachaRewardOwned(reward, profile))
-        {
-            return $"+{CurrencyUiUtility.FormatAmount(reward.duplicateConversionAmount)}";
-        }
-
-        switch (reward.type)
-        {
-            case RewardType.Character:
-                return L("menu.gacha.reward_character", "Character");
-            case RewardType.Weapon:
-                return L("menu.gacha.reward_weapon", "Weapon");
-            case RewardType.Consumable:
-                return L("menu.gacha.reward_consumable", "Consumable");
-            case RewardType.Gold:
-            case RewardType.Orb:
-                return string.Empty;
-            case RewardType.Currency:
-                return L("menu.gacha.reward_currency", "Currency");
-            default:
-                return string.Empty;
-        }
-    }
-
-    private CurrencyType? GetGachaRewardMetaCurrencyType(GachaRewardEntry reward, SaveFile_Profile profile)
-    {
-        if (reward == null)
-        {
-            return null;
-        }
-
-        return IsGachaRewardOwned(reward, profile) ? reward.duplicateConversionType : (CurrencyType?)null;
-    }
-
-    private Color GetGachaRewardMetaColor(GachaRewardEntry reward, SaveFile_Profile profile)
-    {
-        return IsGachaRewardOwned(reward, profile)
-            ? new Color(0.92f, 0.75f, 0.28f, 1f)
-            : new Color(0.73f, 0.82f, 0.84f, 1f);
     }
 
     private bool IsGachaRewardOwned(GachaRewardEntry reward, SaveFile_Profile profile)
@@ -6520,6 +6439,12 @@ public class MainMenu : MonoBehaviour
         StyleMenuSectionPanel(card.Find("ResultArea"), 5, new Color(0.10f, 0.10f, 0.10f, 0.96f));
         StyleMenuSectionPanel(card.Find("GachaRewardsPanel"), 11, new Color(0.11f, 0.10f, 0.12f, 0.98f));
         StyleMenuSectionPanel(card.Find("GachaRewardsPanel/RewardsViewport"), 5, new Color(0.08f, 0.09f, 0.11f, 0.96f));
+        if (card.Find("GachaRewardsPanel/RewardsViewport") is Transform rewardsViewportTransform
+            && rewardsViewportTransform.TryGetComponent(out Image rewardsViewportImage))
+        {
+            rewardsViewportImage.sprite = null;
+            rewardsViewportImage.type = Image.Type.Simple;
+        }
 
         if (gachaMeteorNameText != null)
         {

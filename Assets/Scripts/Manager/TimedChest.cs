@@ -72,6 +72,11 @@ public class TimedChest : MonoBehaviour, IInteractable
         }
 
         gameObject.GetComponent<SpriteRenderer>().sprite = openVisual;
+        Collider2D chestCollider = GetComponent<Collider2D>();
+        if (chestCollider != null)
+        {
+            chestCollider.enabled = false;
+        }
         StatisticsManager.Instance.IncrementStat("CHESTS_OPENED");
     }
 
